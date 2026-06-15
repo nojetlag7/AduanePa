@@ -8,8 +8,8 @@ that must pass before the next phase begins.
 
 ## Overall Status
 
-- [ ] Phase 0 — Project Scaffold & Tooling
-- [ ] Phase 1 — Database Schema & Migrations
+- [x] Phase 0 — Project Scaffold & Tooling
+- [x] Phase 1 — Database Schema & Migrations
 - [ ] Phase 2 — Authentication
 - [ ] Phase 3 — App Shell & Layout
 - [ ] Phase 4 — Onboarding Flow
@@ -77,49 +77,51 @@ that must pass before the next phase begins.
 ## Phase 1 — Database Schema & Migrations
 
 ### 1.1 Enums
-- [ ] `HealthCondition`: `HYPERTENSION`, `DIABETES`, `OBESITY`, `NONE`
-- [ ] `DietaryGoal`: `WEIGHT_LOSS`, `MUSCLE_GAIN`, `MAINTENANCE`, `HEART_HEALTH`, `BLOOD_SUGAR_CONTROL`
-- [ ] `MealType`: `BREAKFAST`, `LUNCH`, `DINNER`, `SNACK`
-- [ ] `LogStatus`: `PENDING`, `COMPLETED`, `SKIPPED`
-- [ ] `LanguagePreference`: `ENGLISH`, `TWI`, `GA`
-- [ ] `ThemePreference`: `LIGHT`, `DARK`, `SYSTEM`
-- [ ] `MeasurementSystem`: `METRIC`, `IMPERIAL`
+- [x] `HealthCondition`: `HYPERTENSION`, `DIABETES`, `OBESITY`, `NONE`
+- [x] `DietaryGoal`: `WEIGHT_LOSS`, `MUSCLE_GAIN`, `MAINTENANCE`, `HEART_HEALTH`, `BLOOD_SUGAR_CONTROL`
+- [x] `MealType`: `BREAKFAST`, `LUNCH`, `DINNER`, `SNACK`
+- [x] `LogStatus`: `PENDING`, `COMPLETED`, `SKIPPED`
+- [x] `LanguagePreference`: `ENGLISH`, `TWI`, `GA`
+- [x] `ThemePreference`: `LIGHT`, `DARK`, `SYSTEM`
+- [x] `MeasurementSystem`: `METRIC`, `IMPERIAL`
+- [x] `MealPlanSource`: `AI`, `MANUAL`, `INGREDIENT_BASED`
 
 ### 1.2 Models
-- [ ] `User` — id, name, email, password, age, weight, height, healthConditions, dietaryGoal, language, theme, measurementSystem, notificationsEnabled, emailVerified, emailVerifiedAt, timestamps
-- [ ] `MealPlan` — id, userId, date, generatedBy, createdAt; relation to `User` and `Meal[]`
-- [ ] `Meal` — id, mealPlanId, type, name, description, ingredients (Json), instructions (Json), macros, prepTimeMin, isLocalDish, createdAt
-- [ ] `SavedMeal` — id, userId, name, mealType, data (Json), createdAt
-- [ ] `HealthLog` — id, userId, date, weight, bloodSugar, bpSystolic, bpDiastolic, notes, createdAt
-- [ ] `MealAdherenceLog` — id, userId, mealId, date, status, notes, createdAt
-- [ ] `FoodItem` — id, name, localName, caloriesPer100g, proteinPer100g, carbsPer100g, fatPer100g, isLocalFood
-- [ ] `EmailOtp` — id, userId, email, code (bcrypt hashed), expiresAt, usedAt, createdAt
+- [x] `User` — id, name, email, password, dateOfBirth (@db.Date), weight, height, healthConditions, dietaryGoal, language, theme, measurementSystem, notificationsEnabled, emailVerified, emailVerifiedAt, timestamps
+- [x] `MealPlan` — id, userId, date (@db.Date), generatedBy (MealPlanSource), createdAt; relation to `User` and `Meal[]`
+- [x] `Meal` — id, mealPlanId, type, name, description, ingredients (Json), instructions (Json), macros (incl. fiberG, sodiumMg), prepTimeMin, isLocalDish, createdAt
+- [x] `SavedMeal` — id, userId, name, mealType, data (Json), createdAt
+- [x] `HealthLog` — id, userId, date (@db.Date), weight, bloodSugar, bpSystolic, bpDiastolic, notes, createdAt
+- [x] `MealAdherenceLog` — id, userId, mealId, date (@db.Date), status, notes, createdAt
+- [x] `FoodItem` — id, name, localName, caloriesPer100g, proteinPer100g, carbsPer100g, fatPer100g, fiberPer100g, sodiumMg100g, potassiumMg100g, isLocalFood
+- [x] `EmailOtp` — id, userId, email, code (bcrypt hashed), expiresAt, usedAt, createdAt
+- [x] `Recommendation` — id, userId, items (Json), generatedAt; relation to `User`
 
 ### 1.3 Constraints & indexes
-- [ ] `cuid()` used for all IDs
-- [ ] `HealthLog` unique constraint: `@@unique([userId, date])`
-- [ ] `MealAdherenceLog` unique constraint: `@@unique([userId, mealId, date])`
-- [ ] `FoodItem` unique constraint: `@@unique([name])`
-- [ ] All indexes added per `claude.md` schema section
-- [ ] Cascade deletes set on all `userId` foreign keys
+- [x] `cuid()` used for all IDs
+- [x] `HealthLog` unique constraint: `@@unique([userId, date])`
+- [x] `MealAdherenceLog` unique constraint: `@@unique([userId, mealId, date])`
+- [x] `FoodItem` unique constraint: `@@unique([name])`
+- [x] All indexes added per `claude.md` schema section
+- [x] Cascade deletes set on all `userId` foreign keys
 
 ### 1.4 Migration & seed
-- [ ] Initial migration run: `npx prisma migrate dev --name init`
-- [ ] Prisma client regenerated: `npx prisma generate`
-- [ ] `prisma/seed.ts` written with `FoodItem` records:
-  - [ ] Ghanaian staples: rice, kenkey, banku, fufu, yam, plantain, kontomire, garden egg, tilapia, mackerel, chicken, groundnuts, palm oil, tomatoes, onions, ginger, garlic
-  - [ ] Global staples: oats, eggs, bread, milk, beans, lentils
-- [ ] Seed script run: `npx prisma db seed`
+- [x] Initial migration run: `npx prisma migrate dev --name init`
+- [x] Prisma client regenerated: `npx prisma generate`
+- [x] `prisma/seed.ts` written with `FoodItem` records:
+  - [x] Ghanaian staples: rice, kenkey, banku, fufu, yam, plantain, kontomire, garden egg, tilapia, mackerel, chicken, groundnuts, palm oil, tomatoes, onions, ginger, garlic
+  - [x] Global staples: oats, eggs, bread, milk, beans, lentils
+- [x] Seed script run: `npx prisma db seed` (23 records seeded)
 
 ### 1.5 Shared Zod schemas
-- [ ] `IngredientSchema` and `IngredientsSchema` defined in `types/index.ts`
-- [ ] `InstructionsSchema` (array of strings) defined in `types/index.ts`
-- [ ] All shared TypeScript types derived from Prisma models defined in `types/index.ts`
+- [x] `IngredientSchema` and `IngredientsSchema` defined in `types/index.ts`
+- [x] `InstructionsSchema` (array of strings) defined in `types/index.ts`
+- [x] All shared TypeScript types derived from Prisma models defined in `types/index.ts`
 
 ### 1.6 Exit criteria
-- [ ] `npx prisma validate` passes with all models
-- [ ] `npx prisma studio` opens and shows all tables populated (FoodItem seeded)
-- [ ] `npm run build` passes
+- [x] `npx prisma validate` passes with all models
+- [x] FoodItem table populated (23 records confirmed via seed output; `npx prisma studio` available)
+- [x] `npm run build` passes
 
 ---
 

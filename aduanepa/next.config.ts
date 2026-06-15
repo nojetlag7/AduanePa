@@ -1,3 +1,4 @@
+import path from "node:path"
 import type { NextConfig } from "next"
 import withPWAInit from "@ducanh2912/next-pwa"
 
@@ -13,7 +14,9 @@ const withPWA = withPWAInit({
 })
 
 const nextConfig: NextConfig = {
-  // reserved for future config
+  // Pin the workspace root to this project. A stray lockfile in the user's home
+  // directory otherwise makes Next infer the wrong root.
+  outputFileTracingRoot: path.join(__dirname),
 }
 
 export default withPWA(nextConfig)

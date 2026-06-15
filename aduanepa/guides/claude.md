@@ -805,12 +805,17 @@ const plans = await prisma.mealPlan.findMany({ where: { userId } })
 const plans = await prisma.mealPlan.findMany()
 ```
 
-**Prisma singleton:**
+**Prisma singleton (Prisma 7 — driver adapter):**
+Prisma 7 connects through a driver adapter (`@prisma/adapter-pg`) instead of a built-in
+engine URL. The pooled `DATABASE_URL` is used at runtime; the direct `DIRECT_URL` is used
+by the CLI for migrations (configured in `prisma.config.ts`).
 ```ts
 // lib/db.ts
+import { PrismaPg } from "@prisma/adapter-pg"
 import { PrismaClient } from "@prisma/client"
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
-export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
 ```
 

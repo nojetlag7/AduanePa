@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next"
+import { SessionProvider } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -25,17 +26,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TooltipProvider>
-            {children}
-            <Toaster richColors closeButton position="top-right" />
-          </TooltipProvider>
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider>
+              {children}
+              <Toaster richColors closeButton position="top-right" />
+            </TooltipProvider>
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   )
