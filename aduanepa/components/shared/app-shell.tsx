@@ -1,0 +1,95 @@
+"use client"
+
+import { useState, useSyncExternalStore } from "react"
+import Link from "next/link"
+import { Leaf, Menu } from "lucide-react"
+import { Sidebar } from "@/components/shared/sidebar"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
+
+const COLLAPSE_KEY = "aduanepa:sidebar-collapsed"
+
+// Tiny external store so the persisted collapse state hydrates without a mismatch.
+const collapseListeners = new Set<() => void>()
+let collapseCache: boolean | null = null
+
+function getCollapsed(): boolean {
+  if (collapseCache === null) {
+    collapseCache =
+      typeof window !== "undefined" && window.localStorage.getItem(COLLAPSE_KEY) === "true"
+  }
+  return collapseCache
+}
+
+function setCollapsed(value: boolean) {
+  collapseCache = value
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(COLLAPSE_KEY, String(value))
+  }
+  collapseListeners.forEach((listener) => listener())
+}
+
+function subscribeCollapsed(listener: () => void) {
+  collapseListeners.add(listener)
+  return () => collapseListeners.delete(listener)
+}
+
+interface AppShellProps {
+  user: { name?: string | null; email?: string | null }
+  children: React.ReactNode
+}
+
+export function AppShell({ user, children }: AppShellProps) {
+  const collapsed = useSyncExternalStore(subscribeCollapsed, getCollapsed, () => false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  function toggleCollapse() {
+    setCollapsed(!collapsed)
+  }
+
+  return (
+    <div className="min-h-screen bg-bg-main">
+      {/* Desktop fixed sidebar */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 hidden border-r border-border-light transition-[width] duration-200 lg:block",
+          collapsed ? "w-[76px]" : "w-64"
+        )}
+      >
+        <Sidebar user={user} collapsed={collapsed} onToggleCollapse={toggleCollapse} />
+      </aside>
+
+      {/* Mobile top bar */}
+      <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border-light bg-bg-card px-4 lg:hidden">
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger
+            aria-label="Open navigation menu"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary transition-colors duration-200 hover:bg-bg-muted hover:text-text-primary"
+          >
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          </SheetTrigger>
+          <SheetContent side="left" className="w-72 p-0" showCloseButton={false}>
+            <SheetTitle className="sr-only">Navigation</SheetTitle>
+            <Sidebar user={user} onNavigate={() => setMobileOpen(false)} />
+          </SheetContent>
+        </Sheet>
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+            <Leaf className="h-4 w-4 text-white" aria-hidden="true" />
+          </span>
+          <span className="font-display text-base font-bold text-text-primary">AduanePa</span>
+        </Link>
+      </header>
+
+      {/* Main content */}
+      <main
+        className={cn(
+          "transition-[padding] duration-200",
+          collapsed ? "lg:pl-[76px]" : "lg:pl-64"
+        )}
+      >
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</div>
+      </main>
+    </div>
+  )
+}
