@@ -51,7 +51,7 @@ component. Do not use a placeholder.
 | Icons | Lucide React | Use consistently — no mixing of icon libraries |
 | Auth | Auth.js (NextAuth v5) | Credentials provider (email + password) |
 | Charts | Recharts | Nutritional breakdowns, health metric trends |
-| AI | Anthropic Claude API | Core driver of meal generation and recommendations |
+| AI | Google Gemini API | Core driver of meal generation and recommendations |
 | Validation | Zod | All form and API input validation |
 | Toasts | Sonner | All success/error feedback — never `alert()` |
 | PWA | next-pwa + Service Workers | Offline capability, installable on mobile |
@@ -74,9 +74,9 @@ Prisma ORM  (type-safe queries, schema migrations)
 Neon PostgreSQL  (cloud-hosted, serverless)
 
 AI-powered routes (meal gen, ingredient-based gen, recommendations):
-Client → /api/meals/generate        → Anthropic Claude API
-Client → /api/meals/make-me-a-meal  → Anthropic Claude API
-Client → /api/recommendations       → Anthropic Claude API
+Client → /api/meals/generate        → Google Gemini API
+Client → /api/meals/make-me-a-meal  → Google Gemini API
+Client → /api/recommendations       → Google Gemini API
                                    ↗ (reads user health profile + dietary constraints from DB)
 ```
 
@@ -347,6 +347,12 @@ enum MeasurementSystem {
   IMPERIAL
 }
 
+enum MealPlanSource {
+  AI
+  MANUAL
+  INGREDIENT_BASED
+}
+
 // ─── Models ───────────────────────────────────────────────────────────────────
 
 model User {
@@ -354,8 +360,8 @@ model User {
   name               String
   email              String              @unique
   password           String                                    // bcrypt hashed
-  age                Int?
-  weight             Float?                                    // kg, used for nutritional targets
+  dateOfBirth        DateTime?           @db.Date              // used to compute age dynamically for Mifflin-St Jeor
+  weight             Float?                                    // kg — onboarding baseline; prefer latest HealthLog.weight at runtime
   height             Float?                                    // cm, used for BMI and targets
   healthConditions   HealthCondition[]
   dietaryGoal        DietaryGoal         @default(MAINTENANCE)
@@ -373,16 +379,17 @@ model User {
   mealAdherenceLogs  MealAdherenceLog[]
   savedMeals         SavedMeal[]
   emailOtps          EmailOtp[]
+  recommendations    Recommendation[]
 
   @@index([email])
 }
 
 model MealPlan {
-  id          String    @id @default(cuid())
+  id          String         @id @default(cuid())
   userId      String
-  date        DateTime                            // the day this plan applies to
-  generatedBy String    @default("ai")            // "ai" | "manual" | "ingredient-based"
-  createdAt   DateTime  @default(now())
+  date        DateTime       @db.Date             // date-only; no time component — prevents timezone duplicates
+  generatedBy MealPlanSource @default(AI)
+  createdAt   DateTime       @default(now())
 
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   meals       Meal[]
@@ -403,6 +410,8 @@ model Meal {
   proteinG       Float?
   carbsG         Float?
   fatG           Float?
+  fiberG         Float?                            // dietary fibre — needed for diabetes/heart health constraint display
+  sodiumMg       Float?                            // sodium in mg — needed for hypertension constraint display
   prepTimeMin    Int?
   isLocalDish    Boolean   @default(true)          // flags Ghanaian/local dishes
   createdAt      DateTime  @default(now())
@@ -429,7 +438,7 @@ model SavedMeal {
 model HealthLog {
   id           String   @id @default(cuid())
   userId       String
-  date         DateTime
+  date         DateTime @db.Date                  // date-only; unique constraint relies on this
   weight       Float?                              // kg
   bloodSugar   Float?                              // mmol/L
   bpSystolic   Int?                                // mmHg
@@ -448,7 +457,7 @@ model MealAdherenceLog {
   id        String    @id @default(cuid())
   userId    String
   mealId    String
-  date      DateTime
+  date      DateTime  @db.Date                   // date-only; unique constraint relies on this
   status    LogStatus @default(PENDING)
   notes     String?
   createdAt DateTime  @default(now())
@@ -462,14 +471,17 @@ model MealAdherenceLog {
 }
 
 model FoodItem {
-  id           String  @id @default(cuid())
-  name         String  @unique
-  localName    String?                             // Twi/Ga name if applicable
-  caloriesPer100g  Int
-  proteinPer100g   Float
-  carbsPer100g     Float
-  fatPer100g       Float
-  isLocalFood  Boolean @default(false)
+  id              String  @id @default(cuid())
+  name            String  @unique
+  localName       String?                          // Twi/Ga name if applicable
+  caloriesPer100g Int
+  proteinPer100g  Float
+  carbsPer100g    Float
+  fatPer100g      Float
+  fiberPer100g    Float   @default(0)              // dietary fibre (g per 100g)
+  sodiumMg100g    Float   @default(0)              // sodium (mg per 100g) — hypertension constraint
+  potassiumMg100g Float   @default(0)              // potassium (mg per 100g) — hypertension support
+  isLocalFood     Boolean @default(false)
 
   @@index([name])
 }
@@ -487,6 +499,17 @@ model EmailOtp {
 
   @@index([userId])
   @@index([email])
+}
+
+model Recommendation {
+  id          String   @id @default(cuid())
+  userId      String
+  items       Json                               // [{ number: Int, text: String }]
+  generatedAt DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 ```
 
@@ -506,6 +529,15 @@ model EmailOtp {
   stored and computed in metric (kg, cm) internally — conversion happens at the display layer.
 - `User.theme` is persisted in DB for cross-device consistency. On login, sync this value to the
   `next-themes` provider. `SYSTEM` means defer to OS preference.
+- `User.dateOfBirth` replaces `age`. Compute age at runtime:
+  `Math.floor((Date.now() - user.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))`.
+- `User.weight` is the onboarding baseline. At runtime, `calculateDailyTargets()` must prefer the
+  most recent non-null `HealthLog.weight` when available, falling back to `User.weight` if not.
+- `MealPlan.date`, `HealthLog.date`, and `MealAdherenceLog.date` use `@db.Date` (PostgreSQL `DATE`
+  type — no time component). This is required for unique constraints to deduplicate correctly by
+  calendar day regardless of timezone.
+- `Recommendation` records are append-only. The dashboard reads the most recent record per user.
+  The "Refresh" button generates a new record — do not overwrite the old one (keep history).
 
 ---
 
@@ -629,12 +661,12 @@ Generated from the current week's meal plan. Not AI — computed from meal ingre
 **Trigger:** User clicks "Generate Plan" on the dashboard or meals page.
 
 **What the route does:**
-1. Reads the user's full health profile from DB: age, weight, height, health conditions, dietary goal.
+1. Reads the user's full health profile from DB: dateOfBirth (→ compute age), weight, height, health conditions, dietary goal.
 2. Calls `lib/dietary-rules.ts` to build hard constraint strings (e.g., "avoid high-sodium foods",
    "limit simple carbohydrates", "prioritise high-protein options").
 3. Constructs a system prompt with: constraints, cultural context (Ghanaian cuisine first),
    nutritional targets (calculated from profile), and today's date.
-4. Sends to `claude-sonnet-4-6` and streams the response.
+4. Sends to `gemini-2.5-flash` and streams the response.
 5. Parses the streamed response into structured `Meal` objects and saves them to the DB.
 
 **Output format (ask the model to respond in this JSON shape):**
@@ -668,7 +700,7 @@ uncertain, omit and note that values are estimates.
 
 **What the route does:**
 1. Reads the user's health profile for constraints.
-2. Sends the ingredient list + constraints to `claude-sonnet-4-6`.
+2. Sends the ingredient list + constraints to `gemini-2.5-flash`.
 3. The model generates one meal using only the given ingredients (plus salt, oil, water unless
    `strictIngredients: true` is passed).
 4. If no valid meal is possible, the model must return `{ "possible": false, "suggestion": "..." }`.
@@ -684,7 +716,7 @@ uncertain, omit and note that values are estimates.
    - Last 7 days of meal adherence (what was eaten vs. planned).
    - User's health conditions and dietary goal.
 2. Builds a compact JSON summary (no raw rows — aggregated only).
-3. Sends to `claude-sonnet-4-6` requesting 3–5 specific, numbered, data-grounded recommendations.
+3. Sends to `gemini-2.5-flash` requesting 3–5 specific, numbered, data-grounded recommendations.
 4. Stores the output as a structured response and surfaces it on the dashboard.
 
 **The model must:**
@@ -831,13 +863,13 @@ DATABASE_URL=           # Neon PostgreSQL pooled connection string
 DIRECT_URL=             # Neon direct (non-pooled) connection string for migrations
 NEXTAUTH_SECRET=        # 32-char random string for session signing
 NEXTAUTH_URL=           # Full app URL (http://localhost:3000 in dev)
-ANTHROPIC_API_KEY=      # Server-side only — never expose to client
+GEMINI_API_KEY=         # Server-side only — never expose to client
 TRANSLATION_API_KEY=    # Google Translate API or equivalent — server-side only
 BREVO_API_KEY=          # Brevo transactional email API key — server-side only
 BREVO_SENDER_EMAIL=     # Verified sender address (e.g. noreply@aduanepa.app) — server-side only
 ```
 
-Never commit `.env.local`. `ANTHROPIC_API_KEY`, `TRANSLATION_API_KEY`, `BREVO_API_KEY`, and
+Never commit `.env.local`. `GEMINI_API_KEY`, `TRANSLATION_API_KEY`, `BREVO_API_KEY`, and
 `BREVO_SENDER_EMAIL` must never appear in client bundles.
 
 ---
@@ -871,7 +903,7 @@ premium diet plans, vendor partnerships.
   prompt.
 - **Trusting AI nutritional values blindly.** The AI may estimate macros. Always flag AI-generated
   nutritional values with a note that they are estimates and may vary.
-- **Exposing `ANTHROPIC_API_KEY` client-side.** All Claude API calls must happen inside server-side
+- **Exposing `GEMINI_API_KEY` client-side.** All Gemini API calls must happen inside server-side
   API routes.
 - **Calling `new PrismaClient()` outside the singleton.** Always import from `lib/db.ts`.
 - **Using `alert()` or `confirm()`.** Use shadcn/ui `Dialog` and `Sonner` toasts.

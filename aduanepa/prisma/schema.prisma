@@ -5,3 +5,215 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum HealthCondition {
+  HYPERTENSION
+  DIABETES
+  OBESITY
+  NONE
+}
+
+enum DietaryGoal {
+  WEIGHT_LOSS
+  MUSCLE_GAIN
+  MAINTENANCE
+  HEART_HEALTH
+  BLOOD_SUGAR_CONTROL
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum LogStatus {
+  PENDING
+  COMPLETED
+  SKIPPED
+}
+
+enum LanguagePreference {
+  ENGLISH
+  TWI
+  GA
+}
+
+enum ThemePreference {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum MeasurementSystem {
+  METRIC
+  IMPERIAL
+}
+
+enum MealPlanSource {
+  AI
+  MANUAL
+  INGREDIENT_BASED
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id                   String             @id @default(cuid())
+  name                 String
+  email                String             @unique
+  password             String
+  dateOfBirth          DateTime?          @db.Date
+  weight               Float?
+  height               Float?
+  healthConditions     HealthCondition[]
+  dietaryGoal          DietaryGoal        @default(MAINTENANCE)
+  language             LanguagePreference @default(ENGLISH)
+  theme                ThemePreference    @default(SYSTEM)
+  measurementSystem    MeasurementSystem  @default(METRIC)
+  notificationsEnabled Boolean            @default(false)
+  emailVerified        Boolean            @default(false)
+  emailVerifiedAt      DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  mealPlans         MealPlan[]
+  healthLogs        HealthLog[]
+  mealAdherenceLogs MealAdherenceLog[]
+  savedMeals        SavedMeal[]
+  emailOtps         EmailOtp[]
+  recommendations   Recommendation[]
+
+  @@index([email])
+}
+
+model MealPlan {
+  id          String         @id @default(cuid())
+  userId      String
+  date        DateTime       @db.Date
+  generatedBy MealPlanSource @default(AI)
+  createdAt   DateTime       @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meals Meal[]
+
+  @@index([userId])
+  @@index([userId, date])
+}
+
+model Meal {
+  id          String   @id @default(cuid())
+  mealPlanId  String
+  type        MealType
+  name        String
+  description String?
+  ingredients Json
+  instructions Json
+  calories    Int?
+  proteinG    Float?
+  carbsG      Float?
+  fatG        Float?
+  fiberG      Float?
+  sodiumMg    Float?
+  prepTimeMin Int?
+  isLocalDish Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  mealPlan      MealPlan          @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  adherenceLogs MealAdherenceLog[]
+
+  @@index([mealPlanId])
+}
+
+model SavedMeal {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  mealType  MealType
+  data      Json
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model HealthLog {
+  id          String   @id @default(cuid())
+  userId      String
+  date        DateTime @db.Date
+  weight      Float?
+  bloodSugar  Float?
+  bpSystolic  Int?
+  bpDiastolic Int?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([userId, date])
+}
+
+model MealAdherenceLog {
+  id        String    @id @default(cuid())
+  userId    String
+  mealId    String
+  date      DateTime  @db.Date
+  status    LogStatus @default(PENDING)
+  notes     String?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, mealId, date])
+  @@index([userId])
+  @@index([mealId])
+}
+
+model FoodItem {
+  id              String  @id @default(cuid())
+  name            String  @unique
+  localName       String?
+  caloriesPer100g Int
+  proteinPer100g  Float
+  carbsPer100g    Float
+  fatPer100g      Float
+  fiberPer100g    Float   @default(0)
+  sodiumMg100g    Float   @default(0)
+  potassiumMg100g Float   @default(0)
+  isLocalFood     Boolean @default(false)
+
+  @@index([name])
+}
+
+model EmailOtp {
+  id        String    @id @default(cuid())
+  userId    String
+  email     String
+  code      String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([email])
+}
+
+model Recommendation {
+  id          String   @id @default(cuid())
+  userId      String
+  items       Json
+  generatedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}

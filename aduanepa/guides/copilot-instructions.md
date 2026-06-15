@@ -188,7 +188,7 @@ indicator during this window. Never let the user submit twice.
 ## 7. AI API Rules
 
 ### 7.1 Always call `buildDietaryConstraints()` before constructing any AI prompt
-The dietary rules engine is the safety layer. Never call the Claude API for meal generation
+The dietary rules engine is the safety layer. Never call the Gemini API for meal generation
 without first injecting constraints from `lib/dietary-rules.ts`.
 
 ```ts
@@ -204,9 +204,9 @@ const systemPrompt = `
 `
 ```
 
-### 7.2 The ANTHROPIC_API_KEY must never reach the client
-All calls to the Anthropic API happen inside API routes (`app/api/`). Never import
-`@anthropic-ai/sdk` in a Client Component or a shared `lib/` file that a Client Component
+### 7.2 The GEMINI_API_KEY must never reach the client
+All calls to the Gemini API happen inside API routes (`app/api/`). Never import
+`@google/genai` in a Client Component or a shared `lib/` file that a Client Component
 could import.
 
 ### 7.3 Never send raw Prisma rows to the AI
@@ -394,6 +394,6 @@ Before marking any task done, run through this list:
 - [ ] Does any chart compute a percentage? → Guard the denominator against zero
 - [ ] Does any chart hardcode a hex color? → Use CSS variables
 - [ ] Does any `absolute`-positioned element have a `relative` parent?
-- [ ] Is `ANTHROPIC_API_KEY` or `TRANSLATION_API_KEY` referenced in any client-side file?
+- [ ] Is `GEMINI_API_KEY` or `TRANSLATION_API_KEY` referenced in any client-side file?
 - [ ] Are there unused imports? → Remove them
 - [ ] `npm run build` passes cleanly with zero TypeScript errors

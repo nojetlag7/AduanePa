@@ -38,7 +38,7 @@ that must pass before the next phase begins.
 - [ ] `next-pwa` installed for PWA support
 
 ### 0.2 Dependencies installed
-- [ ] Runtime: `@prisma/client`, `zod`, `next-auth`, `bcryptjs`, `lucide-react`, `sonner`, `recharts`, `@anthropic-ai/sdk`
+- [ ] Runtime: `@prisma/client`, `zod`, `next-auth`, `bcryptjs`, `lucide-react`, `sonner`, `recharts`, `@google/genai`
 - [ ] Dev: `prisma`
 - [ ] Tailwind plugins: `tailwindcss-animate`
 
@@ -56,7 +56,7 @@ that must pass before the next phase begins.
 ### 0.5 Environment & Prisma initialised
 - [ ] `prisma/schema.prisma` created with datasource + generator block
 - [ ] `lib/db.ts` singleton added
-- [ ] `.env.local` created with: `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `ANTHROPIC_API_KEY`, `TRANSLATION_API_KEY`, `BREVO_API_KEY`, `BREVO_SENDER_EMAIL`
+- [ ] `.env.local` created with: `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `GEMINI_API_KEY`, `TRANSLATION_API_KEY`, `BREVO_API_KEY`, `BREVO_SENDER_EMAIL`
 - [ ] `.env.local` added to `.gitignore`
 
 ### 0.6 PWA bootstrap
@@ -313,7 +313,7 @@ that must pass before the next phase begins.
   - [ ] Respond ONLY with valid JSON matching the `MealPlanResponse` schema
   - [ ] Never include markdown fences or preamble in the response
   - [ ] Flag estimated nutritional values clearly
-- [ ] Sends to `claude-sonnet-4-6` — `ANTHROPIC_API_KEY` used server-side only, never in client bundle
+- [ ] Sends to `gemini-2.5-flash` — `GEMINI_API_KEY` used server-side only, never in client bundle
 - [ ] Parses and Zod-validates the model response against `MealPlanResponseSchema`
 - [ ] On parse failure: returns `{ error: "Failed to parse AI response" }` with status 500
 - [ ] On success: saves plan via `lib/services/meals.ts` and returns `{ planId, meals }`
@@ -339,7 +339,7 @@ that must pass before the next phase begins.
 - [ ] Response is saved to DB — visible in Prisma Studio under `MealPlan` and `Meal`
 - [ ] Unauthenticated POST returns 401
 - [ ] Malformed AI response returns 500 with `{ error }` — does not crash the server
-- [ ] `ANTHROPIC_API_KEY` is not present in any client-side bundle (check with `npm run build` output)
+- [ ] `GEMINI_API_KEY` is not present in any client-side bundle (check with `npm run build` output)
 - [ ] `npm run build` passes
 
 ---
@@ -418,7 +418,7 @@ that must pass before the next phase begins.
   - [ ] Respect all dietary constraints — adapt rather than reject where possible
   - [ ] Return `{ "possible": false, "suggestion": "..." }` if no valid meal can be made
   - [ ] Return valid JSON matching `MealResponseSchema` if a meal is possible
-- [ ] Sends to `claude-sonnet-4-6` — `ANTHROPIC_API_KEY` server-side only
+- [ ] Sends to `gemini-2.5-flash` — `GEMINI_API_KEY` server-side only
 - [ ] Parses and Zod-validates response
 - [ ] Returns shaped result to client
 
@@ -584,7 +584,7 @@ that must pass before the next phase begins.
   - [ ] Never give generic diet advice not tied to the user's actual data
   - [ ] Defer clinical decisions to a healthcare professional
   - [ ] Respond ONLY with valid JSON: `{ recommendations: { number: int, text: string }[] }`
-- [ ] Sends to `claude-sonnet-4-6` — `ANTHROPIC_API_KEY` server-side only
+- [ ] Sends to `gemini-2.5-flash` — `GEMINI_API_KEY` server-side only
 - [ ] Parses and Zod-validates response
 - [ ] Returns shaped recommendations to client
 
@@ -601,7 +601,7 @@ that must pass before the next phase begins.
 - [ ] Toggling the same meal twice updates correctly (upsert, no duplicate)
 - [ ] Recommendations panel displays 3–5 items with specific numbers from logged data
 - [ ] Recommendations for a user with < 3 days of logs show the empty state, not an error
-- [ ] `ANTHROPIC_API_KEY` is not visible in network tab response or client JS bundle
+- [ ] `GEMINI_API_KEY` is not visible in network tab response or client JS bundle
 - [ ] `npm run build` passes
 
 ---
@@ -703,7 +703,7 @@ Sections:
 - [ ] `npm run build` passes cleanly with zero TypeScript errors
 - [ ] No `any` types remaining in the codebase
 - [ ] All `userId` scoping verified in every service function
-- [ ] No `ANTHROPIC_API_KEY` or `TRANSLATION_API_KEY` in any client-side file
+- [ ] No `GEMINI_API_KEY` or `TRANSLATION_API_KEY` in any client-side file
 - [ ] All `Meal.ingredients` and `Meal.instructions` Json reads are Zod-validated at the service boundary
 - [ ] No unused imports anywhere
 
@@ -712,7 +712,7 @@ Sections:
 - [ ] Dark mode QA: all pages visually correct; no hardcoded colors visible
 - [ ] Mobile layout QA: sidebar drawer, stacked cards, bottom CTAs all correct on a 390px viewport
 - [ ] Language QA: English → Twi → English roundtrip works on all translated strings
-- [ ] AI API key QA: open Network tab in DevTools, generate a meal plan, confirm `ANTHROPIC_API_KEY` does not appear in any request or response payload
+- [ ] AI API key QA: open Network tab in DevTools, generate a meal plan, confirm `GEMINI_API_KEY` does not appear in any request or response payload
 - [ ] End-to-end flow: register → onboard → generate plan → log health → view recommendations → check grocery list → change language → delete account
 
 ---
