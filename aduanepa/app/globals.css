@@ -1,26 +1,222 @@
+/* ─── Fonts — must precede all other rules ───────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
+/* ─── AduanePa Design Tokens — Light Mode ───────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Main brand */
+  --color-primary:        #1A5C38;
+  --color-primary-hover:  #154d2f;
+  --color-primary-active: #0f3d25;
+  --color-primary-light:  #2D8653;
+  --color-secondary:      #FFFFFF;
+  --color-section-bg:     #F4FAF6;
+
+  /* Green scale */
+  --color-green-1:  #F4FAF6;
+  --color-green-2:  #E8F5E9;
+  --color-green-3:  #C8E6C9;
+  --color-green-4:  #A5D6A7;
+  --color-green-5:  #81C784;
+  --color-green-6:  #4CAF50;
+  --color-green-7:  #2D8653;
+  --color-green-8:  #1A5C38;
+  --color-green-9:  #154d2f;
+  --color-green-10: #0f3d25;
+  --color-green-11: #092618;
+
+  /* Neutral grays */
+  --color-neutral-1:  #ffffff;
+  --color-neutral-2:  #f9faf9;
+  --color-neutral-3:  #f0f0f0;
+  --color-neutral-4:  #e0e0e0;
+  --color-neutral-5:  #bdbdbd;
+  --color-neutral-6:  #9e9e9e;
+  --color-neutral-7:  #757575;
+  --color-neutral-8:  #555555;
+  --color-neutral-9:  #3d3d3d;
+  --color-neutral-10: #1c1c1c;
+  --color-neutral-11: #111111;
+
+  /* Semantic status */
+  --color-success-bg:   #f0fdf4;
+  --color-success:      #22c55e;
+  --color-success-dark: #15803d;
+  --color-error-bg:     #fef2f2;
+  --color-error:        #f04438;
+  --color-error-dark:   #b42318;
+  --color-warning-bg:   #fffbeb;
+  --color-warning:      #F59E0B;
+  --color-warning-dark: #b45309;
+  --color-info-bg:      #eff6ff;
+  --color-info:         #3b82f6;
+  --color-info-dark:    #1d4ed8;
+
+  /* Semantic surface aliases — light mode */
+  --bg-main:        #F4FAF6;
+  --bg-card:        #ffffff;
+  --bg-muted:       #f9faf9;
+  --border-light:   #e0e0e0;
+  --border-medium:  #bdbdbd;
+  --text-primary:   #1c1c1c;
+  --text-secondary: #555555;
+  --text-muted:     #9e9e9e;
+  --text-inverse:   #ffffff;
+
+  /* shadcn/ui compatibility — HSL channel values */
+  --background:             0 0% 100%;
+  --foreground:             0 0% 11%;
+  --card:                   0 0% 100%;
+  --card-foreground:        0 0% 11%;
+  --popover:                0 0% 100%;
+  --popover-foreground:     0 0% 11%;
+  --primary:                150 54% 23%;
+  --primary-foreground:     0 0% 100%;
+  --secondary:              120 12% 95%;
+  --secondary-foreground:   0 0% 11%;
+  --muted:                  120 6% 97%;
+  --muted-foreground:       0 0% 62%;
+  --accent:                 120 12% 95%;
+  --accent-foreground:      0 0% 11%;
+  --destructive:            4 86% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --border:                 0 0% 88%;
+  --input:                  0 0% 88%;
+  --ring:                   150 54% 23%;
+  --radius:                 0.5rem;
 }
 
+/* ─── Dark Mode ──────────────────────────────────────────────────────────── */
+.dark {
+  --color-primary:        #4CAF50;
+  --color-primary-hover:  #2D8653;
+  --color-primary-active: #1A5C38;
+  --color-section-bg:     #122b1e;
+
+  --bg-main:        #0D2B1A;
+  --bg-card:        #122b1e;
+  --bg-muted:       #1a3827;
+  --border-light:   #1e4530;
+  --border-medium:  #2a5c3f;
+  --text-primary:   #f4faf6;
+  --text-secondary: #a5d6a7;
+  --text-muted:     #4CAF50;
+  --text-inverse:   #0D2B1A;
+
+  --background:             150 53% 8%;
+  --foreground:             120 40% 96%;
+  --card:                   150 36% 12%;
+  --card-foreground:        120 40% 96%;
+  --popover:                150 36% 12%;
+  --popover-foreground:     120 40% 96%;
+  --primary:                123 38% 48%;
+  --primary-foreground:     150 53% 8%;
+  --secondary:              150 30% 16%;
+  --secondary-foreground:   120 40% 96%;
+  --muted:                  150 30% 16%;
+  --muted-foreground:       123 38% 48%;
+  --accent:                 150 30% 16%;
+  --accent-foreground:      120 40% 96%;
+  --destructive:            4 86% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --border:                 150 41% 22%;
+  --input:                  150 41% 22%;
+  --ring:                   123 38% 48%;
+}
+
+/* ─── Tailwind v4: expose CSS vars as utilities (@theme inline) ──────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand */
+  --color-primary:        var(--color-primary);
+  --color-primary-hover:  var(--color-primary-hover);
+  --color-primary-active: var(--color-primary-active);
+  --color-primary-light:  var(--color-primary-light);
+
+  /* Surfaces */
+  --color-bg-main:       var(--bg-main);
+  --color-bg-card:       var(--bg-card);
+  --color-bg-muted:      var(--bg-muted);
+
+  /* Borders */
+  --color-border-light:  var(--border-light);
+  --color-border-medium: var(--border-medium);
+
+  /* Text */
+  --color-text-primary:   var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted:     var(--text-muted);
+  --color-text-inverse:   var(--text-inverse);
+
+  /* Status */
+  --color-success:      var(--color-success);
+  --color-success-bg:   var(--color-success-bg);
+  --color-success-dark: var(--color-success-dark);
+  --color-error:        var(--color-error);
+  --color-error-bg:     var(--color-error-bg);
+  --color-error-dark:   var(--color-error-dark);
+  --color-warning:      var(--color-warning);
+  --color-warning-bg:   var(--color-warning-bg);
+  --color-warning-dark: var(--color-warning-dark);
+  --color-info:         var(--color-info);
+  --color-info-bg:      var(--color-info-bg);
+  --color-info-dark:    var(--color-info-dark);
+
+  /* Typography */
+  --font-sans:    'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Global interactive defaults ────────────────────────────────────────── */
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* cursor-pointer on all interactive elements */
+button,
+[role="button"],
+a,
+label[for],
+select,
+[tabindex]:not([tabindex="-1"]) {
+  cursor: pointer;
+}
+
+/* Smooth transitions */
+button,
+[role="button"],
+a {
+  transition: all 200ms ease;
+}
+
+/* Focus visible ring using brand color */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

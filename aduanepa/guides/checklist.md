@@ -56,7 +56,7 @@ that must pass before the next phase begins.
 ### 0.5 Environment & Prisma initialised
 - [ ] `prisma/schema.prisma` created with datasource + generator block
 - [ ] `lib/db.ts` singleton added
-- [ ] `.env.local` created with: `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `ANTHROPIC_API_KEY`, `TRANSLATION_API_KEY`
+- [ ] `.env.local` created with: `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `ANTHROPIC_API_KEY`, `TRANSLATION_API_KEY`, `BREVO_API_KEY`, `BREVO_SENDER_EMAIL`
 - [ ] `.env.local` added to `.gitignore`
 
 ### 0.6 PWA bootstrap
@@ -82,15 +82,18 @@ that must pass before the next phase begins.
 - [ ] `MealType`: `BREAKFAST`, `LUNCH`, `DINNER`, `SNACK`
 - [ ] `LogStatus`: `PENDING`, `COMPLETED`, `SKIPPED`
 - [ ] `LanguagePreference`: `ENGLISH`, `TWI`, `GA`
+- [ ] `ThemePreference`: `LIGHT`, `DARK`, `SYSTEM`
+- [ ] `MeasurementSystem`: `METRIC`, `IMPERIAL`
 
 ### 1.2 Models
-- [ ] `User` — id, name, email, password, age, weight, height, healthConditions, dietaryGoal, language, timestamps
+- [ ] `User` — id, name, email, password, age, weight, height, healthConditions, dietaryGoal, language, theme, measurementSystem, notificationsEnabled, emailVerified, emailVerifiedAt, timestamps
 - [ ] `MealPlan` — id, userId, date, generatedBy, createdAt; relation to `User` and `Meal[]`
 - [ ] `Meal` — id, mealPlanId, type, name, description, ingredients (Json), instructions (Json), macros, prepTimeMin, isLocalDish, createdAt
 - [ ] `SavedMeal` — id, userId, name, mealType, data (Json), createdAt
 - [ ] `HealthLog` — id, userId, date, weight, bloodSugar, bpSystolic, bpDiastolic, notes, createdAt
 - [ ] `MealAdherenceLog` — id, userId, mealId, date, status, notes, createdAt
 - [ ] `FoodItem` — id, name, localName, caloriesPer100g, proteinPer100g, carbsPer100g, fatPer100g, isLocalFood
+- [ ] `EmailOtp` — id, userId, email, code (bcrypt hashed), expiresAt, usedAt, createdAt
 
 ### 1.3 Constraints & indexes
 - [ ] `cuid()` used for all IDs
@@ -125,29 +128,52 @@ that must pass before the next phase begins.
 ### 2.1 Auth configuration
 - [ ] `lib/auth.ts` — Auth.js v5 with Credentials provider (email + password)
 - [ ] `app/api/auth/[...nextauth]/route.ts` — route handler
-- [ ] `types/next-auth.d.ts` — session type extended with `id`, `name`, `email`, `language`
+- [ ] `types/next-auth.d.ts` — session type extended with `id`, `name`, `email`, `language`, `theme`, `measurementSystem`
 
-### 2.2 Register flow
-- [ ] `app/api/auth/register/route.ts` — POST handler; Zod-validates input, bcrypt-hashes password, creates `User`
+### 2.2 Email service
+- [ ] `lib/email.ts` — Brevo transactional email via `@getbrevo/brevo`
+- [ ] `sendOtpEmail(to: string, code: string)` — sends branded OTP email; subject: "Your AduanePa verification code"
+- [ ] `BREVO_API_KEY` and `BREVO_SENDER_EMAIL` used server-side only — never in client bundle
+
+### 2.3 OTP service
+- [ ] `lib/services/otp.ts`:
+  - [ ] `generateOtp(userId, email)` — 6-digit code, bcrypt-hashed, saved to `EmailOtp` (10min expiry); invalidates prior unused OTPs first
+  - [ ] `verifyOtp(userId, code)` — finds latest unused unexpired OTP, compares bcrypt hash, marks `usedAt`
+  - [ ] `invalidateOtps(userId)` — marks all existing OTPs `usedAt` (prevents replay)
+  - [ ] Rate limit: max 3 OTP sends per hour per user (query `EmailOtp.createdAt` count)
+
+### 2.4 Register flow
+- [ ] `app/api/auth/register/route.ts` — POST: Zod-validate, bcrypt-hash password, create `User` (`emailVerified: false`), generate OTP, send via Brevo, return `{ userId }`
 - [ ] `app/(auth)/register/page.tsx`
 - [ ] `components/auth/register-form.tsx` — fields: name, email, password, confirm password; field-level Zod errors
 
-### 2.3 Login flow
+### 2.5 Email verification flow
+- [ ] `app/api/auth/verify-email/route.ts` — POST: receives `{ userId, code }`, calls `verifyOtp`, sets `emailVerified: true`, returns success
+- [ ] `app/(auth)/verify-email/page.tsx` — shows 6-digit OTP input; "Resend code" button (rate-limited)
+- [ ] `components/auth/verify-email-form.tsx` — OTP input (6 separate digit inputs or single field); field-level errors; spinner on submit
+- [ ] Resend OTP: re-calls register API path or a dedicated `/api/auth/resend-otp` route
+
+### 2.6 Login flow
 - [ ] `app/(auth)/login/page.tsx`
 - [ ] `components/auth/login-form.tsx` — fields: email, password; field-level Zod errors
-- [ ] Successful login redirects to `/dashboard` (or `/onboarding` if profile incomplete)
+- [ ] Successful login: if `emailVerified: false` → redirect to `/verify-email`; if profile incomplete → `/onboarding`; else → `/dashboard`
 
-### 2.4 Route protection
-- [ ] `middleware.ts` — protects all `(app)/` routes; unauthenticated requests redirect to `/login`
-- [ ] Authenticated requests to `/login` or `/register` redirect to `/dashboard`
+### 2.7 Route protection
+- [ ] `middleware.ts` — protects all `(app)/` routes; unauthenticated → `/login`; unverified email → `/verify-email`
+- [ ] Authenticated + verified requests to `/login` or `/register` redirect to `/dashboard`
 
-### 2.5 Exit criteria
-- [ ] User can register with a new email
+### 2.8 Exit criteria
+- [ ] User can register with a new email and receives an OTP email via Brevo
 - [ ] Duplicate email registration returns a clear error
-- [ ] User can log in with correct credentials
+- [ ] OTP entry verifies the user and redirects to `/onboarding`
+- [ ] Expired OTP (> 10 min) returns a clear error
+- [ ] Wrong OTP returns a clear error
+- [ ] "Resend code" sends a fresh OTP and invalidates the previous one
+- [ ] Unverified user visiting `(app)/` routes is redirected to `/verify-email`
+- [ ] User can log in with correct credentials after verification
 - [ ] Wrong password returns a clear error
 - [ ] Unauthenticated visit to `/dashboard` redirects to `/login`
-- [ ] Logged-in visit to `/login` redirects to `/dashboard`
+- [ ] `BREVO_API_KEY` does not appear in any client bundle (verify via build output)
 - [ ] `npm run build` passes
 
 ---

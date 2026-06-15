@@ -99,7 +99,8 @@ Follow this structure exactly. Do not deviate without a strong reason.
 ├── app/
 │   ├── (auth)/
 │   │   ├── login/page.tsx
-│   │   └── register/page.tsx
+│   │   ├── register/page.tsx
+│   │   └── verify-email/page.tsx           # OTP entry form (post-registration)
 │   ├── (app)/                              # Protected routes (require session)
 │   │   ├── layout.tsx                      # Sidebar layout wrapper
 │   │   ├── dashboard/page.tsx              # Overview: today's meals, health stats, quick actions
@@ -119,7 +120,10 @@ Follow this structure exactly. Do not deviate without a strong reason.
 │       │   └── make-me-a-meal/route.ts     # POST: ingredient-based meal generation via Claude
 │       ├── recommendations/route.ts        # POST: adaptive recommendations based on user history
 │       ├── nutrition/route.ts              # POST: compute nutritional breakdown for a meal/plan
-│       └── auth/[...nextauth]/route.ts
+│       └── auth/
+│           ├── [...nextauth]/route.ts
+│           ├── register/route.ts           # POST: create user + send OTP via Brevo
+│           └── verify-email/route.ts       # POST: verify OTP code
 ├── components/
 │   ├── ui/                                 # shadcn/ui generated (do not edit)
 │   ├── dashboard/                          # Today's summary, health snapshot, quick-add
@@ -132,6 +136,7 @@ Follow this structure exactly. Do not deviate without a strong reason.
 ├── lib/
 │   ├── db.ts                               # Prisma client singleton
 │   ├── auth.ts                             # Auth.js config + session helpers
+│   ├── email.ts                            # Brevo transactional email sender
 │   ├── nutrition.ts                        # Nutritional computation engine (per-100g + portions)
 │   ├── dietary-rules.ts                    # Rule-based constraint builder (per condition/goal)
 │   ├── services/
@@ -140,7 +145,8 @@ Follow this structure exactly. Do not deviate without a strong reason.
 │   │   ├── health-logs.ts                  # Biodata and adherence log queries
 │   │   ├── nutrition.ts                    # Nutritional aggregation queries
 │   │   ├── grocery.ts                      # Grocery list generation from meal plans
-│   │   └── recommendations.ts             # Builds AI context payload from user history + profile
+│   │   ├── recommendations.ts             # Builds AI context payload from user history + profile
+│   │   └── otp.ts                          # OTP generation, verification, rate limiting
 │   └── utils.ts
 ├── prisma/
 │   ├── schema.prisma
@@ -330,6 +336,17 @@ enum LanguagePreference {
   GA
 }
 
+enum ThemePreference {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum MeasurementSystem {
+  METRIC
+  IMPERIAL
+}
+
 // ─── Models ───────────────────────────────────────────────────────────────────
 
 model User {
@@ -342,14 +359,20 @@ model User {
   height             Float?                                    // cm, used for BMI and targets
   healthConditions   HealthCondition[]
   dietaryGoal        DietaryGoal         @default(MAINTENANCE)
-  language           LanguagePreference  @default(ENGLISH)
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  language             LanguagePreference  @default(ENGLISH)
+  theme                ThemePreference     @default(SYSTEM)
+  measurementSystem    MeasurementSystem   @default(METRIC)
+  notificationsEnabled Boolean             @default(false)
+  emailVerified        Boolean             @default(false)
+  emailVerifiedAt      DateTime?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
 
   mealPlans          MealPlan[]
   healthLogs         HealthLog[]
   mealAdherenceLogs  MealAdherenceLog[]
   savedMeals         SavedMeal[]
+  emailOtps          EmailOtp[]
 
   @@index([email])
 }
@@ -450,6 +473,21 @@ model FoodItem {
 
   @@index([name])
 }
+
+model EmailOtp {
+  id        String    @id @default(cuid())
+  userId    String
+  email     String
+  code      String                                // 6-digit numeric code (hashed)
+  expiresAt DateTime                              // 10 minutes from creation
+  usedAt    DateTime?                             // null = unused, set on successful verify
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([email])
+}
 ```
 
 ### Schema Rules
@@ -461,6 +499,13 @@ model FoodItem {
 - `MealAdherenceLog` is unique per user per meal per day — prevents duplicate adherence entries.
 - Every query must be scoped to `userId`. A missing `userId` filter is a data leak and a security bug.
 - `FoodItem` is a shared (non-user-scoped) reference table for the nutritional computation engine.
+- `EmailOtp.code` must be **hashed** (bcrypt) before storing — never store raw OTP codes.
+- OTP codes expire after 10 minutes (`expiresAt`). Set `usedAt` on successful verification — do not
+  delete records (audit trail). Only the most recent unused, unexpired OTP for a user is valid.
+- `User.measurementSystem` controls how weight/height values are **displayed** only. All data is
+  stored and computed in metric (kg, cm) internally — conversion happens at the display layer.
+- `User.theme` is persisted in DB for cross-device consistency. On login, sync this value to the
+  `next-themes` provider. `SYSTEM` means defer to OS preference.
 
 ---
 
@@ -468,11 +513,36 @@ model FoodItem {
 
 - Auth.js v5 with **Credentials provider** (email + password).
 - Passwords are bcrypt-hashed before storage. Never store or log plain text.
-- After registration, redirect to an onboarding flow that collects: age, weight, height, health
-  conditions, and dietary goal. This profile data drives all AI meal generation.
+- **Email verification is required before accessing the app.** After registration:
+  1. Create `User` with `emailVerified: false`.
+  2. Generate a 6-digit OTP, bcrypt-hash it, save to `EmailOtp` with `expiresAt = now + 10min`.
+  3. Send OTP via Brevo (`lib/email.ts`).
+  4. Redirect to `/(auth)/verify-email`.
+  5. User submits OTP → `/api/auth/verify-email` → compare hash → set `emailVerified: true`,
+     `emailVerifiedAt: now()`, mark OTP `usedAt`.
+  6. Redirect to `/onboarding`.
+- Middleware must check `emailVerified`. Unverified users are redirected to `/verify-email`.
+- After onboarding completion, redirect to `/dashboard`.
 - All `(app)/` routes are protected by middleware session check.
 - There are no roles — every authenticated user has full access to their own data only.
-- Session carries: `id`, `name`, `email`, `language`.
+- Session carries: `id`, `name`, `email`, `language`, `theme`, `measurementSystem`.
+
+### Email Service (`lib/email.ts`)
+
+- Uses **Brevo** (formerly Sendinblue) transactional email API via `@getbrevo/brevo`.
+- `BREVO_API_KEY` and `BREVO_SENDER_EMAIL` are **server-side only** — never expose to client.
+- `sendOtpEmail(to: string, code: string)` — sends a branded OTP email.
+- The email subject: "Your AduanePa verification code". Body: plain, clear, single code in large
+  text. Expires in 10 minutes note. No marketing content in transactional emails.
+- All Brevo calls are wrapped in try/catch — email failure should not crash the registration flow,
+  but must surface a clear error to the user.
+
+### OTP Service (`lib/services/otp.ts`)
+
+- `generateOtp(userId, email)` — generates 6-digit code, hashes it, saves to `EmailOtp`, returns plain code for sending.
+- `verifyOtp(userId, code)` — finds most recent unused unexpired OTP for user, compares bcrypt hash, marks `usedAt`.
+- `invalidateOtps(userId)` — marks all existing OTPs for a user as used (call before generating a new one to prevent replay).
+- Rate limit: max 3 OTP sends per hour per user (check `createdAt` count in `EmailOtp`).
 
 ---
 
@@ -763,10 +833,12 @@ NEXTAUTH_SECRET=        # 32-char random string for session signing
 NEXTAUTH_URL=           # Full app URL (http://localhost:3000 in dev)
 ANTHROPIC_API_KEY=      # Server-side only — never expose to client
 TRANSLATION_API_KEY=    # Google Translate API or equivalent — server-side only
+BREVO_API_KEY=          # Brevo transactional email API key — server-side only
+BREVO_SENDER_EMAIL=     # Verified sender address (e.g. noreply@aduanepa.app) — server-side only
 ```
 
-Never commit `.env.local`. Neither `ANTHROPIC_API_KEY` nor `TRANSLATION_API_KEY` must ever appear
-in client bundles.
+Never commit `.env.local`. `ANTHROPIC_API_KEY`, `TRANSLATION_API_KEY`, `BREVO_API_KEY`, and
+`BREVO_SENDER_EMAIL` must never appear in client bundles.
 
 ---
 
