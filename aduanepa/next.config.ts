@@ -19,4 +19,7 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
 }
 
-export default withPWA(nextConfig)
+// next-pwa injects a webpack config, which collides with Turbopack (the Next 16
+// dev default). PWA is disabled in development anyway, so only wrap for builds —
+// this lets `next dev` run on Turbopack with no webpack config present.
+export default process.env.NODE_ENV === "development" ? nextConfig : withPWA(nextConfig)

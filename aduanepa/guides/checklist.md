@@ -162,7 +162,7 @@ that must pass before the next phase begins.
 - [x] Successful login: middleware routes unverified → `/verify-email`; verified → `/dashboard` (profile-complete check added in Phase 4)
 
 ### 2.7 Route protection
-- [x] `middleware.ts` — protects all `(app)/` routes; unauthenticated → `/login`; unverified email → `/verify-email`
+- [x] `proxy.ts` (Next 16 rename of `middleware.ts`) — protects all `(app)/` routes; unauthenticated → `/login`; unverified email → `/verify-email`
 - [x] Authenticated + verified requests to `/login`, `/register`, `/verify-email` redirect to `/dashboard`
 
 ### 2.8 Exit criteria
