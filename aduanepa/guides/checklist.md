@@ -12,7 +12,7 @@ that must pass before the next phase begins.
 - [x] Phase 1 — Database Schema & Migrations
 - [x] Phase 2 — Authentication
 - [x] Phase 3 — App Shell & Layout
-- [ ] Phase 4 — Onboarding Flow
+- [x] Phase 4 — Onboarding Flow
 - [ ] Phase 5 — Dietary Rules & Nutritional Engine
 - [ ] Phase 6 — Meal Generation API
 - [ ] Phase 7 — Meal UI & Dashboard
@@ -159,7 +159,7 @@ that must pass before the next phase begins.
 ### 2.6 Login flow
 - [x] `app/(auth)/login/page.tsx`
 - [x] `components/auth/auth-panel.tsx` (unified sign in / sign up, animated segmented toggle) — sign-in fields: email, password; field-level Zod errors
-- [x] Successful login: middleware routes unverified → `/verify-email`; verified → `/dashboard` (profile-complete check added in Phase 4)
+- [x] Successful login: proxy routes unverified → `/verify-email`; verified + incomplete profile → `/onboarding`; complete → `/dashboard`
 
 ### 2.7 Route protection
 - [x] `proxy.ts` (Next 16 rename of `middleware.ts`) — protects all `(app)/` routes; unauthenticated → `/login`; unverified email → `/verify-email`
@@ -229,43 +229,43 @@ that must pass before the next phase begins.
 ## Phase 4 — Onboarding Flow
 
 ### 4.1 Onboarding detection
-- [ ] After registration, `User` has no `age`/`weight`/`height` set → redirect to `/onboarding`
-- [ ] Middleware or layout check: if profile incomplete, redirect to `/onboarding` before any `(app)/` route
-- [ ] Returning users with complete profile skip onboarding entirely
+- [x] After registration, `User` has no `dateOfBirth`/`weight`/`height` set → redirect to `/onboarding`
+- [x] `proxy.ts` checks `isProfileComplete` in JWT; incomplete profile → `/onboarding` before any `(main)/` route
+- [x] Returning users with complete profile skip onboarding entirely
 
 ### 4.2 Onboarding page (`app/(app)/onboarding/page.tsx`)
-- [ ] Multi-step form — progress indicator shows current step (e.g. Step 2 of 4)
-- [ ] Step 1 — Basic profile:
-  - [ ] Age (number, required)
-  - [ ] Weight in kg (number, required)
-  - [ ] Height in cm (number, required)
-  - [ ] Zod validation: age 10–120, weight 20–300, height 50–250
-- [ ] Step 2 — Health conditions:
-  - [ ] Multi-select checkboxes from `HealthCondition` enum
-  - [ ] "None of the above" option that clears all others
-- [ ] Step 3 — Dietary goal:
-  - [ ] Single-select radio buttons from `DietaryGoal` enum
-  - [ ] Each option has a short plain-language description
-- [ ] Step 4 — Language preference:
-  - [ ] Single-select: English / Twi / Ga
-  - [ ] Note: "You can change this anytime in Settings"
-- [ ] On complete: saves all fields to `User`, redirects to `/dashboard`
-- [ ] Back button navigates to previous step without losing entered data
+- [x] Multi-step form — progress indicator shows current step (Step X of 4)
+- [x] Step 1 — Basic profile:
+  - [x] Date of birth (required; validates age 10–120)
+  - [x] Weight in kg (number, required)
+  - [x] Height in cm (number, required)
+  - [x] Zod validation: weight 20–300, height 50–250
+- [x] Step 2 — Health conditions:
+  - [x] Multi-select checkboxes from `HealthCondition` enum (HYPERTENSION, DIABETES, OBESITY)
+  - [x] "None of the above" option that clears all others (stores `[NONE]`)
+- [x] Step 3 — Dietary goal:
+  - [x] Single-select radio cards from `DietaryGoal` enum
+  - [x] Each option has a short plain-language description
+- [x] Step 4 — Language preference:
+  - [x] Single-select: English / Twi / Ga
+  - [x] Note: "You can change this anytime in Settings"
+- [x] On complete: saves all fields to `User` via `PATCH /api/users/profile`, redirects to `/dashboard`
+- [x] Back button navigates to previous step without losing entered data
 
 ### 4.3 User profile service
-- [ ] `lib/services/users.ts`:
-  - [ ] `getUserProfile(userId)` — returns full user record
-  - [ ] `updateUserProfile(userId, data)` — Zod-validated; updates profile fields
-  - [ ] `isProfileComplete(user)` — returns boolean (age + weight + height all set)
-  - [ ] All queries scoped to `userId`
+- [x] `lib/services/users.ts`:
+  - [x] `getUserProfile(userId)` — returns full user record
+  - [x] `updateUserProfile(userId, data)` — Zod-validated; updates profile fields
+  - [x] `isProfileComplete(user)` — in `lib/profile.ts`; returns boolean (`dateOfBirth` + weight + height all set)
+  - [x] All queries scoped to `userId`
 
 ### 4.4 Exit criteria
-- [ ] New user is redirected to `/onboarding` after registration
-- [ ] Stepping back preserves entered data
-- [ ] "None of the above" for health conditions clears other selections
-- [ ] Completed profile is saved to DB and readable via Prisma Studio
-- [ ] After onboarding, user lands on `/dashboard` and does not see onboarding again on refresh
-- [ ] `npm run build` passes
+- [x] New user is redirected to `/onboarding` after email verification
+- [x] Stepping back preserves entered data
+- [x] "None of the above" for health conditions clears other selections
+- [x] Completed profile is saved to DB and readable via Prisma Studio
+- [x] After onboarding, user lands on `/dashboard` and does not see onboarding again on refresh
+- [x] `npm run build` passes
 
 ---
 

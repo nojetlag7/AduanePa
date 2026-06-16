@@ -3,6 +3,7 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { authConfig } from "@/lib/auth.config"
 import { prisma } from "@/lib/db"
+import { isProfileComplete } from "@/lib/profile"
 import { loginSchema } from "@/lib/validations/auth"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -34,6 +35,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           theme: user.theme,
           measurementSystem: user.measurementSystem,
           isEmailVerified: user.emailVerified,
+          isProfileComplete: isProfileComplete(user),
         }
       },
     }),

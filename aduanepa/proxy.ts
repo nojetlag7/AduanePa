@@ -13,8 +13,10 @@ export default auth((req) => {
   const session = req.auth
   const isLoggedIn = !!session?.user
   const isVerified = session?.user?.isEmailVerified === true
+  const isProfileComplete = session?.user?.isProfileComplete === true
   const isVerifyPage = path === "/verify-email"
   const isAuthPage = path === "/login" || path === "/register"
+  const isOnboardingPage = path === "/onboarding"
 
   if (!isLoggedIn) {
     if (PUBLIC_PATHS.has(path)) return NextResponse.next()
@@ -28,8 +30,14 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/verify-email", nextUrl))
   }
 
-  // Authenticated and verified: keep them out of the auth/verify pages.
-  if (isAuthPage || isVerifyPage) {
+  // Verified but profile incomplete: only /onboarding is allowed.
+  if (!isProfileComplete) {
+    if (isOnboardingPage) return NextResponse.next()
+    return NextResponse.redirect(new URL("/onboarding", nextUrl))
+  }
+
+  // Complete profile: keep users out of auth, verify, and onboarding pages.
+  if (isAuthPage || isVerifyPage || isOnboardingPage) {
     return NextResponse.redirect(new URL("/dashboard", nextUrl))
   }
 

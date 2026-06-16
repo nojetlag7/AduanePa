@@ -8,6 +8,7 @@ declare module "next-auth" {
     theme?: ThemePreference
     measurementSystem?: MeasurementSystem
     isEmailVerified?: boolean
+    isProfileComplete?: boolean
   }
 
   interface Session {
@@ -17,6 +18,7 @@ declare module "next-auth" {
       theme: ThemePreference
       measurementSystem: MeasurementSystem
       isEmailVerified: boolean
+      isProfileComplete: boolean
     } & DefaultSession["user"]
   }
 }
@@ -28,5 +30,6 @@ declare module "next-auth/jwt" {
     theme: ThemePreference
     measurementSystem: MeasurementSystem
     isEmailVerified: boolean
+    isProfileComplete: boolean
   }
 }
