@@ -148,7 +148,7 @@ that must pass before the next phase begins.
 ### 2.4 Register flow
 - [x] `app/api/auth/register/route.ts` — POST: Zod-validate, bcrypt-hash password, create `User` (`emailVerified: false`), generate OTP, send via Brevo, return `{ userId }`
 - [x] `app/(auth)/register/page.tsx`
-- [x] `components/auth/register-form.tsx` — fields: name, email, password, confirm password; field-level Zod errors
+- [x] `components/auth/auth-panel.tsx` (unified sign in / sign up) — sign-up fields: name, email, password (+ strength meter), confirm password; field-level Zod errors
 
 ### 2.5 Email verification flow
 - [x] `app/api/auth/verify-email/route.ts` — POST: session-authenticated, receives `{ code }`, calls `verifyOtp`, sets `emailVerified: true` + `emailVerifiedAt`, returns success
@@ -158,7 +158,7 @@ that must pass before the next phase begins.
 
 ### 2.6 Login flow
 - [x] `app/(auth)/login/page.tsx`
-- [x] `components/auth/login-form.tsx` — fields: email, password; field-level Zod errors
+- [x] `components/auth/auth-panel.tsx` (unified sign in / sign up, animated segmented toggle) — sign-in fields: email, password; field-level Zod errors
 - [x] Successful login: middleware routes unverified → `/verify-email`; verified → `/dashboard` (profile-complete check added in Phase 4)
 
 ### 2.7 Route protection
