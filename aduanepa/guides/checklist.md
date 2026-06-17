@@ -13,7 +13,7 @@ that must pass before the next phase begins.
 - [x] Phase 2 — Authentication
 - [x] Phase 3 — App Shell & Layout
 - [x] Phase 4 — Onboarding Flow
-- [ ] Phase 5 — Dietary Rules & Nutritional Engine
+- [x] Phase 5 — Dietary Rules & Nutritional Engine
 - [ ] Phase 6 — Meal Generation API
 - [ ] Phase 7 — Meal UI & Dashboard
 - [ ] Phase 8 — Make Me a Meal
@@ -283,36 +283,36 @@ that must pass before the next phase begins.
 ## Phase 5 — Dietary Rules & Nutritional Engine
 
 ### 5.1 Dietary rules engine (`lib/dietary-rules.ts`)
-- [ ] `buildDietaryConstraints(conditions: HealthCondition[], goal: DietaryGoal): string[]`
-- [ ] Constraints defined for `HYPERTENSION`: low sodium, potassium-rich foods, limit processed foods
-- [ ] Constraints defined for `DIABETES`: low glycaemic index, limit simple carbs, fibre-rich options
-- [ ] Constraints defined for `OBESITY`: calorie deficit, high satiety foods, limit refined sugars
-- [ ] Constraints defined for `WEIGHT_LOSS`: 500-calorie deficit from TDEE, high protein
-- [ ] Constraints defined for `MUSCLE_GAIN`: calorie surplus, high protein target (1.6–2.2g/kg body weight)
-- [ ] Constraints defined for `HEART_HEALTH`: low saturated fat, omega-3 rich, high fibre
-- [ ] Constraints defined for `BLOOD_SUGAR_CONTROL`: low GI, complex carbs only, regular meal timing
-- [ ] Combined constraints from conditions + goal are deduplicated before return
-- [ ] Unit tests (or manual verification log) covering each condition + goal combination
+- [x] `buildDietaryConstraints(conditions: HealthCondition[], goal: DietaryGoal): string[]`
+- [x] Constraints defined for `HYPERTENSION`: low sodium, potassium-rich foods, limit processed foods
+- [x] Constraints defined for `DIABETES`: low glycaemic index, limit simple carbs, fibre-rich options
+- [x] Constraints defined for `OBESITY`: calorie deficit, high satiety foods, limit refined sugars
+- [x] Constraints defined for `WEIGHT_LOSS`: 500-calorie deficit from TDEE, high protein
+- [x] Constraints defined for `MUSCLE_GAIN`: calorie surplus, high protein target (1.6–2.2g/kg body weight)
+- [x] Constraints defined for `HEART_HEALTH`: low saturated fat, omega-3 rich, high fibre
+- [x] Constraints defined for `BLOOD_SUGAR_CONTROL`: low GI, complex carbs only, regular meal timing
+- [x] Combined constraints from conditions + goal are deduplicated before return
+- [x] Unit tests (or manual verification log) covering each condition + goal combination — `scripts/verify-phase5.ts`
 
 ### 5.2 Nutritional computation engine (`lib/nutrition.ts`)
-- [ ] `calculateDailyTargets(user: UserProfile): NutritionalTargets`
-  - [ ] Uses Mifflin-St Jeor formula for BMR
-  - [ ] Applies activity multiplier (default: sedentary 1.2 for MVP)
-  - [ ] Adjusts calorie target based on `DietaryGoal` (deficit / surplus / maintenance)
-  - [ ] Derives protein, carb, fat gram targets from calorie total and goal ratios
-- [ ] `calculateMealNutrition(ingredients: Ingredient[]): MacroTotals`
-  - [ ] Maps each ingredient name to `FoodItem` in DB
-  - [ ] Scales per-100g values by the given portion amount
-  - [ ] Sums calories, protein, carbs, fat across all ingredients
-  - [ ] Returns `null` for unrecognised ingredient names (does not throw)
-- [ ] Return types (`NutritionalTargets`, `MacroTotals`) defined in `types/index.ts`
+- [x] `calculateDailyTargets(user: UserProfile): NutritionalTargets`
+  - [x] Uses Mifflin-St Jeor formula for BMR
+  - [x] Applies activity multiplier (default: sedentary 1.2 for MVP)
+  - [x] Adjusts calorie target based on `DietaryGoal` (deficit / surplus / maintenance)
+  - [x] Derives protein, carb, fat gram targets from calorie total and goal ratios
+- [x] `calculateMealNutrition(ingredients: Ingredient[]): MacroTotals`
+  - [x] Maps each ingredient name to `FoodItem` in DB
+  - [x] Scales per-100g values by the given portion amount
+  - [x] Sums calories, protein, carbs, fat across all ingredients
+  - [x] Returns `null` for unrecognised ingredient names (does not throw)
+- [x] Return types (`NutritionalTargets`, `MacroTotals`) defined in `types/index.ts`
 
 ### 5.3 Exit criteria
-- [ ] `buildDietaryConstraints(["HYPERTENSION"], "WEIGHT_LOSS")` returns at least 4 non-empty constraint strings
-- [ ] `calculateDailyTargets` returns sensible calorie targets for a range of test profiles (verify manually)
-- [ ] `calculateMealNutrition` correctly scales a known ingredient (e.g. 200g of rice) against the seeded `FoodItem` record
-- [ ] Unrecognised ingredient returns `null` gracefully — no crash
-- [ ] `npm run build` passes
+- [x] `buildDietaryConstraints(["HYPERTENSION"], "WEIGHT_LOSS")` returns at least 4 non-empty constraint strings
+- [x] `calculateDailyTargets` returns sensible calorie targets for a range of test profiles (verify manually)
+- [x] `calculateMealNutrition` correctly scales a known ingredient (e.g. 200g of rice) against the seeded `FoodItem` record
+- [x] Unrecognised ingredient returns `null` gracefully — no crash
+- [x] `npm run build` passes
 
 ---
 
