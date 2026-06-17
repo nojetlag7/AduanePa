@@ -1,22 +1,22 @@
 import { z } from "zod"
-import type {
-  User,
-  MealPlan,
-  Meal,
-  SavedMeal,
-  HealthLog,
-  MealAdherenceLog,
-  FoodItem,
-  EmailOtp,
-  Recommendation,
-  HealthCondition,
-  DietaryGoal,
+import {
   MealType,
-  LogStatus,
-  LanguagePreference,
-  ThemePreference,
-  MeasurementSystem,
-  MealPlanSource,
+  type User,
+  type MealPlan,
+  type Meal,
+  type SavedMeal,
+  type HealthLog,
+  type MealAdherenceLog,
+  type FoodItem,
+  type EmailOtp,
+  type Recommendation,
+  type HealthCondition,
+  type DietaryGoal,
+  type LogStatus,
+  type LanguagePreference,
+  type ThemePreference,
+  type MeasurementSystem,
+  type MealPlanSource,
 } from "@prisma/client"
 
 // ─── Shared Zod schemas for Json fields ─────────────────────────────────────
@@ -97,3 +97,26 @@ export interface MacroTotals {
   carbsG: number
   fatG: number
 }
+
+// ─── AI meal plan response (Phase 6+) ───────────────────────────────────────
+
+export const GeneratedMealSchema = z.object({
+  type: z.nativeEnum(MealType),
+  name: z.string().min(1),
+  description: z.string().min(1),
+  ingredients: IngredientsSchema,
+  instructions: InstructionsSchema,
+  calories: z.number().int().nonnegative(),
+  proteinG: z.number().nonnegative(),
+  carbsG: z.number().nonnegative(),
+  fatG: z.number().nonnegative(),
+  prepTimeMin: z.number().int().positive(),
+  isLocalDish: z.boolean(),
+})
+
+export const MealPlanResponseSchema = z.object({
+  meals: z.array(GeneratedMealSchema).min(1),
+})
+
+export type GeneratedMeal = z.infer<typeof GeneratedMealSchema>
+export type MealPlanResponse = z.infer<typeof MealPlanResponseSchema>

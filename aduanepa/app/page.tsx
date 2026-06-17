@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { FeaturesFloatingMeals, HeroFloatingMeals } from "@/components/landing/floating-meals"
+import { HowItWorks } from "@/components/landing/how-it-works"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
@@ -229,23 +230,13 @@ export default function LandingPage() {
       </section>
 
       {/* ─── How it works ─────────────────────────────────────────────────── */}
-      <section className="bg-bg-card py-16 lg:py-24">
+      <section className="bg-bg-card py-12 lg:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto mb-12 max-w-2xl text-center">
+          <div className="mx-auto mb-8 max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold sm:text-4xl">How it works</h2>
             <p className="mt-3 text-text-secondary">Three steps to a plan that fits your life.</p>
           </div>
-          <ol className="grid gap-8 md:grid-cols-3">
-            {STEPS.map((step, index) => (
-              <li key={step.title} className="relative flex flex-col gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-display text-lg font-bold text-white">
-                  {index + 1}
-                </span>
-                <h3 className="text-lg font-semibold">{step.title}</h3>
-                <p className="text-sm text-text-secondary">{step.body}</p>
-              </li>
-            ))}
-          </ol>
+          <HowItWorks steps={STEPS} />
         </div>
       </section>
 
@@ -292,38 +283,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── Final CTA ────────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
-        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary to-primary-active px-6 py-14 text-center sm:px-12">
-          <h2 className="font-display text-3xl font-bold text-white sm:text-4xl">
-            Start eating well today
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-white/85 sm:text-base">
-            Create your free account and get your first personalised meal plan in minutes.
-          </p>
-          <Button
-            asChild
-            size="lg"
-            className="mt-7 bg-white text-primary hover:bg-white/90"
-          >
-            <Link href="/register">
-              Create free account
-              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-            </Link>
-          </Button>
-        </div>
-      </section>
-
       {/* ─── Footer ───────────────────────────────────────────────────────── */}
       <footer className="border-t border-border-light">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
-              <Leaf className="h-4 w-4 text-white" aria-hidden="true" />
-            </span>
-            <span className="font-display text-base font-bold">AduanePa</span>
-          </div>
-          <p className="text-xs text-text-muted">
+        <div className="mx-auto flex max-w-6xl flex-col items-center center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6 lg:px-8">
+          <p className="text-center text-xs text-text-muted">
             © {new Date().getFullYear()} AduanePa. Nutrition for Ghana.
           </p>
         </div>

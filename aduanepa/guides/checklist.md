@@ -14,7 +14,7 @@ that must pass before the next phase begins.
 - [x] Phase 3 — App Shell & Layout
 - [x] Phase 4 — Onboarding Flow
 - [x] Phase 5 — Dietary Rules & Nutritional Engine
-- [ ] Phase 6 — Meal Generation API
+- [x] Phase 6 — Meal Generation API
 - [ ] Phase 7 — Meal UI & Dashboard
 - [ ] Phase 8 — Make Me a Meal
 - [ ] Phase 9 — Nutritional Breakdown & Grocery List
@@ -319,43 +319,43 @@ that must pass before the next phase begins.
 ## Phase 6 — Meal Generation API
 
 ### 6.1 Meal generation route (`app/api/meals/generate/route.ts`)
-- [ ] POST handler — session-authenticated; reads `userId` from session
-- [ ] Fetches user profile via `lib/services/users.ts`
-- [ ] Calls `buildDietaryConstraints()` — result injected into system prompt
-- [ ] Calls `calculateDailyTargets()` — calorie/macro targets injected into system prompt
-- [ ] System prompt instructs model to:
-  - [ ] Prioritise Ghanaian and West African dishes
-  - [ ] Respond ONLY with valid JSON matching the `MealPlanResponse` schema
-  - [ ] Never include markdown fences or preamble in the response
-  - [ ] Flag estimated nutritional values clearly
-- [ ] Sends to `gemini-2.5-flash` — `GEMINI_API_KEY` used server-side only, never in client bundle
-- [ ] Parses and Zod-validates the model response against `MealPlanResponseSchema`
-- [ ] On parse failure: returns `{ error: "Failed to parse AI response" }` with status 500
-- [ ] On success: saves plan via `lib/services/meals.ts` and returns `{ planId, meals }`
+- [x] POST handler — session-authenticated; reads `userId` from session
+- [x] Fetches user profile via `lib/services/users.ts`
+- [x] Calls `buildDietaryConstraints()` — result injected into system prompt
+- [x] Calls `calculateDailyTargets()` — calorie/macro targets injected into system prompt
+- [x] System prompt instructs model to:
+  - [x] Prioritise Ghanaian and West African dishes
+  - [x] Respond ONLY with valid JSON matching the `MealPlanResponse` schema
+  - [x] Never include markdown fences or preamble in the response
+  - [x] Flag estimated nutritional values clearly
+- [x] Sends to `gemini-2.5-flash` — `GEMINI_API_KEY` used server-side only, never in client bundle
+- [x] Parses and Zod-validates the model response against `MealPlanResponseSchema`
+- [x] On parse failure: returns `{ error: "Failed to parse AI response" }` with status 500
+- [x] On success: saves plan via `lib/services/meals.ts` and returns `{ planId, meals }`
 
 ### 6.2 Meal service (`lib/services/meals.ts`)
-- [ ] `saveMealPlan(userId, date, meals)` — creates `MealPlan` + nested `Meal` records in a single transaction
-- [ ] `getMealPlanByDate(userId, date)` — returns plan with nested meals, or null
-- [ ] `listMealPlans(userId, limit)` — returns most recent plans (date desc)
-- [ ] `getMealById(userId, mealId)` — returns a single meal (scoped to userId via join)
-- [ ] `saveMeal(userId, meal)` — saves a meal snapshot to `SavedMeal`
-- [ ] `listSavedMeals(userId)` — returns all saved meals
-- [ ] `deleteSavedMeal(userId, savedMealId)` — deletes a saved meal (scoped to userId)
-- [ ] All queries scoped to `userId`
+- [x] `saveMealPlan(userId, date, meals)` — creates `MealPlan` + nested `Meal` records in a single transaction
+- [x] `getMealPlanByDate(userId, date)` — returns plan with nested meals, or null
+- [x] `listMealPlans(userId, limit)` — returns most recent plans (date desc)
+- [x] `getMealById(userId, mealId)` — returns a single meal (scoped to userId via join)
+- [x] `saveMeal(userId, meal)` — saves a meal snapshot to `SavedMeal`
+- [x] `listSavedMeals(userId)` — returns all saved meals
+- [x] `deleteSavedMeal(userId, savedMealId)` — deletes a saved meal (scoped to userId)
+- [x] All queries scoped to `userId`
 
 ### 6.3 Response schema
-- [ ] `MealPlanResponseSchema` defined in `types/index.ts`:
-  - [ ] Array of meals, each with: `type`, `name`, `description`, `ingredients`, `instructions`, `calories`, `proteinG`, `carbsG`, `fatG`, `prepTimeMin`, `isLocalDish`
-- [ ] `IngredientSchema` reused from Phase 1 for `ingredients` field validation
+- [x] `MealPlanResponseSchema` defined in `types/index.ts`:
+  - [x] Array of meals, each with: `type`, `name`, `description`, `ingredients`, `instructions`, `calories`, `proteinG`, `carbsG`, `fatG`, `prepTimeMin`, `isLocalDish`
+- [x] `IngredientSchema` reused from Phase 1 for `ingredients` field validation
 
 ### 6.4 Exit criteria
-- [ ] POST to `/api/meals/generate` (authenticated) returns a valid meal plan JSON
-- [ ] Dietary constraints for a hypertension user are present in the constructed system prompt (verify via `console.log` in dev)
-- [ ] Response is saved to DB — visible in Prisma Studio under `MealPlan` and `Meal`
-- [ ] Unauthenticated POST returns 401
-- [ ] Malformed AI response returns 500 with `{ error }` — does not crash the server
-- [ ] `GEMINI_API_KEY` is not present in any client-side bundle (check with `npm run build` output)
-- [ ] `npm run build` passes
+- [x] POST to `/api/meals/generate` (authenticated) returns a valid meal plan JSON
+- [x] Dietary constraints for a hypertension user are present in the constructed system prompt (verify via `console.log` in dev)
+- [x] Response is saved to DB — visible in Prisma Studio under `MealPlan` and `Meal`
+- [x] Unauthenticated POST returns 401
+- [x] Malformed AI response returns 500 with `{ error }` — does not crash the server
+- [x] `GEMINI_API_KEY` is not present in any client-side bundle (check with `npm run build` output)
+- [x] `npm run build` passes
 
 ---
 
