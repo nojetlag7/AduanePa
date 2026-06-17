@@ -36,9 +36,6 @@ export const authConfig = {
         } | null
         if (patch?.isEmailVerified !== undefined) {
           token.isEmailVerified = patch.isEmailVerified
-        } else if (!patch || Object.keys(patch).length === 0) {
-          // Bare update() after OTP verification (legacy call site).
-          token.isEmailVerified = true
         }
         if (patch?.isProfileComplete !== undefined) {
           token.isProfileComplete = patch.isProfileComplete

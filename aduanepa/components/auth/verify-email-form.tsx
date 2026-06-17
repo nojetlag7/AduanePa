@@ -1,9 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -12,8 +10,6 @@ const CODE_LENGTH = 6
 const RESEND_COOLDOWN_SECONDS = 30
 
 export function VerifyEmailForm() {
-  const router = useRouter()
-  const { update } = useSession()
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(""))
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -73,8 +69,9 @@ export function VerifyEmailForm() {
       }
 
       toast.success("Email verified")
-      await update() // refresh the JWT so emailVerified becomes true
-      router.push("/onboarding")
+      // Full navigation so the refreshed session cookie from the API is picked up
+      // before middleware runs (client-side router.push can race a stale JWT).
+      window.location.href = "/onboarding"
     } catch {
       setError("Network error. Please try again.")
     } finally {
@@ -130,9 +127,10 @@ export function VerifyEmailForm() {
             onKeyDown={(e) => handleKeyDown(index, e)}
             aria-label={`Digit ${index + 1}`}
             className={cn(
-              "h-12 w-11 rounded-lg border bg-bg-card text-center text-xl font-semibold text-text-primary",
-              "focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40",
-              error ? "border-error" : "border-border-medium"
+              "h-12 w-11 rounded-lg border bg-bg-main text-center text-xl font-semibold text-text-primary transition-[border-color,box-shadow,background-color] outline-none dark:bg-bg-muted/60",
+              "hover:border-border-medium",
+              "focus:border-primary focus:bg-bg-card focus:ring-2 focus:ring-primary/20",
+              error ? "border-error ring-2 ring-error/20" : "border-border-light"
             )}
           />
         ))}

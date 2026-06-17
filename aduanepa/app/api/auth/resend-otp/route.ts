@@ -30,7 +30,7 @@ export async function POST() {
 
   try {
     const code = await generateOtp(userId, user.email)
-    await sendOtpEmail(user.email, code)
+    await sendOtpEmail({ email: user.email, name: user.name }, code)
   } catch (error) {
     console.error("[resend-otp] Failed:", error)
     return NextResponse.json({ error: "Failed to send verification email" }, { status: 500 })

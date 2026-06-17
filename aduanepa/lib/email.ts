@@ -1,56 +1,67 @@
 import "server-only"
 import { BrevoClient } from "@getbrevo/brevo"
 
-const SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL ?? ""
-const SENDER_NAME = process.env.BREVO_SENDER_NAME ?? "AduanePa"
+type EmailRecipient = { email: string; name: string }
 
-let client: BrevoClient | null = null
+// ─── Singleton (matches Finora pattern: retries + timeout) ───────────────────
 
-function getClient(): BrevoClient {
-  if (!client) {
-    const apiKey = process.env.BREVO_API_KEY
-    if (!apiKey) throw new Error("BREVO_API_KEY is not configured")
-    client = new BrevoClient({ apiKey })
-  }
-  return client
+function createBrevoClient() {
+  const apiKey = process.env.BREVO_API_KEY
+  if (!apiKey) throw new Error("BREVO_API_KEY is not set")
+  return new BrevoClient({ apiKey, maxRetries: 2, timeoutInSeconds: 30 })
+}
+
+const globalForBrevo = globalThis as unknown as { brevo: BrevoClient }
+const brevo = globalForBrevo.brevo ?? createBrevoClient()
+if (process.env.NODE_ENV !== "production") globalForBrevo.brevo = brevo
+
+function getSender() {
+  const email = process.env.BREVO_SENDER_EMAIL
+  const name = process.env.BREVO_SENDER_NAME ?? "AduanePa"
+  if (!email) throw new Error("BREVO_SENDER_EMAIL is not set")
+  return { email, name }
 }
 
 function otpEmailHtml(code: string): string {
-  return `
-  <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; color: #1c1c1c;">
-    <div style="text-align: center; margin-bottom: 24px;">
-      <span style="font-size: 22px; font-weight: 700; color: #1A5C38;">AduanePa</span>
+  return `<!DOCTYPE html>
+<html>
+<body style="font-family:sans-serif;background:#F4FAF6;margin:0;padding:40px 0;">
+  <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,.08);">
+    <div style="text-align:center;margin-bottom:24px;">
+      <span style="font-size:22px;font-weight:700;color:#1A5C38;">AduanePa</span>
     </div>
-    <h1 style="font-size: 18px; font-weight: 600; margin: 0 0 12px;">Verify your email address</h1>
-    <p style="font-size: 14px; line-height: 1.5; color: #555555; margin: 0 0 24px;">
-      Enter the 6-digit code below to finish setting up your account.
-    </p>
-    <div style="text-align: center; margin: 0 0 24px;">
-      <span style="display: inline-block; font-size: 34px; font-weight: 700; letter-spacing: 10px; color: #1A5C38; background: #F4FAF6; border-radius: 12px; padding: 16px 24px;">
-        ${code}
-      </span>
-    </div>
-    <p style="font-size: 13px; line-height: 1.5; color: #9e9e9e; margin: 0;">
-      This code expires in 10 minutes. If you did not request it, you can safely ignore this email.
-    </p>
-  </div>`
+    <h1 style="font-size:24px;font-weight:700;color:#1c1c1c;margin-bottom:8px;">Verify your email</h1>
+    <p style="color:#555;margin-bottom:32px;">Enter this code in AduanePa to verify your email address. It expires in <strong>10 minutes</strong>.</p>
+    <div style="background:#F4FAF6;border:2px solid #1A5C38;border-radius:12px;text-align:center;padding:24px 0;letter-spacing:12px;font-size:36px;font-weight:700;color:#1A5C38;">${code}</div>
+    <p style="color:#888;font-size:12px;margin-top:32px;">If you didn't create an AduanePa account, you can safely ignore this email.</p>
+  </div>
+</body>
+</html>`
 }
 
 /**
  * Sends a branded OTP verification email via Brevo.
- * Errors are caught and surfaced as a thrown Error so the caller can return a
- * clear message — they never crash the registration flow silently.
+ * Subject includes the code so it is visible in inbox previews (Finora pattern).
  */
-export async function sendOtpEmail(to: string, code: string): Promise<void> {
-  try {
-    await getClient().transactionalEmails.sendTransacEmail({
-      subject: "Your AduanePa verification code",
-      sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-      to: [{ email: to }],
-      htmlContent: otpEmailHtml(code),
-    })
-  } catch (error) {
-    console.error("[email] Failed to send OTP email:", error)
-    throw new Error("Failed to send verification email")
+export async function sendOtpEmail(to: EmailRecipient, code: string): Promise<void> {
+  const textContent = [
+    "Verify your email address",
+    "",
+    `Your AduanePa verification code is: ${code}`,
+    "",
+    "This code expires in 10 minutes.",
+    "If you did not request it, you can safely ignore this email.",
+  ].join("\n")
+
+  const result = await brevo.transactionalEmails.sendTransacEmail({
+    sender: getSender(),
+    to: [to],
+    subject: `${code} is your AduanePa verification code`,
+    htmlContent: otpEmailHtml(code),
+    textContent,
+  })
+
+  if (process.env.NODE_ENV !== "production") {
+    console.info("[email] OTP sent to", to.email, "messageId:", result.messageId ?? result)
   }
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { auth, unstable_update } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { verifyOtp } from "@/lib/services/otp"
 import { verifyOtpSchema } from "@/lib/validations/auth"
@@ -33,6 +33,11 @@ export async function POST(request: Request) {
   await prisma.user.update({
     where: { id: session.user.id },
     data: { emailVerified: true, emailVerifiedAt: new Date() },
+  })
+
+  // Refresh the session cookie on the server so middleware allows /onboarding.
+  await unstable_update({
+    user: { ...session.user, isEmailVerified: true },
   })
 
   return NextResponse.json({ success: true })

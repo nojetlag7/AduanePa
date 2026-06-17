@@ -42,7 +42,7 @@ export async function POST(request: Request) {
   let emailSent = true
   try {
     const code = await generateOtp(user.id, user.email)
-    await sendOtpEmail(user.email, code)
+    await sendOtpEmail({ email: user.email, name: user.name }, code)
   } catch (error) {
     console.error("[register] OTP email failed:", error)
     emailSent = false
