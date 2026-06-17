@@ -46,7 +46,9 @@ export default auth((req) => {
 
 export const config = {
   // Run on everything except API routes, Next internals, and static assets.
+  // Include webp/avif/gif so next/image can fetch public-folder sources without
+  // auth proxy redirecting the optimizer's internal request to /login.
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|manifest.json|sw.js|workbox-.*|swe-worker-.*|icons|.*\\.(?:png|jpg|jpeg|svg|ico|webmanifest)).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|manifest.json|sw.js|workbox-.*|swe-worker-.*|icons|.*\\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico|webmanifest)).*)",
   ],
 }

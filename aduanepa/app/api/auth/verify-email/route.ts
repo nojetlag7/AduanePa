@@ -36,9 +36,7 @@ export async function POST(request: Request) {
   })
 
   // Refresh the session cookie on the server so middleware allows /onboarding.
-  await unstable_update({
-    user: { ...session.user, isEmailVerified: true },
-  })
+  await unstable_update({ user: { isEmailVerified: true } })
 
   return NextResponse.json({ success: true })
 }

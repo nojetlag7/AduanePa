@@ -10,6 +10,7 @@ import { authConfig } from "@/lib/auth.config"
 import { prisma } from "@/lib/db"
 import { isProfileComplete } from "@/lib/profile"
 import { loginSchema } from "@/lib/validations/auth"
+import { readSessionPatch } from "@/lib/session-patch"
 
 export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   ...authConfig,
@@ -26,19 +27,15 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       }
 
       if (trigger === "update") {
-        const patch = session as {
-          isEmailVerified?: boolean
-          isProfileComplete?: boolean
-          language?: LanguagePreference
-        } | null
+        const patch = readSessionPatch(session)
 
-        if (patch?.isEmailVerified !== undefined) {
+        if (patch.isEmailVerified !== undefined) {
           token.isEmailVerified = patch.isEmailVerified
         }
-        if (patch?.isProfileComplete !== undefined) {
+        if (patch.isProfileComplete !== undefined) {
           token.isProfileComplete = patch.isProfileComplete
         }
-        if (patch?.language !== undefined) {
+        if (patch.language !== undefined) {
           token.language = patch.language
         }
 
@@ -57,7 +54,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
           if (dbUser) {
             token.isEmailVerified = dbUser.emailVerified
             token.isProfileComplete = isProfileComplete(dbUser)
-            if (patch?.language === undefined) {
+            if (patch.language === undefined) {
               token.language = dbUser.language
             }
           }

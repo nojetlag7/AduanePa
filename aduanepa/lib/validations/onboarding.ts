@@ -55,7 +55,8 @@ export const onboardingSchema = onboardingStep1Schema
   .merge(onboardingStep3Schema)
   .merge(onboardingStep4Schema)
 
-export type OnboardingInput = z.infer<typeof onboardingSchema>
+export type OnboardingInput = z.input<typeof onboardingSchema>
+export type OnboardingParsed = z.output<typeof onboardingSchema>
 export type OnboardingStep1Input = z.infer<typeof onboardingStep1Schema>
 export type OnboardingStep2Input = z.infer<typeof onboardingStep2Schema>
 export type OnboardingStep3Input = z.infer<typeof onboardingStep3Schema>

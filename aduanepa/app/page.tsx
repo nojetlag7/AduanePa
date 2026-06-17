@@ -13,6 +13,7 @@ import {
   UtensilsCrossed,
 } from "lucide-react"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
+import { FeaturesFloatingMeals, HeroFloatingMeals } from "@/components/landing/floating-meals"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
@@ -95,17 +96,19 @@ export default function LandingPage() {
 
       {/* ─── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
+        <HeroFloatingMeals />
+
         {/* decorative blobs */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-primary/10 blur-3xl"
+          className="pointer-events-none absolute -left-24 -top-24 z-0 h-72 w-72 rounded-full bg-primary/10 blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 top-32 h-72 w-72 rounded-full bg-primary-light/10 blur-3xl"
+          className="pointer-events-none absolute -right-24 top-32 z-0 h-72 w-72 rounded-full bg-primary-light/10 blur-3xl"
         />
 
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-8 lg:py-24">
+        <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-8 lg:py-24">
           <div className="flex flex-col items-start gap-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-border-light bg-bg-card px-3 py-1 text-xs font-medium text-text-secondary">
               <Sparkles className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
@@ -193,7 +196,10 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Features ─────────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <section className="relative overflow-hidden">
+        <FeaturesFloatingMeals />
+
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="font-display text-3xl font-bold sm:text-4xl">
             Everything you need to eat better
@@ -218,6 +224,7 @@ export default function LandingPage() {
               </div>
             )
           })}
+        </div>
         </div>
       </section>
 

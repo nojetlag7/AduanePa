@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db"
 import { isProfileComplete } from "@/lib/profile"
-import { onboardingSchema, type OnboardingInput } from "@/lib/validations/onboarding"
+import type { OnboardingParsed } from "@/lib/validations/onboarding"
 import type { UserProfile } from "@/types"
 
 const PROFILE_SELECT = {
@@ -26,18 +26,16 @@ export async function getUserProfile(userId: string): Promise<UserProfile | null
   })
 }
 
-export async function updateUserProfile(userId: string, data: OnboardingInput) {
-  const parsed = onboardingSchema.parse(data)
-
+export async function updateUserProfile(userId: string, data: OnboardingParsed) {
   return prisma.user.update({
     where: { id: userId },
     data: {
-      dateOfBirth: parsed.dateOfBirth,
-      weight: parsed.weight,
-      height: parsed.height,
-      healthConditions: parsed.healthConditions,
-      dietaryGoal: parsed.dietaryGoal,
-      language: parsed.language,
+      dateOfBirth: data.dateOfBirth,
+      weight: data.weight,
+      height: data.height,
+      healthConditions: data.healthConditions,
+      dietaryGoal: data.dietaryGoal,
+      language: data.language,
     },
     select: PROFILE_SELECT,
   })

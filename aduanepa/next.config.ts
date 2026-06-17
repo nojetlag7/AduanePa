@@ -17,6 +17,15 @@ const nextConfig: NextConfig = {
   // Pin the workspace root to this project. A stray lockfile in the user's home
   // directory otherwise makes Next infer the wrong root.
   outputFileTracingRoot: path.join(__dirname),
+  images: {
+    // Next.js 16: quality values must be allowlisted.
+    qualities: [75],
+    localPatterns: [
+      {
+        pathname: "/landing_page_meals/**",
+      },
+    ],
+  },
 }
 
 // next-pwa injects a webpack config, which collides with Turbopack (the Next 16

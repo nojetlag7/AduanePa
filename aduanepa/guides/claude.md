@@ -3,6 +3,8 @@
 This file is the authoritative reference for the AI assistant working inside this codebase.
 Read it fully before making any suggestions, generating code, or answering questions about the project.
 
+**Also read `guides/vital_info.md`** for Next.js 16 pitfalls (proxy, images, cookies, auth session sync) learned during development — check it before changing auth, `proxy.ts`, or `next/image`.
+
 ---
 
 ## Project Overview

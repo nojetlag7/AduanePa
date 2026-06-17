@@ -156,6 +156,17 @@ that must pass before the next phase begins.
 - [x] `components/auth/verify-email-form.tsx` — 6 separate digit inputs (auto-advance, paste support); field-level errors; spinner on submit
 - [x] Resend OTP: dedicated `/api/auth/resend-otp` route
 
+**Post-verify redirect loop fix (dev notes):**
+- **Symptom:** After OTP verify, user stuck on `/verify-email` with repeated `307` redirects, or `500` when syncing session from the page.
+- **Root cause:** Email was marked verified in Postgres, but the JWT cookie still had `isEmailVerified: false`. The verify-email *page* trusted the DB and redirected to `/onboarding`, while `proxy.ts` only reads the JWT and sent the user back to `/verify-email`.
+- **Fixes applied:**
+  - `lib/session-patch.ts` — `readSessionPatch()` reads flat or nested `user` fields from Auth.js `update` payloads (avoids circular import with `auth.config.ts`).
+  - `lib/session-sync.ts` + `GET /api/auth/sync-session` — refresh JWT claims from the DB inside a **Route Handler** (Next.js 16 does not allow cookie writes from Server Components).
+  - `app/(auth)/verify-email/page.tsx` — if DB says verified but JWT is stale, redirect through `/api/auth/sync-session?redirect=…` instead of calling `unstable_update` in the page.
+  - `components/auth/verify-email-form.tsx` — after successful OTP POST, navigate via `/api/auth/sync-session?redirect=/onboarding`.
+  - `lib/auth.ts` jwt callback — on `trigger: "update"`, re-read `emailVerified` / profile fields from Prisma.
+  - `lib/db.ts` — normalize `sslmode=require` → `sslmode=verify-full` to silence the `pg` SSL deprecation warning.
+
 ### 2.6 Login flow
 - [x] `app/(auth)/login/page.tsx`
 - [x] `components/auth/auth-panel.tsx` (unified sign in / sign up, animated segmented toggle) — sign-in fields: email, password; field-level Zod errors

@@ -11,6 +11,7 @@ import {
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { isProfileComplete } from "@/lib/profile"
+import { safeRedirectPath } from "@/lib/session-sync"
 
 export const metadata: Metadata = {
   title: "Verify your email · AduanePa",
@@ -28,7 +29,14 @@ export default async function VerifyEmailPage() {
   })
 
   if (user?.emailVerified || session.user.isEmailVerified) {
-    redirect(user && isProfileComplete(user) ? "/dashboard" : "/onboarding")
+    const target = user && isProfileComplete(user) ? "/dashboard" : "/onboarding"
+
+    // Cookie writes are not allowed in Server Components — route through the sync handler.
+    if (user?.emailVerified && !session.user.isEmailVerified) {
+      redirect(`/api/auth/sync-session?redirect=${encodeURIComponent(safeRedirectPath(target))}`)
+    }
+
+    redirect(target)
   }
 
   return (

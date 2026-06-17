@@ -166,6 +166,19 @@
   /* Typography */
   --font-sans:    'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+  /* Landing page — gentle vertical float for meal photos */
+  --animate-landing-float: landing-float 5.5s ease-in-out infinite;
+}
+
+@keyframes landing-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
 }
 
 /* ─── Global interactive defaults ────────────────────────────────────────── */

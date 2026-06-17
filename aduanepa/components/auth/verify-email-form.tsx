@@ -69,9 +69,7 @@ export function VerifyEmailForm() {
       }
 
       toast.success("Email verified")
-      // Full navigation so the refreshed session cookie from the API is picked up
-      // before middleware runs (client-side router.push can race a stale JWT).
-      window.location.href = "/onboarding"
+      window.location.href = "/api/auth/sync-session?redirect=%2Fonboarding"
     } catch {
       setError("Network error. Please try again.")
     } finally {

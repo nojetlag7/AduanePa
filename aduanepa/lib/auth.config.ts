@@ -4,7 +4,7 @@ import type {
   ThemePreference,
 } from "@prisma/client"
 import type { NextAuthConfig } from "next-auth"
-import { isProfileComplete } from "@/lib/profile"
+import { readSessionPatch } from "@/lib/session-patch"
 
 // Edge-safe Auth.js configuration. Contains NO database or bcrypt imports so it
 // can run inside middleware on the Edge runtime. The Credentials provider with
@@ -29,18 +29,14 @@ export const authConfig = {
         token.isProfileComplete = user.isProfileComplete ?? false
       }
       if (trigger === "update") {
-        const patch = session as {
-          isEmailVerified?: boolean
-          isProfileComplete?: boolean
-          language?: LanguagePreference
-        } | null
-        if (patch?.isEmailVerified !== undefined) {
+        const patch = readSessionPatch(session)
+        if (patch.isEmailVerified !== undefined) {
           token.isEmailVerified = patch.isEmailVerified
         }
-        if (patch?.isProfileComplete !== undefined) {
+        if (patch.isProfileComplete !== undefined) {
           token.isProfileComplete = patch.isProfileComplete
         }
-        if (patch?.language !== undefined) {
+        if (patch.language !== undefined) {
           token.language = patch.language
         }
       }
