@@ -6,15 +6,16 @@ import {
   ChefHat,
   HeartPulse,
   Languages,
-  Leaf,
   LineChart,
   ShoppingBasket,
   Sparkles,
   UtensilsCrossed,
 } from "lucide-react"
-import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { FeaturesFloatingMeals, HeroFloatingMeals } from "@/components/landing/floating-meals"
 import { HowItWorks } from "@/components/landing/how-it-works"
+import { ContactSection } from "@/components/landing/contact-section"
+import { LandingNav } from "@/components/landing/landing-nav"
+import { MissionSection } from "@/components/landing/mission-section"
 import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
@@ -73,30 +74,10 @@ const STEPS = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-bg-main text-text-primary">
-      {/* ─── Floating nav ─────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-border-light/60 bg-bg-main/80 backdrop-blur">
-        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
-              <Leaf className="h-5 w-5 text-white" aria-hidden="true" />
-            </span>
-            <span className="font-display text-xl font-bold">AduanePa</span>
-          </Link>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <ThemeToggle />
-            <Button asChild variant="ghost" className="hidden sm:inline-flex">
-              <Link href="/login">Sign in</Link>
-            </Button>
-            <Button asChild className="bg-primary text-white hover:bg-primary-hover">
-              <Link href="/register">Get started</Link>
-            </Button>
-          </div>
-        </nav>
-      </header>
-
-      {/* ─── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
+    <div className="min-h-screen scroll-smooth bg-bg-main text-text-primary">
+      {/* ─── Hero (nav shares this background — no visible seam) ─────────── */}
+      <section id="top" className="relative overflow-hidden">
+        <LandingNav />
         <HeroFloatingMeals />
 
         {/* decorative blobs */}
@@ -240,6 +221,8 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <MissionSection />
+
       {/* ─── Built for Ghana ──────────────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid items-center gap-10 lg:grid-cols-2">
@@ -283,9 +266,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── Footer ───────────────────────────────────────────────────────── */}
+      <ContactSection />
+
       <footer className="border-t border-border-light">
-        <div className="mx-auto flex max-w-6xl flex-col items-center center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6 lg:px-8">
+        <div className="mx-auto px-4 py-6 sm:px-6 lg:px-10">
           <p className="text-center text-xs text-text-muted">
             © {new Date().getFullYear()} AduanePa. Nutrition for Ghana.
           </p>

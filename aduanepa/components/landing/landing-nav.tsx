@@ -1,0 +1,142 @@
+"use client"
+
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { Leaf, Menu } from "lucide-react"
+import { ThemeToggle } from "@/components/shared/theme-toggle"
+import { Button } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
+
+const NAV_LINKS = [
+  { href: "#top", label: "Home" },
+  { href: "#mission", label: "Our Mission" },
+  { href: "#contact", label: "Contact" },
+] as const
+
+function NavLink({
+  href,
+  label,
+  className,
+  onNavigate,
+}: {
+  href: string
+  label: string
+  className?: string
+  onNavigate?: () => void
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onNavigate}
+      className={cn(
+        "text-sm font-medium text-text-secondary transition-colors hover:text-primary",
+        className
+      )}
+    >
+      {label}
+    </Link>
+  )
+}
+
+export function LandingNav() {
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  return (
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-300",
+        scrolled
+          ? "border-b border-border-light/60 bg-bg-main/90 shadow-sm backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
+      )}
+    >
+      <nav
+        className="relative flex h-16 w-full items-center px-4 sm:px-6 lg:px-10"
+        aria-label="Main"
+      >
+        {/* Logo — flush left (viewport padding only) */}
+        <Link href="/#top" className="relative z-10 flex shrink-0 items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
+            <Leaf className="h-5 w-5 text-white" aria-hidden="true" />
+          </span>
+          <span className="font-display text-xl font-bold text-text-primary">AduanePa</span>
+        </Link>
+
+        {/* Center links — absolutely centred on desktop */}
+        <ul className="pointer-events-none absolute inset-x-0 hidden items-center justify-center gap-8 md:flex">
+          {NAV_LINKS.map((link) => (
+            <li key={link.href} className="pointer-events-auto">
+              <NavLink href={link.href} label={link.label} />
+            </li>
+          ))}
+        </ul>
+
+        {/* Actions — flush right */}
+        <div className="relative z-10 ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[min(100%,20rem)]">
+              <SheetHeader>
+                <SheetTitle className="font-display text-left">Menu</SheetTitle>
+              </SheetHeader>
+              <ul className="mt-6 flex flex-col gap-4">
+                {NAV_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <NavLink
+                      href={link.href}
+                      label={link.label}
+                      className="text-base"
+                      onNavigate={() => setMobileOpen(false)}
+                    />
+                  </li>
+                ))}
+                <li className="border-t border-border-light pt-4">
+                  <Link
+                    href="/login"
+                    className="text-sm font-medium text-text-secondary hover:text-primary"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Sign in
+                  </Link>
+                </li>
+              </ul>
+            </SheetContent>
+          </Sheet>
+
+          <ThemeToggle />
+          <Button asChild variant="ghost" className="hidden sm:inline-flex">
+            <Link href="/login">Sign in</Link>
+          </Button>
+          <Button asChild className="bg-primary text-white hover:bg-primary-hover">
+            <Link href="/register">Get started</Link>
+          </Button>
+        </div>
+      </nav>
+    </header>
+  )
+}
