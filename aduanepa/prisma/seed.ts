@@ -1,300 +1,40 @@
 import { PrismaPg } from "@prisma/adapter-pg"
-import { PrismaClient, type Prisma } from "@prisma/client"
+import { PrismaClient } from "@prisma/client"
+import { FOOD_ITEMS, macroCalorieDrift, toFoodItemCreateInput } from "./food-items-data"
 
 // Seeding is a one-off script — use the direct (non-pooled) connection.
 const adapter = new PrismaPg({ connectionString: process.env.DIRECT_URL })
 const prisma = new PrismaClient({ adapter })
 
-// Per-100g nutritional reference values. Sources: USDA FoodData Central and the
-// Ghana Food Composition Table (for local staples). Values are approximate and
-// intended as a baseline for the nutritional computation engine — not clinical data.
-// `name` is unique and used as the lookup key by calculateMealNutrition().
-
-const FOOD_ITEMS: Prisma.FoodItemCreateInput[] = [
-  // ─── Ghanaian / West African staples ──────────────────────────────────────
-  {
-    name: "White rice (cooked)",
-    localName: "Emo",
-    caloriesPer100g: 130,
-    proteinPer100g: 2.7,
-    carbsPer100g: 28,
-    fatPer100g: 0.3,
-    fiberPer100g: 0.4,
-    sodiumMg100g: 1,
-    potassiumMg100g: 35,
-    isLocalFood: true,
-  },
-  {
-    name: "Kenkey",
-    localName: "Dɔkono",
-    caloriesPer100g: 165,
-    proteinPer100g: 3.2,
-    carbsPer100g: 36,
-    fatPer100g: 0.8,
-    fiberPer100g: 1.6,
-    sodiumMg100g: 120,
-    potassiumMg100g: 90,
-    isLocalFood: true,
-  },
-  {
-    name: "Banku",
-    localName: "Banku",
-    caloriesPer100g: 145,
-    proteinPer100g: 2.5,
-    carbsPer100g: 32,
-    fatPer100g: 0.5,
-    fiberPer100g: 1.2,
-    sodiumMg100g: 95,
-    potassiumMg100g: 80,
-    isLocalFood: true,
-  },
-  {
-    name: "Fufu (cassava & plantain)",
-    localName: "Fufuo",
-    caloriesPer100g: 150,
-    proteinPer100g: 1.3,
-    carbsPer100g: 36,
-    fatPer100g: 0.2,
-    fiberPer100g: 1.8,
-    sodiumMg100g: 8,
-    potassiumMg100g: 270,
-    isLocalFood: true,
-  },
-  {
-    name: "Yam (boiled)",
-    localName: "Bayerɛ",
-    caloriesPer100g: 116,
-    proteinPer100g: 1.5,
-    carbsPer100g: 27,
-    fatPer100g: 0.2,
-    fiberPer100g: 3.9,
-    sodiumMg100g: 8,
-    potassiumMg100g: 670,
-    isLocalFood: true,
-  },
-  {
-    name: "Plantain (ripe, boiled)",
-    localName: "Borɔdeɛ",
-    caloriesPer100g: 122,
-    proteinPer100g: 1.3,
-    carbsPer100g: 32,
-    fatPer100g: 0.4,
-    fiberPer100g: 2.3,
-    sodiumMg100g: 4,
-    potassiumMg100g: 499,
-    isLocalFood: true,
-  },
-  {
-    name: "Kontomire (cocoyam leaves)",
-    localName: "Kontomire",
-    caloriesPer100g: 42,
-    proteinPer100g: 4.0,
-    carbsPer100g: 5.6,
-    fatPer100g: 0.7,
-    fiberPer100g: 3.0,
-    sodiumMg100g: 22,
-    potassiumMg100g: 648,
-    isLocalFood: true,
-  },
-  {
-    name: "Garden egg",
-    localName: "Nyaadewa",
-    caloriesPer100g: 25,
-    proteinPer100g: 1.0,
-    carbsPer100g: 6,
-    fatPer100g: 0.2,
-    fiberPer100g: 3.0,
-    sodiumMg100g: 2,
-    potassiumMg100g: 230,
-    isLocalFood: true,
-  },
-  {
-    name: "Tilapia (grilled)",
-    localName: "Apatre",
-    caloriesPer100g: 128,
-    proteinPer100g: 26,
-    carbsPer100g: 0,
-    fatPer100g: 2.7,
-    fiberPer100g: 0,
-    sodiumMg100g: 56,
-    potassiumMg100g: 380,
-    isLocalFood: true,
-  },
-  {
-    name: "Mackerel (smoked)",
-    localName: "Salmon",
-    caloriesPer100g: 305,
-    proteinPer100g: 19,
-    carbsPer100g: 0,
-    fatPer100g: 25,
-    fiberPer100g: 0,
-    sodiumMg100g: 314,
-    potassiumMg100g: 314,
-    isLocalFood: true,
-  },
-  {
-    name: "Chicken (skinless, cooked)",
-    localName: "Akɔkɔ",
-    caloriesPer100g: 165,
-    proteinPer100g: 31,
-    carbsPer100g: 0,
-    fatPer100g: 3.6,
-    fiberPer100g: 0,
-    sodiumMg100g: 74,
-    potassiumMg100g: 256,
-    isLocalFood: true,
-  },
-  {
-    name: "Groundnuts (roasted)",
-    localName: "Nkateɛ",
-    caloriesPer100g: 567,
-    proteinPer100g: 26,
-    carbsPer100g: 16,
-    fatPer100g: 49,
-    fiberPer100g: 8.5,
-    sodiumMg100g: 18,
-    potassiumMg100g: 705,
-    isLocalFood: true,
-  },
-  {
-    name: "Palm oil",
-    localName: "Abe ngo",
-    caloriesPer100g: 884,
-    proteinPer100g: 0,
-    carbsPer100g: 0,
-    fatPer100g: 100,
-    fiberPer100g: 0,
-    sodiumMg100g: 0,
-    potassiumMg100g: 0,
-    isLocalFood: true,
-  },
-  {
-    name: "Tomatoes",
-    localName: "Ntoosi",
-    caloriesPer100g: 18,
-    proteinPer100g: 0.9,
-    carbsPer100g: 3.9,
-    fatPer100g: 0.2,
-    fiberPer100g: 1.2,
-    sodiumMg100g: 5,
-    potassiumMg100g: 237,
-    isLocalFood: true,
-  },
-  {
-    name: "Onions",
-    localName: "Gyeene",
-    caloriesPer100g: 40,
-    proteinPer100g: 1.1,
-    carbsPer100g: 9.3,
-    fatPer100g: 0.1,
-    fiberPer100g: 1.7,
-    sodiumMg100g: 4,
-    potassiumMg100g: 146,
-    isLocalFood: true,
-  },
-  {
-    name: "Ginger",
-    localName: "Akakaduro",
-    caloriesPer100g: 80,
-    proteinPer100g: 1.8,
-    carbsPer100g: 18,
-    fatPer100g: 0.8,
-    fiberPer100g: 2.0,
-    sodiumMg100g: 13,
-    potassiumMg100g: 415,
-    isLocalFood: true,
-  },
-  {
-    name: "Garlic",
-    localName: "Galik",
-    caloriesPer100g: 149,
-    proteinPer100g: 6.4,
-    carbsPer100g: 33,
-    fatPer100g: 0.5,
-    fiberPer100g: 2.1,
-    sodiumMg100g: 17,
-    potassiumMg100g: 401,
-    isLocalFood: true,
-  },
-
-  // ─── Global staples ────────────────────────────────────────────────────────
-  {
-    name: "Oats (rolled, dry)",
-    caloriesPer100g: 389,
-    proteinPer100g: 17,
-    carbsPer100g: 66,
-    fatPer100g: 7,
-    fiberPer100g: 10,
-    sodiumMg100g: 2,
-    potassiumMg100g: 429,
-    isLocalFood: false,
-  },
-  {
-    name: "Eggs (boiled)",
-    caloriesPer100g: 155,
-    proteinPer100g: 13,
-    carbsPer100g: 1.1,
-    fatPer100g: 11,
-    fiberPer100g: 0,
-    sodiumMg100g: 124,
-    potassiumMg100g: 126,
-    isLocalFood: false,
-  },
-  {
-    name: "Bread (white)",
-    caloriesPer100g: 265,
-    proteinPer100g: 9,
-    carbsPer100g: 49,
-    fatPer100g: 3.2,
-    fiberPer100g: 2.7,
-    sodiumMg100g: 491,
-    potassiumMg100g: 115,
-    isLocalFood: false,
-  },
-  {
-    name: "Milk (whole)",
-    caloriesPer100g: 61,
-    proteinPer100g: 3.2,
-    carbsPer100g: 4.8,
-    fatPer100g: 3.3,
-    fiberPer100g: 0,
-    sodiumMg100g: 43,
-    potassiumMg100g: 132,
-    isLocalFood: false,
-  },
-  {
-    name: "Beans (cooked)",
-    caloriesPer100g: 127,
-    proteinPer100g: 8.7,
-    carbsPer100g: 23,
-    fatPer100g: 0.5,
-    fiberPer100g: 6.4,
-    sodiumMg100g: 1,
-    potassiumMg100g: 405,
-    isLocalFood: false,
-  },
-  {
-    name: "Lentils (cooked)",
-    caloriesPer100g: 116,
-    proteinPer100g: 9,
-    carbsPer100g: 20,
-    fatPer100g: 0.4,
-    fiberPer100g: 7.9,
-    sodiumMg100g: 2,
-    potassiumMg100g: 369,
-    isLocalFood: false,
-  },
-]
-
 async function main() {
   console.log(`Seeding ${FOOD_ITEMS.length} food items...`)
 
+  const driftWarnings: string[] = []
   for (const item of FOOD_ITEMS) {
+    const drift = macroCalorieDrift(item)
+    if (drift > 0.15) {
+      driftWarnings.push(`${item.name}: ${(drift * 100).toFixed(0)}% macro/kcal drift`)
+    }
+
+    const data = toFoodItemCreateInput(item)
     await prisma.foodItem.upsert({
-      where: { name: item.name },
-      update: item,
-      create: item,
+      where: { name: data.name },
+      update: data,
+      create: data,
     })
+  }
+
+  const canonicalNames = FOOD_ITEMS.map((item) => item.name)
+  const removed = await prisma.foodItem.deleteMany({
+    where: { name: { notIn: canonicalNames } },
+  })
+  if (removed.count > 0) {
+    console.log(`Removed ${removed.count} stale FoodItem record(s).`)
+  }
+
+  if (driftWarnings.length > 0) {
+    console.warn("Macro/kcal drift >15% (expected for some fiber-rich or composite foods):")
+    for (const w of driftWarnings) console.warn(`  - ${w}`)
   }
 
   const count = await prisma.foodItem.count()

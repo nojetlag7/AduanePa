@@ -78,6 +78,17 @@ async function main() {
   ])
   assert(unknown === null, "unknown ingredient returns null")
 
+  const kokoMeal = await calculateMealNutrition([
+    { name: "millet flour", amount: 50, unit: "g" },
+    { name: "koose", amount: 80, unit: "g" },
+  ])
+  assert(kokoMeal != null, "expanded seed: millet flour + koose aliases resolve")
+  assert(kokoMeal!.calories > 0, `composite meal calories: ${kokoMeal!.calories}`)
+
+  const kenkeyMeal = await calculateMealNutrition([{ name: "kenkey", amount: 200, unit: "g" }])
+  assert(kenkeyMeal != null, "kenkey resolves")
+  assert(kenkeyMeal!.calories === 228, `200g kenkey calories: ${kenkeyMeal!.calories} (expected 228)`)
+
   console.log("\nPhase 5 verification passed.")
 }
 
