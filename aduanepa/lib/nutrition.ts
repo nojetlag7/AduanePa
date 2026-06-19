@@ -1,6 +1,6 @@
 import { DietaryGoal } from "@prisma/client"
 import { prisma } from "@/lib/db"
-import type { Ingredient, MacroTotals, NutritionalTargets, UserProfile } from "@/types"
+import type { GeneratedMeal, Ingredient, MacroTotals, NutritionalTargets, UserProfile } from "@/types"
 
 /** MVP default — no activity level on User yet. */
 const SEDENTARY_ACTIVITY_MULTIPLIER = 1.2
@@ -350,4 +350,32 @@ export async function calculateMealNutrition(
     carbsG: roundMacro(carbsG),
     fatG: roundMacro(fatG),
   }
+}
+
+/**
+ * Override AI macro estimates with FoodItem-backed totals when every ingredient resolves.
+ */
+export async function applyDbMacrosToMeals(meals: GeneratedMeal[]): Promise<{
+  meals: GeneratedMeal[]
+  macrosFromDb: number
+}> {
+  let macrosFromDb = 0
+
+  const updated = await Promise.all(
+    meals.map(async (meal) => {
+      const dbMacros = await calculateMealNutrition(meal.ingredients)
+      if (!dbMacros) return meal
+
+      macrosFromDb += 1
+      return {
+        ...meal,
+        calories: dbMacros.calories,
+        proteinG: dbMacros.proteinG,
+        carbsG: dbMacros.carbsG,
+        fatG: dbMacros.fatG,
+      }
+    })
+  )
+
+  return { meals: updated, macrosFromDb }
 }

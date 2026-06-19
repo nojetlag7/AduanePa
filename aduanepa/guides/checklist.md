@@ -15,7 +15,7 @@ that must pass before the next phase begins.
 - [x] Phase 4 — Onboarding Flow
 - [x] Phase 5 — Dietary Rules & Nutritional Engine
 - [x] Phase 6 — Meal Generation API
-- [ ] Phase 7 — Meal UI & Dashboard
+- [x] Phase 7 — Meal UI & Dashboard
 - [ ] Phase 8 — Make Me a Meal
 - [ ] Phase 9 — Nutritional Breakdown & Grocery List
 - [ ] Phase 10 — Health Monitoring
@@ -332,6 +332,8 @@ that must pass before the next phase begins.
 - [x] Parses and Zod-validates the model response against `MealPlanResponseSchema`
 - [x] On parse failure: returns `{ error: "Failed to parse AI response" }` with status 500
 - [x] On success: saves plan via `lib/services/meals.ts` and returns `{ planId, meals }`
+- [x] Returns cached plan when today already has a plan and `regenerate` is not `true` (skips Gemini)
+- [x] Overrides AI macros with `applyDbMacrosToMeals()` when all ingredients resolve in `FoodItem`
 
 ### 6.2 Meal service (`lib/services/meals.ts`)
 - [x] `saveMealPlan(userId, date, meals)` — creates `MealPlan` + nested `Meal` records in a single transaction
@@ -361,63 +363,65 @@ that must pass before the next phase begins.
 
 ## Phase 7 — Meal UI & Dashboard
 
-### 7.1 Dashboard page (`app/(app)/dashboard/page.tsx`)
-- [ ] Fetches today's meal plan via `getMealPlanByDate`
-- [ ] Fetches latest health readings via `getLatestReadings`
-- [ ] Fetches daily nutrition totals via `getDailyNutrition`
-- [ ] All data fetched server-side; passed as props to client components
+> Route group: pages live under `app/(app)/(main)/…` (e.g. `dashboard/page.tsx`).
+
+### 7.1 Dashboard page (`app/(app)/(main)/dashboard/page.tsx`)
+- [x] Fetches today's meal plan via `getMealPlanByDate`
+- [x] Fetches latest health readings via `getLatestReadings` (`lib/services/health-logs.ts`)
+- [x] Fetches daily nutrition totals via `getDailyNutrition` (`lib/services/nutrition.ts`)
+- [x] All data fetched server-side; passed as props to client components
 
 ### 7.2 Dashboard components
-- [ ] `components/dashboard/todays-meals.tsx`:
-  - [ ] Shows all four meal slots (Breakfast / Lunch / Dinner / Snack)
-  - [ ] Each slot: meal card if plan exists, or "Not planned" placeholder
-  - [ ] "Generate Plan" button — calls `/api/meals/generate`, disabled while loading
-- [ ] `components/dashboard/health-snapshot.tsx`:
-  - [ ] Most recent weight, blood pressure, blood sugar readings
-  - [ ] Trend arrow per metric (up / down / stable vs. 7 days ago)
-  - [ ] Colour-coded badge per reading (green / amber / red)
-  - [ ] "Log Today's Data" link to `/health/log`
-- [ ] `components/dashboard/nutrition-ring.tsx`:
-  - [ ] Recharts `PieChart` donut: calories consumed vs. target
-  - [ ] Shows grams of protein / carbs / fat consumed today
-  - [ ] Falls back to empty ring when no meals logged
-- [ ] `components/dashboard/quick-actions.tsx`:
-  - [ ] Three action buttons: "Generate Plan", "Log Health Data", "Make Me a Meal"
+- [x] `components/dashboard/todays-meals.tsx`:
+  - [x] Shows all four meal slots (Breakfast / Lunch / Dinner / Snack)
+  - [x] Each slot: meal card if plan exists, or "Not planned" placeholder
+  - [x] "Generate Plan" button — calls `/api/meals/generate`, disabled while loading
+- [x] `components/dashboard/health-snapshot.tsx`:
+  - [x] Most recent weight, blood pressure, blood sugar readings
+  - [x] Trend arrow per metric (up / down / stable vs. 7 days ago)
+  - [x] Colour-coded badge per reading (green / amber / red)
+  - [x] "Log Today's Data" link to `/health/log`
+- [x] `components/dashboard/nutrition-ring.tsx`:
+  - [x] Recharts `PieChart` donut: calories consumed vs. target
+  - [x] Shows grams of protein / carbs / fat consumed today
+  - [x] Falls back to empty ring when no meals logged
+- [x] `components/dashboard/quick-actions.tsx`:
+  - [x] Shortcuts: View all meals, Log health data, Make me a meal (generate lives on Today's meals only)
 
-### 7.3 Meals list page (`app/(app)/meals/page.tsx`)
-- [ ] Lists meal plans by date (most recent first)
-- [ ] Date navigation: previous / next day arrows
-- [ ] Each plan entry shows the four meal slots as compact cards
-- [ ] Skeleton loading while data fetches
+### 7.3 Meals list page (`app/(app)/(main)/meals/page.tsx`)
+- [x] Meal plan for selected date (date picker + prev/next navigation)
+- [x] Date navigation: previous / next day arrows
+- [x] Each plan entry shows the four meal slots as compact cards
+- [x] Skeleton loading via `meals/loading.tsx`
 
-### 7.4 Meal detail page (`app/(app)/meals/[id]/page.tsx`)
-- [ ] Full recipe: name, description, type badge, local dish badge
-- [ ] Ingredients list with amounts and units
-- [ ] Numbered preparation instructions
-- [ ] Full macros: calories, protein, carbs, fat, prep time
-- [ ] "Save Meal" button → calls `saveMeal`; disabled if already saved
-- [ ] "Substitute ingredient" — opens a dialog (AI call to suggest swap; Phase 8 covers the API)
+### 7.4 Meal detail page (`app/(app)/(main)/meals/[id]/page.tsx`)
+- [x] Full recipe: name, description, type badge, local dish badge
+- [x] Ingredients list with amounts and units
+- [x] Numbered preparation instructions
+- [x] Full macros: calories, protein, carbs, fat, prep time
+- [x] "Save Meal" button → `POST /api/meals/saved`; disabled if already saved
+- [ ] "Substitute ingredient" — **Phase 8.2** (API + dialog together)
 
 ### 7.5 Meal components
-- [ ] `components/meals/meal-card.tsx`:
-  - [ ] Meal name + `MealType` badge
-  - [ ] Up to 4 key ingredients listed, "+ N more" if exceeded
-  - [ ] Macros summary: calories, protein, carbs, fat
-  - [ ] Prep time
-  - [ ] "Local dish" badge (`isLocalDish = true`)
-  - [ ] "Save" action
-- [ ] `components/meals/recipe-sheet.tsx` — full recipe in a shadcn/ui `Sheet`
-- [ ] Skeleton variants of `meal-card.tsx` for loading states
+- [x] `components/meals/meal-card.tsx`:
+  - [x] Meal name + `MealType` badge
+  - [x] Up to 4 key ingredients listed, "+ N more" if exceeded
+  - [x] Macros summary: calories, protein, carbs, fat
+  - [x] Prep time
+  - [x] "Local dish" badge (`isLocalDish = true`)
+  - [x] "Save" action on card (compact bookmark icon)
+- [x] `recipe-sheet.tsx` — **cancelled**; `/meals/[id]` detail page is the canonical full-recipe view
+- [x] Skeleton variants of `meal-card.tsx` for loading states
 
 ### 7.6 Exit criteria
-- [ ] Dashboard loads with real data: today's plan, health snapshot, nutrition ring
-- [ ] "Generate Plan" button triggers the API and renders the new plan without a full page reload
-- [ ] Submit button is disabled and shows a spinner while generation is in flight
-- [ ] Meal detail page renders all recipe fields correctly
-- [ ] "Save Meal" saves to `SavedMeal` and button state updates
-- [ ] All components render correctly in light and dark mode
-- [ ] Skeleton loaders appear while data is fetching — no layout shift
-- [ ] `npm run build` passes
+- [x] Dashboard loads with real data: today's plan, health snapshot, nutrition ring
+- [x] "Generate Plan" button triggers the API and renders the new plan without a full page reload (`router.refresh()`)
+- [x] Submit button is disabled and shows a spinner while generation is in flight
+- [x] Meal detail page renders all recipe fields correctly
+- [x] "Save Meal" saves to `SavedMeal` and button state updates
+- [x] Semantic tokens used on meal/dashboard components; full light/dark QA in Phase 14.6
+- [x] Skeleton loaders appear while data is fetching — `dashboard/loading.tsx`, `meals/loading.tsx`
+- [x] `npm run build` passes
 
 ---
 
@@ -440,7 +444,7 @@ that must pass before the next phase begins.
 ### 8.2 Ingredient substitution API (extension of Phase 6)
 - [ ] `app/api/meals/substitute/route.ts`:
   - [ ] POST — receives `{ mealId, ingredientName }`
-  - [ ] Fetches meal from DB, calls Claude to suggest one alternative ingredient
+  - [ ] Fetches meal from DB, calls **Gemini** to suggest one alternative ingredient
   - [ ] Returns `{ substitute: string, reason: string }`
   - [ ] Respects user's dietary constraints in the substitution
 
@@ -479,7 +483,7 @@ that must pass before the next phase begins.
 ## Phase 9 — Nutritional Breakdown & Grocery List
 
 ### 9.1 Nutrition service (`lib/services/nutrition.ts`)
-- [ ] `getDailyNutrition(userId, date)` — sums macros across all meals in the day's plan
+- [x] `getDailyNutrition(userId, date)` — shipped in Phase 7 (dashboard nutrition ring)
 - [ ] `getNutritionTrend(userId, days: 14 | 30)` — daily calorie totals ordered by date
 - [ ] `getMacroBreakdown(userId, startDate, endDate)` — averaged protein / carbs / fat ratios
 - [ ] `getTopFoods(userId, limit: 10)` — most frequently appearing ingredient names across all meals
@@ -527,7 +531,7 @@ that must pass before the next phase begins.
 - [ ] `getTodayLog(userId)` — returns today's `HealthLog` or `null`
 - [ ] `upsertHealthLog(userId, data)` — create or update; never `create` directly (unique constraint on `[userId, date]`)
 - [ ] `getHealthTrend(userId, days: 30)` — returns ordered logs for chart rendering
-- [ ] `getLatestReadings(userId)` — most recent non-null values for each metric
+- [x] `getLatestReadings(userId)` — minimal version shipped in Phase 7 (dashboard snapshot); extend in Phase 10 for condition-aware badges
 - [ ] All queries scoped to `userId`
 
 ### 10.2 Health overview page (`app/(app)/health/page.tsx`)
@@ -734,10 +738,44 @@ Sections:
 
 ## Notes
 
+### Cross-phase overlaps & conflicts (read before building)
+
+| Area | Issue | Resolution |
+|------|--------|------------|
+| **Generate plan button** | Was on Today's meals *and* Quick actions | One primary CTA on Today's meals; Quick actions links elsewhere |
+| **Nutrition ring (Ph 7) vs Nutrition page (Ph 9)** | Both show macro charts | Ph 7 = today only; Ph 9 = trends, top foods, date ranges — complementary |
+| **Health snapshot (Ph 7) vs Health page (Ph 10)** | Both show readings | Ph 7 = latest + trends preview; Ph 10 = full charts + log form |
+| **`getDailyNutrition`** | Listed in Ph 7 and Ph 9 | Built in Ph 7; Ph 9 adds trend/breakdown helpers only |
+| **`getLatestReadings`** | Listed in Ph 7 and Ph 10 | Minimal version in Ph 7; Ph 10 adds upsert, trends, condition-aware thresholds |
+| **Recipe sheet vs detail page** | Two ways to view full recipe | **Detail page wins**; `recipe-sheet.tsx` cancelled |
+| **Save meal** | Card, detail, Make Me a Meal | Same `POST /api/meals/saved`; list saved meals UI still missing (future) |
+| **Make Me a Meal vs Generate plan** | Both call Gemini for meals | Different inputs: full-day plan vs user ingredients; keep both |
+| **`SavedMeal` vs `Meal`** | Bookmark vs daily plan slot | Saved meals are snapshots; no "saved recipes" list page yet |
+| **`listMealPlans` vs date picker on `/meals`** | Service returns history; UI picks one day | Date nav is MVP; optional "recent plans" list can come later |
+| **Meal adherence checkboxes** | `claude.md` mentions on dashboard; Ph 11 owns it | Deferred to Ph 11 — don't add to Ph 7 |
+| **OBESITY + WEIGHT_LOSS** | Overlapping constraint strings | Acceptable overlap in `dietary-rules.ts`; dedupe handles duplicates |
+| **Theme toggle** | Sidebar + Settings (Ph 12) | Intentional duplicate entry points |
+| **AI provider in docs** | Notes mention "Claude" | App uses **Gemini** (`gemini-2.5-flash`) everywhere |
+| **Ph 13 i18n vs hardcoded strings** | Ph 13 extracts all strings | Technical debt until Ph 13; don't block earlier phases |
+| **Grocery "Regenerate"** | Recomputes from DB | No AI; not redundant with meal generate |
+
+### Deferred items (by phase)
+
+| Item | When | Why |
+|------|------|-----|
+| Substitute ingredient dialog + API | Phase 8.2 | Needs Gemini + meal context together |
+| Saved meals library page | Post–Ph 8 or Ph 12 | `SavedMeal` exists; no list UI yet |
+| Meal adherence on dashboard | Phase 11 | Depends on adherence API + today's plan |
+| Recommendations panel | Phase 11 | Needs 3+ days health + adherence data |
+| Full health log form | Phase 10 | `/health/log` is placeholder until then |
+| Condition-aware reading badges on snapshot | Phase 10 | Snapshot uses general thresholds for now |
+
+### Original notes
+
 - **Do not start Phase 6 until Phase 5 is complete.** The meal generation API requires both `buildDietaryConstraints()` and `calculateDailyTargets()` to exist and be tested.
 - **Do not start Phase 11 until Phases 7 and 10 are complete.** The recommendations engine requires meal adherence logs (meals must exist) and health logs (readings must be logged).
 - **Do not start Phase 13 until Phase 12 is complete.** Language preference is saved in Settings; localisation depends on that field being reliably set.
-- **The dietary rules engine is mandatory for every AI call.** Never send a prompt to Claude for meal generation or Make Me a Meal without first calling `buildDietaryConstraints()`.
+- **The dietary rules engine is mandatory for every AI call.** Never send a prompt to **Gemini** for meal generation or Make Me a Meal without first calling `buildDietaryConstraints()`.
 - **AI nutritional values are estimates.** Always surface a disclaimer. The `FoodItem` table is the authoritative source; use `calculateMealNutrition()` when precision matters.
 - **One health log per user per day.** Always call `upsertHealthLog()` — never `prisma.healthLog.create()` directly.
 - **Grocery list check-off state is client-only.** No DB write is required or expected for MVP.

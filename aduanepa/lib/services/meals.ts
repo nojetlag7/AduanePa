@@ -109,3 +109,25 @@ export async function deleteSavedMeal(userId: string, savedMealId: string) {
   })
   return result.count > 0
 }
+
+export async function isMealSaved(userId: string, mealId: string): Promise<boolean> {
+  const ids = await getSavedSourceMealIds(userId)
+  return ids.has(mealId)
+}
+
+/** Meal IDs referenced by `SavedMeal.data.sourceMealId` for the user. */
+export async function getSavedSourceMealIds(userId: string): Promise<Set<string>> {
+  const saved = await prisma.savedMeal.findMany({
+    where: { userId },
+    select: { data: true },
+  })
+
+  const ids = new Set<string>()
+  for (const row of saved) {
+    if (row.data && typeof row.data === "object" && !Array.isArray(row.data)) {
+      const sourceMealId = (row.data as { sourceMealId?: string }).sourceMealId
+      if (sourceMealId) ids.add(sourceMealId)
+    }
+  }
+  return ids
+}

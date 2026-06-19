@@ -242,4 +242,22 @@ When bumping Next.js minor versions, re-read the **Image** and **Proxy** section
 
 ---
 
-*Last updated from dev session: verify-email JWT sync, landing page images, onboarding Zod, Neon SSL, proxy matcher.*
+## 12. Meal generation — reduce Gemini usage
+
+**Dashboard loads plans from Postgres** (`getMealPlanByDate`) — no external API on page view.
+
+**`POST /api/meals/generate`** behaviour:
+
+| Request | Behaviour |
+|---------|-----------|
+| `{ "regenerate": false }` or empty body, plan exists for today | Returns DB plan (`cached: true`) — **no Gemini call** |
+| No plan for today | Calls Gemini, saves, returns plan |
+| `{ "regenerate": true }` | Always calls Gemini (replace today's plan) |
+
+UI: first-time button = generate; when a plan exists the button label is **Regenerate plan** and sends `regenerate: true`.
+
+**Macros:** after Gemini responds, `applyDbMacrosToMeals()` overrides calories/protein/carbs/fat when **every** ingredient resolves in `FoodItem`. Partial matches keep AI estimates (no risky partial sums).
+
+---
+
+*Last updated from dev session: verify-email JWT sync, landing page images, onboarding Zod, Neon SSL, proxy matcher, Phase 7 dashboard, meal API cache.*
