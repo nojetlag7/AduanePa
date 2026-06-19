@@ -49,7 +49,7 @@ export function NutritionRing({
               cy={RING_SIZE / 2}
               r={RING_RADIUS}
               fill="none"
-              stroke="var(--border-medium)"
+              style={{ stroke: "var(--border-medium)" }}
               strokeWidth={RING_STROKE}
             />
             {target > 0 && pct > 0 && (
@@ -58,7 +58,7 @@ export function NutritionRing({
                 cy={RING_SIZE / 2}
                 r={RING_RADIUS}
                 fill="none"
-                stroke="var(--color-primary)"
+                style={{ stroke: "var(--color-primary)" }}
                 strokeWidth={RING_STROKE}
                 strokeLinecap="round"
                 strokeDasharray={RING_CIRCUMFERENCE}

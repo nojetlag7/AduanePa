@@ -2,11 +2,7 @@
 
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts"
 
-const MACRO_COLORS = {
-  protein: "var(--chart-protein)",
-  carbs: "var(--chart-carbs)",
-  fat: "var(--chart-fat)",
-} as const
+import { useChartColors } from "@/lib/use-chart-colors"
 
 export function MacroDonut({
   proteinG,
@@ -17,10 +13,12 @@ export function MacroDonut({
   carbsG: number
   fatG: number
 }) {
+  const colors = useChartColors()
+
   const data = [
-    { key: "protein", label: "Protein", grams: proteinG, color: MACRO_COLORS.protein },
-    { key: "carbs", label: "Carbs", grams: carbsG, color: MACRO_COLORS.carbs },
-    { key: "fat", label: "Fat", grams: fatG, color: MACRO_COLORS.fat },
+    { key: "protein", label: "Protein", grams: proteinG, color: colors.protein },
+    { key: "carbs", label: "Carbs", grams: carbsG, color: colors.carbs },
+    { key: "fat", label: "Fat", grams: fatG, color: colors.fat },
   ]
   const total = proteinG + carbsG + fatG
 

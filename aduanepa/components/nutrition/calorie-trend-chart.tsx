@@ -12,6 +12,7 @@ import {
 } from "recharts"
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useChartColors } from "@/lib/use-chart-colors"
 import type { TrendPoint } from "@/lib/services/nutrition"
 
 export function CalorieTrendChart({
@@ -22,6 +23,7 @@ export function CalorieTrendChart({
   data: TrendPoint[]
   targetCalories?: number | null
 }) {
+  const colors = useChartColors()
   const [range, setRange] = React.useState<"14" | "30">("14")
   const visible = range === "14" ? data.slice(-14) : data
 
@@ -43,37 +45,37 @@ export function CalorieTrendChart({
         <div className="h-[260px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={visible} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-light)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} vertical={false} />
               <XAxis
                 dataKey="label"
-                tick={{ fontSize: 11, fill: "var(--text-muted)" }}
+                tick={{ fontSize: 11, fill: colors.axis }}
                 tickLine={false}
-                axisLine={{ stroke: "var(--border-light)" }}
+                axisLine={{ stroke: colors.grid }}
                 minTickGap={16}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "var(--text-muted)" }}
+                tick={{ fontSize: 11, fill: colors.axis }}
                 tickLine={false}
                 axisLine={false}
                 width={44}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "var(--bg-card)",
-                  border: "1px solid var(--border-light)",
+                  backgroundColor: colors.tooltipBg,
+                  border: `1px solid ${colors.tooltipBorder}`,
                   borderRadius: 12,
                   fontSize: 12,
-                  color: "var(--text-primary)",
+                  color: colors.text,
                 }}
-                labelStyle={{ color: "var(--text-muted)" }}
+                labelStyle={{ color: colors.axis }}
                 formatter={(value) => [`${value} kcal`, "Calories"]}
               />
               <Line
                 type="monotone"
                 dataKey="calories"
-                stroke="var(--color-primary)"
+                stroke={colors.primary}
                 strokeWidth={2}
-                dot={{ r: 2, fill: "var(--color-primary)" }}
+                dot={{ r: 2, fill: colors.primary }}
                 activeDot={{ r: 4 }}
               />
             </LineChart>

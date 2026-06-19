@@ -12,6 +12,7 @@ import {
 } from "recharts"
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useChartColors } from "@/lib/use-chart-colors"
 import type { HealthTrendPoint } from "@/lib/services/health-logs"
 
 type Metric = "weight" | "bpSystolic" | "bloodSugar"
@@ -23,8 +24,16 @@ const METRICS: { key: Metric; label: string; unit: string }[] = [
 ]
 
 export function TrendChart({ data }: { data: HealthTrendPoint[] }) {
+  const colors = useChartColors()
   const [metric, setMetric] = React.useState<Metric>("weight")
   const active = METRICS.find((m) => m.key === metric)!
+
+  const metricColor: Record<Metric, string> = {
+    weight: colors.protein,
+    bpSystolic: colors.fat,
+    bloodSugar: colors.carbs,
+  }
+  const lineColor = metricColor[metric]
 
   const series = data.filter((p) => p[metric] != null)
 
@@ -49,16 +58,16 @@ export function TrendChart({ data }: { data: HealthTrendPoint[] }) {
         <div className="h-[280px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-light)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} vertical={false} />
               <XAxis
                 dataKey="label"
-                tick={{ fontSize: 11, fill: "var(--text-muted)" }}
+                tick={{ fontSize: 11, fill: colors.axis }}
                 tickLine={false}
-                axisLine={{ stroke: "var(--border-light)" }}
+                axisLine={{ stroke: colors.grid }}
                 minTickGap={20}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "var(--text-muted)" }}
+                tick={{ fontSize: 11, fill: colors.axis }}
                 tickLine={false}
                 axisLine={false}
                 width={44}
@@ -66,21 +75,21 @@ export function TrendChart({ data }: { data: HealthTrendPoint[] }) {
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "var(--bg-card)",
-                  border: "1px solid var(--border-light)",
+                  backgroundColor: colors.tooltipBg,
+                  border: `1px solid ${colors.tooltipBorder}`,
                   borderRadius: 12,
                   fontSize: 12,
-                  color: "var(--text-primary)",
+                  color: colors.text,
                 }}
-                labelStyle={{ color: "var(--text-muted)" }}
+                labelStyle={{ color: colors.axis }}
                 formatter={(value) => [`${value} ${active.unit}`, active.label]}
               />
               <Line
                 type="monotone"
                 dataKey={metric}
-                stroke="var(--color-primary)"
+                stroke={lineColor}
                 strokeWidth={2}
-                dot={{ r: 2.5, fill: "var(--color-primary)" }}
+                dot={{ r: 2.5, fill: lineColor }}
                 activeDot={{ r: 5 }}
                 connectNulls
               />

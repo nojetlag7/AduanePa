@@ -70,23 +70,31 @@
   --border-medium:  #bfcac2;
 
   /*
-    Text — desaturated. text-primary is near-black (not green-black);
-    text-secondary is a neutral warm-gray; text-muted is mid-gray.
-    This keeps body copy crisp on both white cards and tinted surfaces.
+    Text — NEUTRAL hierarchy (intentionally low green tint) so headers, body
+    and meta read as three clearly distinct steps and green stays an accent,
+    not the colour of every line of copy.
+      primary  ~L12  near-black     → headings / key values
+      secondary~L36  mid neutral    → body copy
+      muted    ~L56  light neutral  → captions / meta / axis labels
   */
-  --text-primary:   #1a1f1b;
-  --text-secondary: #515753;
-  --text-muted:     #7a807c;
+  --text-primary:   #16191c;
+  --text-secondary: #515961;
+  --text-muted:     #828a90;
   --text-inverse:   #ffffff;
 
   /* Elevation — soft neutral shadows */
   --shadow-card:       0 1px 2px 0 rgb(0 0 0 / 0.05), 0 2px 6px -1px rgb(0 0 0 / 0.07);
   --shadow-card-hover: 0 6px 16px -4px rgb(0 0 0 / 0.12), 0 3px 8px -2px rgb(0 0 0 / 0.08);
 
-  /* Chart macro palette — protein uses brand, carbs amber, fat blue */
-  --chart-protein: var(--color-primary);
-  --chart-carbs:   #c8862b;
-  --chart-fat:     #5a7fc4;
+  /*
+    Chart palette — concrete hex (NOT var() aliases). Recharts applies colours
+    as SVG presentation attributes, where var() does not resolve, so these are
+    read via getComputedStyle and passed as literal values by useChartColors.
+  */
+  --chart-protein: #3a6951;
+  --chart-carbs:   #d98a2b;
+  --chart-fat:     #4f7fc9;
+  --chart-accent:  #7c5cbf;
 
   /* shadcn/ui compatibility — HSL channel values (aligned with new primary) */
   --background:             0 0% 100%;
@@ -123,19 +131,25 @@
   --bg-muted:       #1a3827;
   --border-light:   #1e4530;
   --border-medium:  #2a5c3f;
-  --text-primary:   #f4faf6;
-  --text-secondary: #a5d6a7;
-  --text-muted:     #4CAF50;
+  /*
+    Neutral hierarchy in dark mode too — secondary/muted were saturated greens
+    (#a5d6a7 / #4CAF50) which made everything look mono-green. Now soft
+    neutral-greys so green reads as an accent, not the body-text colour.
+  */
+  --text-primary:   #f3f6f4;
+  --text-secondary: #aeb8b2;
+  --text-muted:     #7f8a84;
   --text-inverse:   #0D2B1A;
 
   /* Elevation — deep, low-opacity shadows so dark cards still lift subtly */
   --shadow-card:       0 1px 2px 0 rgb(0 0 0 / 0.30), 0 2px 8px -2px rgb(0 0 0 / 0.35);
   --shadow-card-hover: 0 8px 20px -6px rgb(0 0 0 / 0.45), 0 4px 10px -3px rgb(0 0 0 / 0.40);
 
-  /* Chart macro palette — brightened for contrast on dark surfaces */
-  --chart-protein: var(--color-primary-light);
-  --chart-carbs:   #e0a93c;
+  /* Chart palette — brightened concrete hex for contrast on dark surfaces */
+  --chart-protein: #5aa978;
+  --chart-carbs:   #e6ac4d;
   --chart-fat:     #7da0e0;
+  --chart-accent:  #a98ddb;
 
   --background:             150 53% 8%;
   --foreground:             120 40% 96%;

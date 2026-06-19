@@ -12,6 +12,8 @@ import { config } from "dotenv"
 config({ path: ".env.local" })
 config({ path: ".env" })
 
+import type { Prisma } from "@prisma/client"
+
 const DEMO_NAME = process.env.DEMO_USER_NAME ?? "Jeremy Omane-Antwi Boateng"
 const DEMO_EMAIL = process.env.DEMO_USER_EMAIL ?? "boatengjoa9@gmail.com"
 const DEMO_PASSWORD = process.env.DEMO_USER_PASSWORD ?? "Test123!"
@@ -348,8 +350,8 @@ async function main() {
             type: MealType[type],
             name: tpl.name,
             description: tpl.description,
-            ingredients: tpl.ingredients,
-            instructions: tpl.instructions,
+            ingredients: tpl.ingredients as unknown as Prisma.InputJsonValue,
+            instructions: tpl.instructions as unknown as Prisma.InputJsonValue,
             calories: tpl.calories,
             proteinG: tpl.proteinG,
             carbsG: tpl.carbsG,
@@ -431,7 +433,7 @@ async function main() {
           fatG: tpl.fatG,
           prepTimeMin: tpl.prepTimeMin,
           isLocalDish: true,
-        },
+        } as unknown as Prisma.InputJsonValue,
       },
     })
   }
