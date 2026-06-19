@@ -83,6 +83,11 @@
   --shadow-card:       0 1px 2px 0 rgb(0 0 0 / 0.05), 0 2px 6px -1px rgb(0 0 0 / 0.07);
   --shadow-card-hover: 0 6px 16px -4px rgb(0 0 0 / 0.12), 0 3px 8px -2px rgb(0 0 0 / 0.08);
 
+  /* Chart macro palette — protein uses brand, carbs amber, fat blue */
+  --chart-protein: var(--color-primary);
+  --chart-carbs:   #c8862b;
+  --chart-fat:     #5a7fc4;
+
   /* shadcn/ui compatibility — HSL channel values (aligned with new primary) */
   --background:             0 0% 100%;
   --foreground:             140 5% 11%;
@@ -126,6 +131,11 @@
   /* Elevation — deep, low-opacity shadows so dark cards still lift subtly */
   --shadow-card:       0 1px 2px 0 rgb(0 0 0 / 0.30), 0 2px 8px -2px rgb(0 0 0 / 0.35);
   --shadow-card-hover: 0 8px 20px -6px rgb(0 0 0 / 0.45), 0 4px 10px -3px rgb(0 0 0 / 0.40);
+
+  /* Chart macro palette — brightened for contrast on dark surfaces */
+  --chart-protein: var(--color-primary-light);
+  --chart-carbs:   #e0a93c;
+  --chart-fat:     #7da0e0;
 
   --background:             150 53% 8%;
   --foreground:             120 40% 96%;

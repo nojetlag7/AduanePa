@@ -22,8 +22,8 @@ that must pass before the next phase begins.
 - [x] Phase 6 — Meal Generation API
 - [x] Phase 7 — Meal UI & Dashboard
 - [x] Phase 8 — Make Me a Meal
-- [ ] Phase 9 — Nutritional Breakdown & Grocery List
-- [ ] Phase 10 — Health Monitoring
+- [x] Phase 9 — Nutritional Breakdown & Grocery List
+- [x] Phase 10 — Health Monitoring
 - [ ] Phase 11 — Meal Adherence & Adaptive Recommendations
 - [ ] Phase 12 — Settings Page
 - [ ] Phase 13 — PWA & Localisation
@@ -490,42 +490,43 @@ that must pass before the next phase begins.
 
 ### 9.1 Nutrition service (`lib/services/nutrition.ts`)
 - [x] `getDailyNutrition(userId, date)` — shipped in Phase 7 (dashboard nutrition ring)
-- [ ] `getNutritionTrend(userId, days: 14 | 30)` — daily calorie totals ordered by date
-- [ ] `getMacroBreakdown(userId, startDate, endDate)` — averaged protein / carbs / fat ratios
-- [ ] `getTopFoods(userId, limit: 10)` — most frequently appearing ingredient names across all meals
-- [ ] All queries scoped to `userId`
+- [x] `getNutritionTrend(userId, days: 14 | 30)` — daily calorie totals ordered by date (gaps filled with 0)
+- [x] `getMacroBreakdown(userId, startDate, endDate)` — averaged protein / carbs / fat (over days with a plan)
+- [x] `getTopFoods(userId, limit: 10)` — most frequently appearing ingredient names across all meals
+- [x] All queries scoped to `userId`
 
 ### 9.2 Nutrition page & components (`app/(app)/nutrition/page.tsx`)
-- [ ] Page fetches all four data sets server-side; passes as props
-- [ ] `components/nutrition/macro-donut.tsx` — Recharts `PieChart`: protein / carbs / fat split
-- [ ] `components/nutrition/calorie-trend-chart.tsx` — Recharts `LineChart`: 14 or 30-day calorie history; period toggle
-- [ ] `components/nutrition/top-foods-chart.tsx` — Recharts horizontal `BarChart`: top 10 ingredients
-- [ ] `components/nutrition/goal-progress-bar.tsx` — shadcn/ui `Progress`: avg daily intake vs. target macros
-- [ ] All charts use `ResponsiveContainer`
-- [ ] All chart colors come from CSS variables — no hardcoded hex values
-- [ ] Charts recolor correctly in dark mode
+- [x] Page fetches all data sets server-side; passes as props
+- [x] `components/nutrition/macro-donut.tsx` — Recharts `PieChart`: protein / carbs / fat split
+- [x] `components/nutrition/calorie-trend-chart.tsx` — Recharts `LineChart`: 14 or 30-day calorie history; period toggle (Tabs)
+- [x] `components/nutrition/top-foods-chart.tsx` — Recharts horizontal `BarChart`: top 10 ingredients
+- [x] `components/nutrition/goal-progress-bar.tsx` — shadcn/ui `Progress`: avg daily intake vs. target macros
+- [x] All charts use `ResponsiveContainer`
+- [x] All chart colors come from CSS variables (`--chart-protein/carbs/fat`, `--color-primary`) — no hardcoded hex
+- [x] Charts recolor correctly in dark mode (chart palette has a `.dark` override)
 
 ### 9.3 Grocery service (`lib/services/grocery.ts`)
-- [ ] `generateGroceryList(userId)`:
-  - [ ] Reads all `Meal` records in the current week's `MealPlan`
-  - [ ] Aggregates ingredients: sums quantities per ingredient name
-  - [ ] Groups by category: Vegetables, Proteins, Grains, Condiments, Other
-  - [ ] Returns `{ category: string, items: { name: string, totalAmount: number, unit: string }[] }[]`
+- [x] `generateGroceryList(userId)`:
+  - [x] Reads all `Meal` records in the current week's (Mon–Sun) `MealPlan`s
+  - [x] Aggregates ingredients: sums quantities per ingredient name + unit
+  - [x] Groups by category: Vegetables & Fruit, Proteins, Grains & Starches, Condiments & Spices, Other
+  - [x] Returns `{ category, items: { name, amount, unit }[] }[]` (empty categories omitted)
 
 ### 9.4 Grocery page & components (`app/(app)/grocery/page.tsx`)
-- [ ] `components/grocery/grocery-list.tsx`:
-  - [ ] Grouped by category with category headings
-  - [ ] Each item: name + aggregated quantity
-  - [ ] Checkbox to mark as purchased (client state only — no DB write)
-  - [ ] "Regenerate" button re-fetches from the API
-- [ ] Empty state when no active meal plan exists → CTA to `/dashboard`
+- [x] `components/grocery/grocery-list.tsx`:
+  - [x] Grouped by category with category headings + per-group counts
+  - [x] Each item: name + aggregated quantity
+  - [x] Checkbox to mark as purchased (client state only — no DB write)
+  - [x] "Regenerate" button re-fetches from the server (`router.refresh()` re-runs the SSR query)
+- [x] Empty state when no active meal plan exists → CTA to generate a plan
 
 ### 9.5 Exit criteria
-- [ ] Macro donut renders with real proportions from this week's meals
-- [ ] Calorie trend chart shows the correct values per day over the selected period
-- [ ] Grocery list correctly sums duplicate ingredients across multiple meals (e.g. tomatoes in both lunch and dinner)
-- [ ] Category grouping is correct — no items in the wrong group
-- [ ] Checking off a grocery item persists within the session; unchecking works
+- [x] Macro donut renders with real proportions from this week's meals
+- [x] Calorie trend chart shows the correct values per day over the selected period
+- [x] Grocery list correctly sums duplicate ingredients across multiple meals (e.g. tomatoes in both lunch and dinner)
+- [x] Category grouping is correct — no items in the wrong group
+- [x] Checking off a grocery item persists within the session; unchecking works
+- [x] **Phase 9 test suite ≥ 80%** — `npm run test:phase -- 9` (100%, 31/31)
 - [ ] All charts render in both light and dark mode with correct token colors
 - [ ] `npm run build` passes
 
@@ -534,45 +535,46 @@ that must pass before the next phase begins.
 ## Phase 10 — Health Monitoring
 
 ### 10.1 Health log service (`lib/services/health-logs.ts`)
-- [ ] `getTodayLog(userId)` — returns today's `HealthLog` or `null`
-- [ ] `upsertHealthLog(userId, data)` — create or update; never `create` directly (unique constraint on `[userId, date]`)
-- [ ] `getHealthTrend(userId, days: 30)` — returns ordered logs for chart rendering
-- [x] `getLatestReadings(userId)` — minimal version shipped in Phase 7 (dashboard snapshot); extend in Phase 10 for condition-aware badges
-- [ ] All queries scoped to `userId`
+- [x] `getTodayLog(userId)` — returns today's `HealthLog` or `null`
+- [x] `upsertHealthLog(userId, data)` — create or update; never `create` directly (unique constraint on `[userId, date]`)
+- [x] `getHealthTrend(userId, days: 30)` — returns ordered logs for chart rendering
+- [x] `getLatestReadings(userId)` — minimal version shipped in Phase 7 (dashboard snapshot); extended for condition-aware badges
+- [x] All queries scoped to `userId`
 
 ### 10.2 Health overview page (`app/(app)/health/page.tsx`)
-- [ ] Fetches health trend (30 days) and today's adherence server-side
-- [ ] `components/health/trend-chart.tsx`:
-  - [ ] Recharts `LineChart` with three series: weight, systolic BP, blood sugar
-  - [ ] Toggle between metrics via tabs
-  - [ ] 30-day window; date on x-axis
-  - [ ] Uses `ResponsiveContainer`
-- [ ] `components/health/reading-badge.tsx`:
-  - [ ] Colour-coded: green (healthy) / amber (borderline) / red (out of range)
-  - [ ] Thresholds are condition-aware:
-    - [ ] General systolic: green < 120, amber 120–139, red ≥ 140
-    - [ ] Hypertension systolic: green < 130, amber 130–139, red ≥ 140
-    - [ ] Blood sugar (fasting): green < 5.6 mmol/L, amber 5.6–6.9, red ≥ 7.0
-- [ ] "Log Today's Data" CTA links to `/health/log`
-- [ ] Empty state when no logs exist
+- [x] Fetches health trend (30 days) + latest readings server-side
+- [x] `components/health/trend-chart.tsx`:
+  - [x] Recharts `LineChart` with three metrics: weight, systolic BP, blood sugar
+  - [x] Toggle between metrics via tabs
+  - [x] 30-day window; date on x-axis
+  - [x] Uses `ResponsiveContainer`
+- [x] `components/health/reading-badge.tsx` (logic in `lib/health-thresholds.ts`):
+  - [x] Colour-coded: green (healthy) / amber (borderline) / red (out of range)
+  - [x] Thresholds are condition-aware:
+    - [x] General systolic: green < 120, amber 120–139, red ≥ 140
+    - [x] Hypertension systolic: green < 130, amber 130–139, red ≥ 140
+    - [x] Blood sugar (fasting): green < 5.6 mmol/L, amber 5.6–6.9, red ≥ 7.0
+- [x] "Log Today's Data" CTA links to `/health/log`
+- [x] Empty state when no logs exist
 
 ### 10.3 Daily log form (`app/(app)/health/log/page.tsx`)
-- [ ] `components/health/health-log-form.tsx`:
-  - [ ] Fields: weight (kg), blood sugar (mmol/L), systolic BP (mmHg), diastolic BP (mmHg), notes
-  - [ ] Zod validation: weight 20–300, blood sugar 2.0–30.0, BP systolic 60–250, diastolic 40–150
-  - [ ] Pre-populated with today's existing log values if a log already exists
-  - [ ] On submit: calls `upsertHealthLog` — success toast + redirect to `/health`
-  - [ ] All fields optional individually — user may log only weight, for example
-- [ ] Date displayed at top of form: "Logging for: [today's date]"
+- [x] `components/health/health-log-form.tsx`:
+  - [x] Fields: weight (kg), blood sugar (mmol/L), systolic BP (mmHg), diastolic BP (mmHg), notes
+  - [x] Zod validation: weight 20–300, blood sugar 2.0–30.0, BP systolic 60–250, diastolic 40–150
+  - [x] Pre-populated with today's existing log values if a log already exists
+  - [x] On submit: POST `/api/health/logs` → `upsertHealthLog` — success toast + redirect to `/health`
+  - [x] All fields optional individually (but at least one reading required) — user may log only weight
+- [x] Date displayed at top of form: "Logging for: [today's date]"
 
 ### 10.4 Exit criteria
-- [ ] Submitting the log form saves a `HealthLog` record to DB
-- [ ] Submitting the form a second time for the same day updates (upserts) the existing record — no duplicate
-- [ ] Trend chart renders correctly with ≥ 3 days of logged data
-- [ ] `reading-badge` shows correct colour for each metric based on the user's conditions
-- [ ] Pre-population works: existing today's log values appear in the form on page load
-- [ ] Empty state shows on `/health` when no logs exist
-- [ ] `npm run build` passes
+- [x] Submitting the log form saves a `HealthLog` record to DB
+- [x] Submitting the form a second time for the same day updates (upserts) the existing record — no duplicate
+- [x] Trend chart renders correctly with ≥ 3 days of logged data
+- [x] `reading-badge` shows correct colour for each metric based on the user's conditions
+- [x] Pre-population works: existing today's log values appear in the form on page load
+- [x] Empty state shows on `/health` when no logs exist
+- [x] `npm run build` passes
+- [x] **Phase 10 test suite ≥ 80%** — `npm run test:phase -- 10` (100%, 35/35)
 
 ---
 
@@ -671,17 +673,28 @@ Sections:
 - [ ] PWA install tested on Android Chrome
 - [ ] PWA install tested on iOS Safari (Add to Home Screen)
 
-### 13.2 Localisation setup
-- [ ] `TRANSLATION_API_KEY` confirmed as server-side only — not in any client bundle
-- [ ] All user-facing strings in components extracted to a localisation key map (no hardcoded English strings in JSX)
-- [ ] Translation utility function (`lib/translate.ts`) wraps the Translation API call
+> **Architecture decision (i18n):** static UI strings and dynamic AI content are
+> two separate problems and use two separate mechanisms:
+> - **Static UI** → **next-intl** with authored message catalogs (instant,
+>   offline-capable, reviewable, git-versioned). No runtime machine translation.
+> - **Dynamic AI content** (meal names/descriptions) → runtime translation via
+>   `lib/translate.ts`, applied post-response.
+
+### 13.2 Static UI localisation (next-intl)
+- [ ] Add `next-intl`; wrap `next.config` with `createNextIntlPlugin()`
+- [ ] `i18n/request.ts` resolves locale from a `NEXT_LOCALE` cookie (no URL `[locale]` segment — "without-i18n-routing" mode)
+- [ ] Authored message catalogs: `messages/en.json`, `messages/tw.json`, `messages/gaa.json` (Twi/Ga human-authored, not machine-translated)
+- [ ] All user-facing strings extracted to message keys (no hardcoded English in JSX) — keep this discipline from Phase 10 onward to avoid retrofitting
+- [ ] Use `useTranslations` (client) / `getTranslations` (server) — no translation logic in the client bundle for Server Components
+- [ ] Locale codes: `en`, `tw` (Twi), `gaa` (Ga); map from `LanguagePreference` enum
 
 ### 13.3 Localisation application
-- [ ] Language switcher in sidebar footer functional (updates `User.language` on change)
-- [ ] Meal names and descriptions returned by AI translated when user language is Twi or Ga
-- [ ] UI strings (nav labels, button text, empty states, error messages) translated when language is not English
+- [ ] Language switcher in sidebar footer / Settings updates `User.language`, mirrors it to the `NEXT_LOCALE` cookie, then `router.refresh()` to re-render in the new locale
+- [ ] On login/session start, sync `User.language` → `NEXT_LOCALE` cookie
+- [ ] `TRANSLATION_API_KEY` confirmed server-side only — not in any client bundle
+- [ ] `lib/translate.ts` wraps the Translation API — used **only** for dynamic AI meal names/descriptions when language is Twi or Ga
 - [ ] Translation applied post-response (AI system prompt stays in English for reliability)
-- [ ] Landing page (`app/page.tsx`) value prop available in both English and Twi
+- [ ] Landing page (`app/page.tsx`) value prop available in English + Twi via message catalogs
 
 ### 13.4 Exit criteria
 - [ ] Navigating offline to the dashboard shows the offline fallback, not a browser error page
@@ -762,7 +775,8 @@ Sections:
 | **OBESITY + WEIGHT_LOSS** | Overlapping constraint strings | Acceptable overlap in `dietary-rules.ts`; dedupe handles duplicates |
 | **Theme toggle** | Sidebar + Settings (Ph 12) | Intentional duplicate entry points |
 | **AI provider in docs** | Notes mention "Claude" | App uses **Gemini** (`gemini-2.5-flash`) everywhere |
-| **Ph 13 i18n vs hardcoded strings** | Ph 13 extracts all strings | Technical debt until Ph 13; don't block earlier phases |
+| **Ph 13 i18n vs hardcoded strings** | Ph 13 extracts all strings into next-intl catalogs | Technical debt until Ph 13; extract strings from Ph 10 on to reduce retrofit |
+| **Static UI vs AI content translation** | next-intl (authored) for UI; Translation API only for AI meal text | Static strings shouldn't hit a runtime API — costly, can't QA, breaks offline |
 | **Grocery "Regenerate"** | Recomputes from DB | No AI; not redundant with meal generate |
 
 ### Deferred items (by phase)
@@ -773,14 +787,15 @@ Sections:
 | Saved meals library page | Post–Ph 8 or Ph 12 | `SavedMeal` exists; no list UI yet |
 | Meal adherence on dashboard | Phase 11 | Depends on adherence API + today's plan |
 | Recommendations panel | Phase 11 | Needs 3+ days health + adherence data |
-| Full health log form | Phase 10 | `/health/log` is placeholder until then |
-| Condition-aware reading badges on snapshot | Phase 10 | Snapshot uses general thresholds for now |
+| ~~Full health log form~~ | ~~Phase 10~~ | **Done** — `/health/log` form + `/api/health/logs` shipped |
+| Condition-aware reading badges on snapshot | Phase 10 (partial) | `/health` page uses condition-aware badges; dashboard snapshot still uses general thresholds |
 
 ### Original notes
 
 - **Do not start Phase 6 until Phase 5 is complete.** The meal generation API requires both `buildDietaryConstraints()` and `calculateDailyTargets()` to exist and be tested.
 - **Do not start Phase 11 until Phases 7 and 10 are complete.** The recommendations engine requires meal adherence logs (meals must exist) and health logs (readings must be logged).
 - **Do not start Phase 13 until Phase 12 is complete.** Language preference is saved in Settings; localisation depends on that field being reliably set.
+- **Static UI uses next-intl, not the Translation API.** Author `messages/{en,tw,gaa}.json` by hand; reserve `lib/translate.ts` (Translation API) strictly for dynamic AI-generated meal names/descriptions. Locale comes from the `NEXT_LOCALE` cookie mirrored from `User.language` (no URL locale segment).
 - **The dietary rules engine is mandatory for every AI call.** Never send a prompt to **Gemini** for meal generation or Make Me a Meal without first calling `buildDietaryConstraints()`.
 - **AI nutritional values are estimates.** Always surface a disclaimer. The `FoodItem` table is the authoritative source; use `calculateMealNutrition()` when precision matters.
 - **One health log per user per day.** Always call `upsertHealthLog()` — never `prisma.healthLog.create()` directly.

@@ -1,19 +1,25 @@
 import type { Metadata } from "next"
-import { ShoppingBasket } from "lucide-react"
-import { EmptyState } from "@/components/shared/empty-state"
+
+import { auth } from "@/lib/auth"
+import { generateGroceryList } from "@/lib/services/grocery"
 import { PageHeader } from "@/components/shared/page-header"
+import { GroceryList } from "@/components/grocery/grocery-list"
 
 export const metadata: Metadata = { title: "Grocery List · AduanePa" }
 
-export default function GroceryPage() {
+export default async function GroceryPage() {
+  const session = await auth()
+  const userId = session!.user!.id
+
+  const groups = await generateGroceryList(userId)
+
   return (
     <>
-      <PageHeader title="Grocery List" subtitle="Everything you need for this week's plan." />
-      <EmptyState
-        icon={ShoppingBasket}
-        title="Your grocery list is coming soon"
-        description="We'll aggregate ingredients from your meal plan and group them by category."
+      <PageHeader
+        title="Grocery List"
+        subtitle="Ingredients aggregated from this week's meal plan, grouped by category."
       />
+      <GroceryList groups={groups} />
     </>
   )
 }

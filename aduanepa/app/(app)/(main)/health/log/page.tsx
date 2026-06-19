@@ -1,29 +1,48 @@
 import type { Metadata } from "next"
-import Link from "next/link"
-import { HeartPulse } from "lucide-react"
-import { EmptyState } from "@/components/shared/empty-state"
+
+import { auth } from "@/lib/auth"
+import { getTodayLog } from "@/lib/services/health-logs"
 import { PageHeader } from "@/components/shared/page-header"
-import { Button } from "@/components/ui/button"
+import { HealthLogForm, type TodayLogValues } from "@/components/health/health-log-form"
 
 export const metadata: Metadata = { title: "Log Health Data · AduanePa" }
 
-export default function HealthLogPage() {
+function toFieldValue(value: number | null): string {
+  return value == null ? "" : String(value)
+}
+
+export default async function HealthLogPage() {
+  const session = await auth()
+  const userId = session!.user!.id
+
+  const existing = await getTodayLog(userId)
+
+  const initialValues: Partial<TodayLogValues> | undefined = existing
+    ? {
+        weight: toFieldValue(existing.weight),
+        bloodSugar: toFieldValue(existing.bloodSugar),
+        bpSystolic: toFieldValue(existing.bpSystolic),
+        bpDiastolic: toFieldValue(existing.bpDiastolic),
+        notes: existing.notes ?? "",
+      }
+    : undefined
+
+  const todayLabel = new Date().toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  })
+
   return (
     <>
       <PageHeader
         title="Log today's data"
-        subtitle="Record weight, blood pressure, and blood sugar."
+        subtitle={`Logging for: ${todayLabel}`}
       />
-      <EmptyState
-        icon={HeartPulse}
-        title="Health logging arrives in Phase 10"
-        description="The dashboard snapshot will populate once you can log readings here."
-        action={
-          <Button asChild variant="outline">
-            <Link href="/dashboard">Back to dashboard</Link>
-          </Button>
-        }
-      />
+      <div className="mx-auto max-w-2xl">
+        <HealthLogForm initialValues={initialValues} isUpdate={!!existing} />
+      </div>
     </>
   )
 }

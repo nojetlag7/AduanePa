@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "test": "tsx scripts/test-phase.ts --all",
     "test:phase": "tsx scripts/test-phase.ts",
-    "test:seed-user": "tsx scripts/seed-test-user.ts"
+    "test:seed-user": "tsx scripts/seed-test-user.ts",
+    "seed:demo": "tsx scripts/seed-demo-user.ts"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
