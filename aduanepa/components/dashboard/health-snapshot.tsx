@@ -31,7 +31,7 @@ export function HealthSnapshot({ readings }: { readings: LatestReadings }) {
     readings.bpSystolic != null
 
   return (
-    <section className="rounded-xl border border-border-light bg-bg-card p-5">
+    <section className="rounded-xl border border-border-light bg-bg-card p-5 shadow-card">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="font-display text-lg font-semibold text-text-primary">
@@ -41,7 +41,7 @@ export function HealthSnapshot({ readings }: { readings: LatestReadings }) {
             Latest readings vs. roughly one week ago.
           </p>
         </div>
-        <Button asChild variant="outline" size="sm">
+        <Button asChild variant="secondary" size="sm">
           <Link href="/health/log">Log today&apos;s data</Link>
         </Button>
       </div>

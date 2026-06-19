@@ -24,7 +24,7 @@ export function NutritionRing({
   const progressOffset = RING_CIRCUMFERENCE * (1 - pct / 100)
 
   return (
-    <section className="rounded-xl border border-border-light bg-bg-card p-5">
+    <section className="rounded-xl border border-border-light bg-bg-card p-5 shadow-card">
       <h2 className="font-display text-lg font-semibold text-text-primary">
         Daily nutrition
       </h2>

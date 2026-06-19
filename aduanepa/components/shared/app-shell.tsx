@@ -81,7 +81,7 @@ export function AppShell({ user, children }: AppShellProps) {
           </span>
         </Link>
         <div className="ml-auto">
-          <AppHeader user={user} showProfileText={false} />
+          <AppHeader user={user} />
         </div>
       </header>
 

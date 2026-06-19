@@ -22,7 +22,7 @@ export function MealCard({
   const extraCount = ingredients.length - preview.length
 
   return (
-    <Card className="border-border-light bg-bg-card shadow-sm transition-shadow hover:shadow-md">
+    <Card className="gap-3 transition-shadow duration-200 hover:shadow-card-hover">
       <CardHeader className="gap-2 pb-2">
         <div className="flex items-start justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">

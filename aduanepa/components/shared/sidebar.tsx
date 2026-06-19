@@ -50,10 +50,13 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
 
   return (
     <div className="flex h-full flex-col bg-bg-card">
-      {/* Brand + collapse toggle */}
+      {/*
+        Brand header — h-14 to match the desktop top-bar in app-shell,
+        so the single bottom border reads as one continuous horizontal line.
+      */}
       <div
         className={cn(
-          "flex h-16 shrink-0 items-center border-b border-border-light px-4",
+          "flex h-14 shrink-0 items-center border-b border-border-light px-3",
           collapsed ? "justify-center" : "justify-between"
         )}
       >
@@ -63,13 +66,15 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
           className="flex items-center gap-2 overflow-hidden"
           aria-label="AduanePa dashboard"
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary">
-            <Leaf className="h-5 w-5 text-white" aria-hidden="true" />
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary">
+            <Leaf className="h-4 w-4 text-white" aria-hidden="true" />
           </span>
           {!collapsed && (
-            <span className="font-display text-lg font-bold text-text-primary">AduanePa</span>
+            <span className="font-display text-base font-bold text-text-primary">AduanePa</span>
           )}
         </Link>
+
+        {/* Collapse button — only visible when expanded */}
         {onToggleCollapse && !collapsed && (
           <button
             type="button"
@@ -82,19 +87,28 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
         )}
       </div>
 
-      {onToggleCollapse && collapsed && (
-        <button
-          type="button"
-          onClick={onToggleCollapse}
-          aria-label="Expand sidebar"
-          className="mx-auto mt-2 hidden h-8 w-8 items-center justify-center rounded-lg text-text-muted transition-colors duration-200 hover:bg-bg-muted hover:text-text-primary lg:inline-flex"
-        >
-          <PanelLeftOpen className="h-[18px] w-[18px]" aria-hidden="true" />
-        </button>
-      )}
-
       <TooltipProvider delayDuration={0}>
-        <nav className="flex-1 space-y-1 overflow-y-auto p-3" aria-label="Main navigation">
+        <nav className="flex-1 space-y-0.5 overflow-y-auto p-2" aria-label="Main navigation">
+          {/*
+            Expand button lives as the FIRST nav row when collapsed,
+            aligned flush with the icon-only nav items below it.
+          */}
+          {onToggleCollapse && collapsed && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={onToggleCollapse}
+                  aria-label="Expand sidebar"
+                  className="mb-1 hidden w-full items-center justify-center rounded-lg px-2 py-2.5 text-text-muted transition-colors duration-200 hover:bg-bg-muted hover:text-text-primary lg:flex"
+                >
+                  <PanelLeftOpen className="h-5 w-5 shrink-0" aria-hidden="true" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Expand sidebar</TooltipContent>
+            </Tooltip>
+          )}
+
           {NAV_ITEMS.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(`${item.href}/`)
