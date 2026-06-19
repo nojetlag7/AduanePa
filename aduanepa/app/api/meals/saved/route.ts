@@ -22,6 +22,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 })
   }
 
+  // ── Ad-hoc meal (Make Me a Meal): save the snapshot directly ──────────────
+  if ("meal" in parsed.data) {
+    const { meal } = parsed.data
+    const saved = await saveMeal(session.user.id, {
+      name: meal.name,
+      mealType: meal.type,
+      data: {
+        name: meal.name,
+        description: meal.description,
+        type: meal.type,
+        ingredients: meal.ingredients,
+        instructions: meal.instructions,
+        calories: meal.calories,
+        proteinG: meal.proteinG,
+        carbsG: meal.carbsG,
+        fatG: meal.fatG,
+        prepTimeMin: meal.prepTimeMin,
+        isLocalDish: meal.isLocalDish,
+      },
+    })
+    return NextResponse.json({ saved: true, savedMealId: saved.id })
+  }
+
+  // ── Reference an existing DB meal by id ───────────────────────────────────
   const meal = await getMealById(session.user.id, parsed.data.mealId)
   if (!meal) {
     return NextResponse.json({ error: "Meal not found" }, { status: 404 })

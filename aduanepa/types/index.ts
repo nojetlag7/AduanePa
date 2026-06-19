@@ -120,3 +120,30 @@ export const MealPlanResponseSchema = z.object({
 
 export type GeneratedMeal = z.infer<typeof GeneratedMealSchema>
 export type MealPlanResponse = z.infer<typeof MealPlanResponseSchema>
+
+// ─── Make Me a Meal response (Phase 8) ──────────────────────────────────────
+// The model returns one of two shapes, discriminated by `possible`:
+//   { possible: true,  meal: GeneratedMeal }
+//   { possible: false, suggestion: string }
+
+export const MakeMeAMealResultSchema = z.discriminatedUnion("possible", [
+  z.object({
+    possible: z.literal(true),
+    meal: GeneratedMealSchema,
+  }),
+  z.object({
+    possible: z.literal(false),
+    suggestion: z.string().min(1),
+  }),
+])
+
+export type MakeMeAMealResult = z.infer<typeof MakeMeAMealResultSchema>
+
+// ─── Ingredient substitution response (Phase 8.2) ───────────────────────────
+
+export const SubstituteResultSchema = z.object({
+  substitute: z.string().min(1),
+  reason: z.string().min(1),
+})
+
+export type SubstituteResult = z.infer<typeof SubstituteResultSchema>

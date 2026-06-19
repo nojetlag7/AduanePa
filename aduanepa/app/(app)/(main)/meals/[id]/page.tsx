@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, MapPin } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SaveMealButton } from "@/components/meals/save-meal-button"
+import { SubstituteIngredient } from "@/components/meals/substitute-ingredient"
 import { PageHeader } from "@/components/shared/page-header"
 import { auth } from "@/lib/auth"
 import {
@@ -80,12 +81,18 @@ export default async function MealDetailPage({
             <h2 className="font-display text-base font-semibold text-text-primary">
               Ingredients
             </h2>
-            <ul className="mt-3 space-y-2 text-sm text-text-secondary">
+            <ul className="mt-3 space-y-1 text-sm text-text-secondary">
               {ingredients.map((item, index) => (
-                <li key={`${item.name}-${index}`} className="flex justify-between gap-4">
+                <li
+                  key={`${item.name}-${index}`}
+                  className="flex items-center justify-between gap-3 rounded-md py-1 pl-1 transition-colors hover:bg-bg-muted/50"
+                >
                   <span>{item.name}</span>
-                  <span className="text-text-muted">
-                    {item.amount} {item.unit}
+                  <span className="flex items-center gap-1">
+                    <span className="text-text-muted">
+                      {item.amount} {item.unit}
+                    </span>
+                    <SubstituteIngredient mealId={meal.id} ingredientName={item.name} />
                   </span>
                 </li>
               ))}

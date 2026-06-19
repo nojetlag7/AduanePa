@@ -4,16 +4,23 @@ import { useState } from "react"
 import { Bookmark, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
+import type { GeneratedMeal } from "@/types"
+
+type SaveMealButtonProps = {
+  /** Save an existing DB meal by id (Today's meals, meal detail). */
+  mealId?: string
+  /** Save an ad-hoc generated meal snapshot (Make Me a Meal). */
+  meal?: GeneratedMeal
+  initiallySaved?: boolean
+  compact?: boolean
+}
 
 export function SaveMealButton({
   mealId,
+  meal,
   initiallySaved = false,
   compact = false,
-}: {
-  mealId: string
-  initiallySaved?: boolean
-  compact?: boolean
-}) {
+}: SaveMealButtonProps) {
   const [saved, setSaved] = useState(initiallySaved)
   const [loading, setLoading] = useState(false)
 
@@ -21,10 +28,11 @@ export function SaveMealButton({
     if (saved || loading) return
     setLoading(true)
     try {
+      const payload = meal ? { meal } : { mealId }
       const res = await fetch("/api/meals/saved", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mealId }),
+        body: JSON.stringify(payload),
       })
       const data = (await res.json()) as { error?: string }
       if (!res.ok) {
@@ -69,7 +77,6 @@ export function SaveMealButton({
       variant={saved ? "secondary" : "default"}
       onClick={handleSave}
       disabled={saved || loading}
-      className={saved ? "" : "bg-primary text-white hover:bg-primary-hover"}
     >
       {loading ? (
         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
