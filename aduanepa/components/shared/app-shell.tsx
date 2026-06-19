@@ -2,8 +2,9 @@
 
 import { useState, useSyncExternalStore } from "react"
 import Link from "next/link"
-import { Leaf, Menu } from "lucide-react"
+import { Menu } from "lucide-react"
 import { AppHeader } from "@/components/shared/app-header"
+import { BrandLogo } from "@/components/shared/brand-logo"
 import { Sidebar } from "@/components/shared/sidebar"
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
@@ -73,9 +74,7 @@ export function AppShell({ user, children }: AppShellProps) {
           </SheetContent>
         </Sheet>
         <Link href="/dashboard" className="flex min-w-0 items-center gap-2">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary">
-            <Leaf className="h-4 w-4 text-white" aria-hidden="true" />
-          </span>
+          <BrandLogo className="h-8 w-8 shrink-0 text-primary" />
           <span className="truncate font-display text-base font-bold text-text-primary">
             AduanePa
           </span>

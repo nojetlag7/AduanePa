@@ -7,7 +7,6 @@ import {
   ChefHat,
   HeartPulse,
   LayoutDashboard,
-  Leaf,
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
@@ -15,6 +14,7 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react"
+import { BrandLogo } from "@/components/shared/brand-logo"
 import {
   Tooltip,
   TooltipContent,
@@ -66,9 +66,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
           className="flex items-center gap-2 overflow-hidden"
           aria-label="AduanePa dashboard"
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary">
-            <Leaf className="h-4 w-4 text-white" aria-hidden="true" />
-          </span>
+          <BrandLogo className="h-8 w-8 shrink-0 text-primary" />
           {!collapsed && (
             <span className="font-display text-base font-bold text-text-primary">AduanePa</span>
           )}

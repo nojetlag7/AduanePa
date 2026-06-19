@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { Leaf, Menu } from "lucide-react"
+import { Menu } from "lucide-react"
+import { BrandLogo } from "@/components/shared/brand-logo"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { Button } from "@/components/ui/button"
 import {
@@ -71,9 +72,7 @@ export function LandingNav() {
       >
         {/* Logo — flush left (viewport padding only) */}
         <Link href="/#top" className="relative z-10 flex shrink-0 items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary">
-            <Leaf className="h-5 w-5 text-white" aria-hidden="true" />
-          </span>
+          <BrandLogo className="h-9 w-9 text-primary" />
           <span className="font-display text-xl font-bold text-text-primary">AduanePa</span>
         </Link>
 
