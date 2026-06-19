@@ -4,6 +4,11 @@ This checklist tracks sprint execution progress phase by phase.
 Mark tasks `[x]` as they are completed. Do not skip ahead — each phase has exit criteria
 that must pass before the next phase begins.
 
+> **Gate:** after finishing a phase, run its scored test (`npm run test:phase -- <N>`)
+> and only advance once it clears the **80%** threshold. See `guides/testing.md`.
+> Run `npm test` to verify every implemented phase at once. The shared test user
+> (`boatengjo9@gmail.com`) is seeded via `npm run test:seed-user`.
+
 ---
 
 ## Overall Status

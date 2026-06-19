@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "tsx scripts/test-phase.ts --all",
+    "test:phase": "tsx scripts/test-phase.ts",
+    "test:seed-user": "tsx scripts/seed-test-user.ts"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
