@@ -8,7 +8,6 @@ import {
   HeartPulse,
   LayoutDashboard,
   Leaf,
-  LogOut,
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
@@ -16,9 +15,6 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react"
-import { signOut } from "next-auth/react"
-import { ThemeToggle } from "@/components/shared/theme-toggle"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   Tooltip,
   TooltipContent,
@@ -44,25 +40,12 @@ export const NAV_ITEMS: NavItem[] = [
 ]
 
 interface SidebarProps {
-  user: { name?: string | null; email?: string | null }
   collapsed?: boolean
   onToggleCollapse?: () => void
   onNavigate?: () => void
 }
 
-function initials(name?: string | null, email?: string | null): string {
-  if (name?.trim()) {
-    return name
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((p) => p[0]?.toUpperCase())
-      .join("")
-  }
-  return email?.[0]?.toUpperCase() ?? "U"
-}
-
-export function Sidebar({ user, collapsed = false, onToggleCollapse, onNavigate }: SidebarProps) {
+export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: SidebarProps) {
   const pathname = usePathname()
 
   return (
@@ -70,7 +53,7 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onNavigate 
       {/* Brand + collapse toggle */}
       <div
         className={cn(
-          "flex h-16 items-center border-b border-border-light px-4",
+          "flex h-16 shrink-0 items-center border-b border-border-light px-4",
           collapsed ? "justify-center" : "justify-between"
         )}
       >
@@ -99,7 +82,6 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onNavigate 
         )}
       </div>
 
-      {/* Expand button when collapsed */}
       {onToggleCollapse && collapsed && (
         <button
           type="button"
@@ -111,74 +93,45 @@ export function Sidebar({ user, collapsed = false, onToggleCollapse, onNavigate 
         </button>
       )}
 
-      {/* Navigation */}
       <TooltipProvider delayDuration={0}>
         <nav className="flex-1 space-y-1 overflow-y-auto p-3" aria-label="Main navigation">
           {NAV_ITEMS.map((item) => {
-          const isActive =
-            pathname === item.href || pathname.startsWith(`${item.href}/`)
-          const Icon = item.icon
+            const isActive =
+              pathname === item.href || pathname.startsWith(`${item.href}/`)
+            const Icon = item.icon
 
-          const link = (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate}
-              aria-current={isActive ? "page" : undefined}
-              aria-label={collapsed ? item.label : undefined}
-              className={cn(
-                "group flex items-center gap-3 rounded-lg border-l-2 px-3 py-2.5 text-sm font-medium transition-colors duration-200",
-                collapsed && "justify-center",
-                isActive
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-transparent text-text-secondary hover:bg-bg-muted hover:text-text-primary"
-              )}
-            >
-              <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-              {!collapsed && <span className="truncate">{item.label}</span>}
-            </Link>
-          )
-
-          if (collapsed) {
-            return (
-              <Tooltip key={item.href}>
-                <TooltipTrigger asChild>{link}</TooltipTrigger>
-                <TooltipContent side="right">{item.label}</TooltipContent>
-              </Tooltip>
+            const link = (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onNavigate}
+                aria-current={isActive ? "page" : undefined}
+                aria-label={collapsed ? item.label : undefined}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200",
+                  collapsed && "justify-center px-2",
+                  isActive
+                    ? "bg-bg-muted text-text-primary"
+                    : "text-text-secondary hover:bg-bg-muted/60 hover:text-text-primary"
+                )}
+              >
+                <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                {!collapsed && <span className="truncate">{item.label}</span>}
+              </Link>
             )
-          }
-          return link
+
+            if (collapsed) {
+              return (
+                <Tooltip key={item.href}>
+                  <TooltipTrigger asChild>{link}</TooltipTrigger>
+                  <TooltipContent side="right">{item.label}</TooltipContent>
+                </Tooltip>
+              )
+            }
+            return link
           })}
         </nav>
       </TooltipProvider>
-
-      {/* Footer: theme toggle + user + sign out */}
-      <div className="border-t border-border-light p-3">
-        <div className={cn("flex items-center gap-2", collapsed && "flex-col")}>
-          <Avatar size="default">
-            <AvatarFallback className="bg-primary/10 font-semibold text-primary">
-              {initials(user.name, user.email)}
-            </AvatarFallback>
-          </Avatar>
-          {!collapsed && (
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-text-primary">
-                {user.name ?? "Account"}
-              </p>
-              <p className="truncate text-xs text-text-muted">{user.email}</p>
-            </div>
-          )}
-          <ThemeToggle />
-          <button
-            type="button"
-            onClick={() => signOut({ redirectTo: "/" })}
-            aria-label="Sign out"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-text-secondary transition-colors duration-200 hover:bg-error-bg hover:text-error"
-          >
-            <LogOut className="h-[18px] w-[18px]" aria-hidden="true" />
-          </button>
-        </div>
-      </div>
     </div>
   )
 }
