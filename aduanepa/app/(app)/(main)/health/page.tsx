@@ -3,11 +3,18 @@ import Link from "next/link"
 import { HeartPulse, Plus } from "lucide-react"
 
 import { auth } from "@/lib/auth"
-import { getHealthTrend, getLatestReadings } from "@/lib/services/health-logs"
+import { startOfDay } from "@/lib/meal-utils"
+import {
+  getHealthTrend,
+  getLatestReadings,
+  getMealAdherence,
+} from "@/lib/services/health-logs"
+import { getMealPlanByDate } from "@/lib/services/meals"
 import { getUserProfile } from "@/lib/services/users"
 import { EmptyState } from "@/components/shared/empty-state"
 import { PageHeader } from "@/components/shared/page-header"
 import { Button } from "@/components/ui/button"
+import { AdherenceTracker } from "@/components/health/adherence-tracker"
 import { ReadingBadge } from "@/components/health/reading-badge"
 import { TrendChart } from "@/components/health/trend-chart"
 
@@ -17,14 +24,21 @@ export default async function HealthPage() {
   const session = await auth()
   const userId = session!.user!.id
 
-  const [profile, trend, latest] = await Promise.all([
+  const today = startOfDay(new Date())
+  const [profile, trend, latest, plan, adherence] = await Promise.all([
     getUserProfile(userId),
     getHealthTrend(userId, 30),
     getLatestReadings(userId),
+    getMealPlanByDate(userId, today),
+    getMealAdherence(userId, today),
   ])
 
   const conditions = profile?.healthConditions ?? []
   const hasData = trend.length > 0
+  const planMeals = plan?.meals ?? []
+  const adherenceStatuses = Object.fromEntries(
+    adherence.map((log) => [log.mealId, log.status])
+  )
 
   if (!hasData) {
     return (
@@ -113,6 +127,21 @@ export default async function HealthPage() {
           <h2 className="mb-4 text-base font-semibold text-text-primary">Trends</h2>
           <TrendChart data={trend} />
         </section>
+
+        {planMeals.length > 0 && (
+          <section className="rounded-xl border border-border-light bg-bg-card p-5 shadow-card">
+            <h2 className="mb-1 text-base font-semibold text-text-primary">
+              Today&apos;s meal adherence
+            </h2>
+            <p className="mb-4 text-sm text-text-secondary">
+              Mark each meal as done or skipped to sharpen your recommendations.
+            </p>
+            <AdherenceTracker
+              meals={planMeals.map((m) => ({ id: m.id, name: m.name, type: m.type }))}
+              initialStatuses={adherenceStatuses}
+            />
+          </section>
+        )}
       </div>
     </>
   )

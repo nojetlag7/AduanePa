@@ -1,4 +1,4 @@
-import type { HealthLog } from "@prisma/client"
+import { LogStatus, type HealthLog, type MealAdherenceLog } from "@prisma/client"
 import { prisma } from "@/lib/db"
 import { startOfDay } from "@/lib/meal-utils"
 
@@ -147,4 +147,88 @@ export async function getHealthTrend(
     bpDiastolic: log.bpDiastolic,
     bloodSugar: log.bloodSugar,
   }))
+}
+
+// ─── Phase 11 — meal adherence ──────────────────────────────────────────────
+
+/** All adherence records for a given day, keyed for lookup by `mealId`. */
+export async function getMealAdherence(
+  userId: string,
+  date: Date
+): Promise<MealAdherenceLog[]> {
+  return prisma.mealAdherenceLog.findMany({
+    where: { userId, date: startOfDay(date) },
+  })
+}
+
+/**
+ * Create or update an adherence record for a meal on a day. The
+ * `[userId, mealId, date]` unique constraint guarantees one row per meal/day,
+ * so we always upsert — never `create` directly.
+ */
+export async function upsertAdherence(
+  userId: string,
+  mealId: string,
+  date: Date,
+  status: LogStatus
+): Promise<MealAdherenceLog> {
+  const day = startOfDay(date)
+  return prisma.mealAdherenceLog.upsert({
+    where: { userId_mealId_date: { userId, mealId, date: day } },
+    create: { userId, mealId, date: day, status },
+    update: { status },
+  })
+}
+
+export interface AdherenceRate {
+  /** Completed ÷ logged (excludes PENDING) per meal type, 0–1. */
+  byMealType: Partial<Record<string, number>>
+  /** Overall completed ÷ (completed + skipped) across the window, 0–1. */
+  overall: number
+  /** Distinct days in the window that have at least one logged meal. */
+  daysTracked: number
+}
+
+/**
+ * Completion stats over the last `days`, aggregated per `MealType`. Used by the
+ * recommendation context builder — never returns raw rows.
+ */
+export async function getAdherenceRate(
+  userId: string,
+  days = 7
+): Promise<AdherenceRate> {
+  const start = startOfDay(new Date())
+  start.setDate(start.getDate() - (days - 1))
+
+  const logs = await prisma.mealAdherenceLog.findMany({
+    where: { userId, date: { gte: start }, status: { not: LogStatus.PENDING } },
+    include: { meal: { select: { type: true } } },
+  })
+
+  const totals = new Map<string, { done: number; total: number }>()
+  const days_ = new Set<string>()
+  let done = 0
+
+  for (const log of logs) {
+    days_.add(log.date.toISOString().slice(0, 10))
+    const type = log.meal.type
+    const bucket = totals.get(type) ?? { done: 0, total: 0 }
+    bucket.total += 1
+    if (log.status === LogStatus.COMPLETED) {
+      bucket.done += 1
+      done += 1
+    }
+    totals.set(type, bucket)
+  }
+
+  const byMealType: Record<string, number> = {}
+  for (const [type, { done: d, total }] of totals) {
+    byMealType[type] = total > 0 ? d / total : 0
+  }
+
+  return {
+    byMealType,
+    overall: logs.length > 0 ? done / logs.length : 0,
+    daysTracked: days_.size,
+  }
 }

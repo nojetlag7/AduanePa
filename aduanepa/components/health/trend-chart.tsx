@@ -5,12 +5,12 @@ import {
   CartesianGrid,
   Line,
   LineChart,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts"
 
+import { ResponsiveChart } from "@/components/charts/responsive-chart"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useChartColors } from "@/lib/use-chart-colors"
 import type { HealthTrendPoint } from "@/lib/services/health-logs"
@@ -55,9 +55,14 @@ export function TrendChart({ data }: { data: HealthTrendPoint[] }) {
       </div>
 
       {series.length > 0 ? (
-        <div className="h-[280px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
+        <ResponsiveChart height={280}>
+          {(width, height) => (
+            <LineChart
+              width={width}
+              height={height}
+              data={series}
+              margin={{ top: 8, right: 8, bottom: 0, left: -12 }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} vertical={false} />
               <XAxis
                 dataKey="label"
@@ -94,8 +99,8 @@ export function TrendChart({ data }: { data: HealthTrendPoint[] }) {
                 connectNulls
               />
             </LineChart>
-          </ResponsiveContainer>
-        </div>
+          )}
+        </ResponsiveChart>
       ) : (
         <div className="flex h-[280px] items-center justify-center text-sm text-text-muted">
           No {active.label.toLowerCase()} readings logged yet.

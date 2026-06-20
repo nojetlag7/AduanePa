@@ -31,8 +31,8 @@ const C = {
   bold: "\x1b[1m",
 }
 
-const LAST_IMPLEMENTED_PHASE = 10
-const ALL_PHASES = Array.from({ length: 15 }, (_, i) => i) // 0..14
+const LAST_IMPLEMENTED_PHASE = 11
+const ALL_PHASES = Array.from({ length: 16 }, (_, i) => i) // 0..15
 
 interface Args {
   phases: number[]

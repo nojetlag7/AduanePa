@@ -1,8 +1,10 @@
 "use client"
 
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts"
+import { Cell, Pie, PieChart } from "recharts"
 
 import { useChartColors } from "@/lib/use-chart-colors"
+
+const DONUT_SIZE = 180
 
 export function MacroDonut({
   proteinG,
@@ -32,28 +34,29 @@ export function MacroDonut({
 
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
-      <div className="relative h-[180px] w-[180px] shrink-0">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={data}
-              dataKey="grams"
-              nameKey="label"
-              cx="50%"
-              cy="50%"
-              innerRadius={56}
-              outerRadius={80}
-              paddingAngle={2}
-              stroke="none"
-              startAngle={90}
-              endAngle={-270}
-            >
-              {data.map((entry) => (
-                <Cell key={entry.key} fill={entry.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
+      <div
+        className="relative shrink-0"
+        style={{ height: DONUT_SIZE, width: DONUT_SIZE }}
+      >
+        <PieChart width={DONUT_SIZE} height={DONUT_SIZE}>
+          <Pie
+            data={data}
+            dataKey="grams"
+            nameKey="label"
+            cx="50%"
+            cy="50%"
+            innerRadius={56}
+            outerRadius={80}
+            paddingAngle={2}
+            stroke="none"
+            startAngle={90}
+            endAngle={-270}
+          >
+            {data.map((entry) => (
+              <Cell key={entry.key} fill={entry.color} />
+            ))}
+          </Pie>
+        </PieChart>
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-lg font-bold text-text-primary">
             {Math.round(total)}

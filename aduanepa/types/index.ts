@@ -147,3 +147,17 @@ export const SubstituteResultSchema = z.object({
 })
 
 export type SubstituteResult = z.infer<typeof SubstituteResultSchema>
+
+// ─── Adaptive recommendations (Phase 11) ────────────────────────────────────
+
+export const RecommendationItemSchema = z.object({
+  number: z.number().int().positive(),
+  text: z.string().min(1),
+})
+
+export const RecommendationResultSchema = z.object({
+  recommendations: z.array(RecommendationItemSchema).min(1).max(5),
+})
+
+export type RecommendationItem = z.infer<typeof RecommendationItemSchema>
+export type RecommendationResult = z.infer<typeof RecommendationResultSchema>

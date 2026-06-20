@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { LogStatus } from "@prisma/client"
 
 /**
  * Coerce a possibly-empty string/number field into `number | undefined`.
@@ -43,3 +44,15 @@ export const HealthLogSchema = z
   )
 
 export type HealthLogInputDto = z.infer<typeof HealthLogSchema>
+
+/** Adherence toggle payload. `date` optional — defaults to today server-side. */
+export const AdherenceSchema = z.object({
+  mealId: z.string().min(1, "mealId is required"),
+  status: z.nativeEnum(LogStatus),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "date must be YYYY-MM-DD")
+    .optional(),
+})
+
+export type AdherenceInputDto = z.infer<typeof AdherenceSchema>

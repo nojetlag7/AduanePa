@@ -5,12 +5,12 @@ import {
   CartesianGrid,
   Line,
   LineChart,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts"
 
+import { ResponsiveChart } from "@/components/charts/responsive-chart"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useChartColors } from "@/lib/use-chart-colors"
 import type { TrendPoint } from "@/lib/services/nutrition"
@@ -42,9 +42,14 @@ export function CalorieTrendChart({
       </div>
 
       {hasData ? (
-        <div className="h-[260px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={visible} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+        <ResponsiveChart height={260}>
+          {(width, height) => (
+            <LineChart
+              width={width}
+              height={height}
+              data={visible}
+              margin={{ top: 8, right: 8, bottom: 0, left: -16 }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke={colors.grid} vertical={false} />
               <XAxis
                 dataKey="label"
@@ -79,8 +84,8 @@ export function CalorieTrendChart({
                 activeDot={{ r: 4 }}
               />
             </LineChart>
-          </ResponsiveContainer>
-        </div>
+          )}
+        </ResponsiveChart>
       ) : (
         <div className="flex h-[260px] items-center justify-center text-sm text-text-muted">
           No calorie history for this period yet.

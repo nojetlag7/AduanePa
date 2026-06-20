@@ -24,10 +24,11 @@ that must pass before the next phase begins.
 - [x] Phase 8 — Make Me a Meal
 - [x] Phase 9 — Nutritional Breakdown & Grocery List
 - [x] Phase 10 — Health Monitoring
-- [ ] Phase 11 — Meal Adherence & Adaptive Recommendations
+- [x] Phase 11 — Meal Adherence & Adaptive Recommendations
 - [ ] Phase 12 — Settings Page
 - [ ] Phase 13 — PWA & Localisation
 - [ ] Phase 14 — Hardening, Accessibility & Final QA
+- [ ] Phase 15 — Push Notifications (Firebase Cloud Messaging)
 
 ---
 
@@ -581,55 +582,58 @@ that must pass before the next phase begins.
 ## Phase 11 — Meal Adherence & Adaptive Recommendations
 
 ### 11.1 Meal adherence service (extend `lib/services/health-logs.ts`)
-- [ ] `getMealAdherence(userId, date)` — returns `MealAdherenceLog[]` for all meals on that day
-- [ ] `upsertAdherence(userId, mealId, date, status)` — create or update adherence record
-- [ ] All queries scoped to `userId`
+- [x] `getMealAdherence(userId, date)` — returns `MealAdherenceLog[]` for all meals on that day
+- [x] `upsertAdherence(userId, mealId, date, status)` — create or update adherence record
+- [x] `getAdherenceRate(userId, days)` — derived completion rate per `MealType` (feeds recommendations)
+- [x] All queries scoped to `userId`
 
 ### 11.2 Adherence tracker component
-- [ ] `components/health/adherence-tracker.tsx`:
-  - [ ] Lists today's planned meals (Breakfast / Lunch / Dinner / Snack)
-  - [ ] Each meal: name + three-way toggle: Completed / Skipped / Pending
-  - [ ] On toggle: calls `upsertAdherence` via API route; optimistic UI update
-  - [ ] Shown on `/dashboard` (compact) and `/health` (full)
-- [ ] `app/api/health/adherence/route.ts`:
-  - [ ] POST handler — receives `{ mealId, date, status }`
-  - [ ] Calls `upsertAdherence`; returns updated record
+- [x] `components/health/adherence-tracker.tsx`:
+  - [x] Lists today's planned meals (Breakfast / Lunch / Dinner / Snack)
+  - [x] Each meal: name + three-way toggle: Completed / Skipped / Pending
+  - [x] On toggle: calls `upsertAdherence` via API route; optimistic UI update (reverts on failure)
+  - [x] Shown on `/dashboard` (compact) and `/health` (full)
+- [x] `app/api/health/adherence/route.ts`:
+  - [x] POST handler — receives `{ mealId, date, status }`; Zod-validated; meal ownership checked
+  - [x] Calls `upsertAdherence`; returns updated record
 
 ### 11.3 Recommendations service (`lib/services/recommendations.ts`)
-- [ ] `buildRecommendationContext(userId)`:
-  - [ ] Last 7 days of `HealthLog` — averages and direction per metric (not raw rows)
-  - [ ] Last 7 days of `MealAdherenceLog` — completion rate per `MealType`
-  - [ ] User's `healthConditions`, `dietaryGoal`, and `dietaryGoal`
-  - [ ] Returns compact JSON object — no raw Prisma rows in the output
+- [x] `buildRecommendationContext(userId)`:
+  - [x] Last 7 days of `HealthLog` — averages and direction per metric (not raw rows)
+  - [x] Last 7 days of `MealAdherenceLog` — completion rate per `MealType`
+  - [x] User's `healthConditions`, `dietaryGoal`, age and weight
+  - [x] Returns compact JSON object — no raw Prisma rows in the output
+- [x] `getLatestRecommendation` / `saveRecommendation` persist to `Recommendation` (dashboard shows last result without re-calling Gemini)
 
 ### 11.4 Recommendations API (`app/api/recommendations/route.ts`)
-- [ ] POST handler — session-authenticated
-- [ ] Calls `buildRecommendationContext(userId)`
-- [ ] System prompt instructs model to:
-  - [ ] Return exactly 3–5 numbered recommendations
-  - [ ] Ground every recommendation in a specific number from the context
-  - [ ] Never give generic diet advice not tied to the user's actual data
-  - [ ] Defer clinical decisions to a healthcare professional
-  - [ ] Respond ONLY with valid JSON: `{ recommendations: { number: int, text: string }[] }`
-- [ ] Sends to `gemini-2.5-flash` — `GEMINI_API_KEY` server-side only
-- [ ] Parses and Zod-validates response
-- [ ] Returns shaped recommendations to client
+- [x] POST handler — session-authenticated
+- [x] Calls `buildRecommendationContext(userId)`; returns `{ ready: false, daysLogged }` below the 3-day minimum
+- [x] System prompt instructs model to:
+  - [x] Return exactly 3–5 numbered recommendations
+  - [x] Ground every recommendation in a specific number from the context
+  - [x] Never give generic diet advice not tied to the user's actual data
+  - [x] Defer clinical decisions to a healthcare professional
+  - [x] Respond ONLY with valid JSON: `{ recommendations: { number: int, text: string }[] }`
+- [x] Sends to `gemini-2.5-flash` — `GEMINI_API_KEY` server-side only
+- [x] Parses and Zod-validates response (`RecommendationResultSchema`)
+- [x] Returns shaped recommendations to client
 
 ### 11.5 Recommendations panel component
-- [ ] `components/dashboard/recommendations-panel.tsx`:
-  - [ ] Displays 3–5 current recommendations as a numbered list
-  - [ ] "Refresh" button triggers new recommendation generation
-  - [ ] Skeleton loading while API call is in flight
-  - [ ] Empty state when < 3 days of health data exist: "Log a few more days of health data to unlock personalised recommendations"
-  - [ ] Disclaimer: "These recommendations are based on your logged data and are not a substitute for medical advice"
+- [x] `components/dashboard/recommendations-panel.tsx`:
+  - [x] Displays 3–5 current recommendations as a numbered list
+  - [x] "Refresh" button triggers new recommendation generation
+  - [x] Skeleton loading while API call is in flight
+  - [x] Empty state when < 3 days of health data exist: "Log a few more days of health data to unlock personalised recommendations"
+  - [x] Disclaimer: "These recommendations are based on your logged data and are not a substitute for medical advice"
 
 ### 11.6 Exit criteria
-- [ ] Toggling adherence status saves to DB and UI updates optimistically
-- [ ] Toggling the same meal twice updates correctly (upsert, no duplicate)
-- [ ] Recommendations panel displays 3–5 items with specific numbers from logged data
-- [ ] Recommendations for a user with < 3 days of logs show the empty state, not an error
-- [ ] `GEMINI_API_KEY` is not visible in network tab response or client JS bundle
-- [ ] `npm run build` passes
+- [x] Toggling adherence status saves to DB and UI updates optimistically
+- [x] Toggling the same meal twice updates correctly (upsert, no duplicate)
+- [x] Recommendations panel displays 3–5 items with specific numbers from logged data
+- [x] Recommendations for a user with < 3 days of logs show the empty state, not an error
+- [x] `GEMINI_API_KEY` is not visible in network tab response or client JS bundle (server-only `lib/gemini.ts`)
+- [x] `npm run build` passes
+- [x] **Phase 11 test suite ≥ 80%** — `npm run test:phase -- 11` (100%, 18/18)
 
 ---
 
@@ -752,6 +756,80 @@ Sections:
 - [ ] Language QA: English → Twi → English roundtrip works on all translated strings
 - [ ] AI API key QA: open Network tab in DevTools, generate a meal plan, confirm `GEMINI_API_KEY` does not appear in any request or response payload
 - [ ] End-to-end flow: register → onboard → generate plan → log health → view recommendations → check grocery list → change language → delete account
+
+---
+
+## Phase 15 — Push Notifications (Firebase Cloud Messaging)
+
+> **Goal:** a complete push pipeline — Frontend → Firebase → Service Worker →
+> Backend → User device — for a Next.js (App Router) PWA, in TypeScript, using
+> the Firebase **client SDK** (browser) and **admin SDK** (server).
+>
+> **Depends on:** Phase 13 PWA service-worker registration and `User.notificationsEnabled`
+> (already on the schema from Phase 1). FCM's `firebase-messaging-sw.js` lives
+> alongside the PWA service worker — register both without conflict.
+>
+> **Architecture decision:** the FCM web SDK requires a *dedicated* service
+> worker at the web root (`/firebase-messaging-sw.js`) loaded with the **compat**
+> build (service-worker scripts can't use ES module imports reliably across
+> browsers). All Firebase config is read from `NEXT_PUBLIC_*` env vars; the admin
+> private key is server-only.
+
+### 15.1 Environment & config
+- [ ] Firebase project created; Cloud Messaging enabled; Web Push certificate (VAPID key pair) generated
+- [ ] Client env vars added to `.env.local` (all `NEXT_PUBLIC_` — safe to expose):
+  - [ ] `NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`, `NEXT_PUBLIC_FIREBASE_PROJECT_ID`, `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`, `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`, `NEXT_PUBLIC_FIREBASE_APP_ID`
+  - [ ] `NEXT_PUBLIC_FIREBASE_VAPID_KEY` (Web Push public key)
+- [ ] Admin (server-only — **never** `NEXT_PUBLIC_`) env vars added: `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` (escaped newlines normalised at read time)
+- [ ] `firebase` and `firebase-admin` installed
+
+### 15.2 Firebase client setup
+- [ ] `lib/firebase/client.ts` — reusable client init: `initializeApp` guarded against re-init (`getApps().length`)
+- [ ] Messaging accessed only in the browser — `isSupported()` checked before `getMessaging()` (avoids SSR/`window` crashes)
+- [ ] Exports a typed `getMessagingIfSupported()` helper returning `Messaging | null`
+- [ ] No secrets hardcoded — all values from `NEXT_PUBLIC_FIREBASE_*`
+
+### 15.3 Service worker (background notifications)
+- [ ] `public/firebase-messaging-sw.js` created at the web root (so its scope covers the whole app)
+- [ ] Initialises Firebase inside the SW using `firebase-app-compat.js` + `firebase-messaging-compat.js` (importScripts)
+- [ ] `onBackgroundMessage` handler builds and shows the notification (title, body, icon) so it displays even when the app/tab is closed
+- [ ] `notificationclick` handler focuses an existing client tab or opens the target URL
+
+### 15.4 Permission + token retrieval
+- [ ] `lib/firebase/messaging.ts` — `requestNotificationPermission()`:
+  - [ ] Returns early/typed result if `Notification` unsupported or permission `denied`
+  - [ ] Calls `Notification.requestPermission()` then `getToken(messaging, { vapidKey, serviceWorkerRegistration })`
+  - [ ] Edge cases handled: unsupported browser, denied permission, missing SW registration — never throws to the caller
+- [ ] Token retrieval is idempotent (safe to call repeatedly; returns the same token)
+
+### 15.5 Token management
+- [ ] `app/api/notifications/save-token/route.ts` — POST: session-authenticated, Zod-validates `{ token }`, persists per-user (deduped)
+- [ ] DB: `DeviceToken` model (`id`, `userId`, `token` `@unique`, `userAgent?`, `createdAt`) with cascade delete on `userId`; or store on `User` — pick one and note it
+- [ ] `lib/services/notifications.ts` — `saveDeviceToken(userId, token)` / `listDeviceTokens(userId)` / `removeDeviceToken(token)`; all scoped to `userId`
+- [ ] Client `useFcmToken()` hook: requests permission, fetches token, POSTs it to `save-token`, exposes `{ token, permission, error }`
+
+### 15.6 Backend (Firebase Admin)
+- [ ] `lib/firebase/admin.ts` — admin init from env vars (`cert({ projectId, clientEmail, privateKey })`), guarded against re-init; `server-only` import
+- [ ] `lib/services/notifications.ts` — `sendNotificationToToken(token, { title, body, data? })` and `sendNotificationToUser(userId, payload)` (fans out to all of a user's tokens; prunes tokens that return `messaging/registration-token-not-registered`)
+- [ ] Modular: messaging send logic separate from token persistence
+
+### 15.7 Foreground notifications
+- [ ] `components/notifications/foreground-listener.tsx` — client component: subscribes via `onMessage` while the app is open
+- [ ] Surfaces foreground messages through a Sonner toast (no `alert()`), with optional click action
+- [ ] Mounted once in the protected app shell; no-ops when messaging unsupported
+
+### 15.8 Settings integration
+- [ ] Settings notification toggle writes `User.notificationsEnabled`; enabling triggers permission + token registration, disabling removes the device token
+- [ ] Graceful UI states: "blocked in browser settings", "unsupported on this device"
+
+### 15.9 Exit criteria
+- [ ] Permission prompt appears once and the FCM token is saved to the backend
+- [ ] Background notification (app closed) is delivered and shown by the service worker
+- [ ] Foreground notification (app open) surfaces as an in-app toast via `onMessage`
+- [ ] `notificationclick` focuses/opens the correct route
+- [ ] No Firebase admin secret (`FIREBASE_PRIVATE_KEY`) appears in any client bundle
+- [ ] Stale/unregistered tokens are pruned on send failure
+- [ ] `npm run build` passes
 
 ---
 

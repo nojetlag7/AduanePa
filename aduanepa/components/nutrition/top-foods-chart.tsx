@@ -1,15 +1,8 @@
 "use client"
 
-import {
-  Bar,
-  BarChart,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts"
+import { Bar, BarChart, Cell, Tooltip, XAxis, YAxis } from "recharts"
 
+import { ResponsiveChart } from "@/components/charts/responsive-chart"
 import { useChartColors } from "@/lib/use-chart-colors"
 import type { TopFood } from "@/lib/services/nutrition"
 
@@ -27,9 +20,11 @@ export function TopFoodsChart({ foods }: { foods: TopFood[] }) {
   const height = Math.max(160, foods.length * 34)
 
   return (
-    <div style={{ height }} className="w-full">
-      <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveChart height={height}>
+      {(width, chartHeight) => (
         <BarChart
+          width={width}
+          height={chartHeight}
           data={foods}
           layout="vertical"
           margin={{ top: 0, right: 16, bottom: 0, left: 8 }}
@@ -61,7 +56,7 @@ export function TopFoodsChart({ foods }: { foods: TopFood[] }) {
             ))}
           </Bar>
         </BarChart>
-      </ResponsiveContainer>
-    </div>
+      )}
+    </ResponsiveChart>
   )
 }
