@@ -74,7 +74,7 @@ const STEPS = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen scroll-smooth bg-bg-main text-text-primary">
+    <div className="min-h-screen scroll-smooth bg-bg-main text-text-primary dark:bg-transparent">
       {/* ─── Hero (nav shares this background — no visible seam) ─────────── */}
       <section id="top" className="relative overflow-hidden">
         <LandingNav />
@@ -108,14 +108,14 @@ export default function LandingPage() {
               <Button
                 asChild
                 size="lg"
-                className="bg-primary text-white hover:bg-primary-hover"
+                className="bg-primary text-white shadow-sm hover:bg-primary-hover hover:shadow-md"
               >
                 <Link href="/register">
                   Create free account
                   <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
+              <Button asChild size="lg" variant="outline" className="hover:border-primary/40 hover:bg-primary/5">
                 <Link href="/login">I already have an account</Link>
               </Button>
             </div>
@@ -137,7 +137,7 @@ export default function LandingPage() {
 
           {/* Hero mockup */}
           <div className="relative">
-            <div className="rounded-2xl border border-border-light bg-bg-card p-5 shadow-lg">
+            <div className="rounded-2xl border border-border-light bg-bg-card p-5 shadow-lg transition-all duration-200 hover:border-primary/20 hover:shadow-card-hover">
               <div className="mb-4 flex items-center justify-between">
                 <div>
                   <p className="text-xs text-text-muted">Today&apos;s plan</p>
@@ -178,7 +178,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Features ─────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden py-16 lg:py-24">
         <FeaturesFloatingMeals />
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
@@ -196,9 +196,9 @@ export default function LandingPage() {
             return (
               <div
                 key={feature.title}
-                className="rounded-2xl border border-border-light bg-bg-card p-6 shadow-sm transition-all duration-200 hover:shadow-lg"
+                className="group rounded-2xl border border-border-light bg-bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-card-hover"
               >
-                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors duration-200 group-hover:bg-primary/15">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <h3 className="text-lg font-semibold">{feature.title}</h3>
@@ -210,16 +210,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── How it works ─────────────────────────────────────────────────── */}
-      <section className="bg-bg-card py-12 lg:py-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto mb-8 max-w-2xl text-center">
-            <h2 className="font-display text-3xl font-bold sm:text-4xl">How it works</h2>
-            <p className="mt-3 text-text-secondary">Three steps to a plan that fits your life.</p>
-          </div>
-          <HowItWorks steps={STEPS} />
-        </div>
-      </section>
+      <HowItWorks steps={STEPS} />
 
       <MissionSection />
 
@@ -254,7 +245,7 @@ export default function LandingPage() {
             {["Banku & tilapia", "Waakye", "Kontomire stew", "Red red & plantain"].map((dish) => (
               <div
                 key={dish}
-                className="flex items-center gap-2 rounded-2xl border border-border-light bg-bg-card p-4 shadow-sm"
+                className="flex items-center gap-2 rounded-2xl border border-border-light bg-bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-card-hover"
               >
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <UtensilsCrossed className="h-4 w-4" aria-hidden="true" />
@@ -268,7 +259,7 @@ export default function LandingPage() {
 
       <ContactSection />
 
-      <footer className="border-t border-border-light">
+      <footer className="py-6 dark:bg-transparent">
         <div className="mx-auto px-4 py-6 sm:px-6 lg:px-10">
           <p className="text-center text-xs text-text-muted">
             © {new Date().getFullYear()} AduanePa. Nutrition for Ghana.

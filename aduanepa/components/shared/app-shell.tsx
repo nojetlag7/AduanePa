@@ -49,7 +49,7 @@ export function AppShell({ user, children }: AppShellProps) {
   }
 
   return (
-    <div className="min-h-screen bg-bg-main">
+    <div className="min-h-screen bg-bg-main dark:bg-transparent">
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 hidden border-r border-border-light transition-[width] duration-200 lg:block",

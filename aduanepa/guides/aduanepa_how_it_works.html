@@ -1,0 +1,224 @@
+
+<style>
+  .hiw-section {
+    background: #0D2B1A;
+    padding: 64px 40px;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+  .hiw-section::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(34,197,94,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hiw-eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #4ade80;
+    margin: 0 0 12px;
+  }
+  .hiw-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 8px;
+  }
+  .hiw-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.45);
+    margin: 0 0 56px;
+  }
+  .steps-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+  }
+  .step-connector {
+    flex: 1;
+    max-width: 80px;
+    height: 2px;
+    margin-top: 36px;
+    background: rgba(74,222,128,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .step-connector-fill {
+    position: absolute;
+    left: 0; top: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4ade80, #16a34a);
+    transition: width 0.6s ease;
+  }
+  .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 160px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .step-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .step-circle {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(74,222,128,0.3);
+    background: rgba(13,43,26,0.8);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    transition: border-color 0.3s, background 0.3s, transform 0.3s;
+    margin-bottom: 20px;
+  }
+  .step-item:hover .step-circle,
+  .step-item.active .step-circle {
+    border-color: #4ade80;
+    background: rgba(74,222,128,0.1);
+    transform: scale(1.08);
+  }
+  .step-circle::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(74,222,128,0.0);
+    transition: border-color 0.3s, inset 0.3s;
+  }
+  .step-item:hover .step-circle::after,
+  .step-item.active .step-circle::after {
+    border-color: rgba(74,222,128,0.15);
+    inset: -10px;
+  }
+  .step-num {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4ade80;
+    transition: color 0.3s;
+  }
+  .step-item:hover .step-num,
+  .step-item.active .step-num { color: #86efac; }
+  .step-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    margin: 0 0 8px;
+    transition: color 0.3s;
+  }
+  .step-item:hover .step-label,
+  .step-item.active .step-label { color: #ffffff; }
+  .step-desc {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+    max-width: 130px;
+    transition: color 0.3s, max-height 0.4s ease, opacity 0.4s;
+    overflow: hidden;
+    max-height: 60px;
+    opacity: 0.6;
+  }
+  .step-item:hover .step-desc,
+  .step-item.active .step-desc {
+    color: rgba(255,255,255,0.65);
+    max-height: 100px;
+    opacity: 1;
+  }
+  .step-icon {
+    font-size: 20px;
+    color: #4ade80;
+    margin-bottom: 4px;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .step-item:hover .step-icon,
+  .step-item.active .step-icon {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .hiw-cta {
+    margin-top: 48px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+  }
+</style>
+
+<div class="hiw-section" id="hiwSection">
+  <p class="hiw-eyebrow">Simple by design</p>
+  <h2 class="hiw-title">How it works</h2>
+  <p class="hiw-sub">Three steps to a plan that fits your life.</p>
+
+  <div class="steps-row">
+    <div class="step-item active" id="step1">
+      <div class="step-circle">
+        <span class="step-num">1</span>
+      </div>
+      <i class="ti ti-user-circle step-icon" aria-hidden="true"></i>
+      <p class="step-label">Set your profile</p>
+      <p class="step-desc">Tell us your goals, dietary needs, and favourite Ghanaian dishes.</p>
+    </div>
+
+    <div class="step-connector"><div class="step-connector-fill" id="con1"></div></div>
+
+    <div class="step-item" id="step2">
+      <div class="step-circle">
+        <span class="step-num">2</span>
+      </div>
+      <i class="ti ti-salad step-icon" aria-hidden="true"></i>
+      <p class="step-label">Get your plan</p>
+      <p class="step-desc">AI curates personalised meal plans using locally available ingredients.</p>
+    </div>
+
+    <div class="step-connector"><div class="step-connector-fill" id="con2"></div></div>
+
+    <div class="step-item" id="step3">
+      <div class="step-circle">
+        <span class="step-num">3</span>
+      </div>
+      <i class="ti ti-chart-line step-icon" aria-hidden="true"></i>
+      <p class="step-label">Track & adapt</p>
+      <p class="step-desc">Log your meals and readings — your recommendations evolve with your progress.</p>
+    </div>
+  </div>
+
+  <p class="hiw-cta">Hover each step to explore ↑</p>
+</div>
+
+<script>
+const items = ['step1','step2','step3'];
+const connectors = ['con1','con2'];
+let delays = [0, 180, 360];
+
+items.forEach((id, i) => {
+  setTimeout(() => {
+    document.getElementById(id).classList.add('visible');
+  }, 300 + delays[i]);
+});
+
+connectors.forEach((id, i) => {
+  setTimeout(() => {
+    document.getElementById(id).style.width = '100%';
+  }, 600 + i * 300);
+});
+
+items.forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('mouseenter', () => {
+    items.forEach(oid => document.getElementById(oid).classList.remove('active'));
+    el.classList.add('active');
+  });
+});
+</script>

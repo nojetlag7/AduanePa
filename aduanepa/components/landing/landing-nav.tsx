@@ -71,7 +71,7 @@ export function LandingNav() {
         aria-label="Main"
       >
         {/* Logo — flush left (viewport padding only) */}
-        <Link href="/#top" className="relative z-10 flex shrink-0 items-center gap-2">
+        <Link href="/#top" className="relative z-10 flex shrink-0 items-center gap-2 transition-opacity duration-200 hover:opacity-90">
           <BrandLogo className="h-9 w-9 text-primary" />
           <span className="font-display text-xl font-bold text-text-primary">AduanePa</span>
         </Link>
@@ -128,10 +128,13 @@ export function LandingNav() {
           </Sheet>
 
           <ThemeToggle />
-          <Button asChild variant="ghost" className="hidden sm:inline-flex">
+          <Button asChild variant="ghost" className="hidden sm:inline-flex hover:bg-primary/10 hover:text-primary">
             <Link href="/login">Sign in</Link>
           </Button>
-          <Button asChild className="bg-primary text-white hover:bg-primary-hover">
+          <Button
+            asChild
+            className="bg-primary text-white shadow-sm hover:bg-primary-hover hover:shadow-md"
+          >
             <Link href="/register">Get started</Link>
           </Button>
         </div>

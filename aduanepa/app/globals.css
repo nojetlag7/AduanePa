@@ -122,24 +122,34 @@
 /* ─── Dark Mode ──────────────────────────────────────────────────────────── */
 .dark {
   --color-primary:        #4CAF50;
-  --color-primary-hover:  #2D8653;
-  --color-primary-active: #1A5C38;
-  --color-section-bg:     #122b1e;
+  --color-primary-hover:  #5ec462;
+  --color-primary-active: #2D8653;
+  --color-section-bg:     #111111;
 
-  --bg-main:        #0D2B1A;
-  --bg-card:        #122b1e;
-  --bg-muted:       #1a3827;
-  --border-light:   #1e4530;
-  --border-medium:  #2a5c3f;
+  /* Near-black neutrals — green stays on accents, not every surface */
+  --bg-main:        #080808;
+  --bg-card:        #121212;
+  --bg-muted:       #1a1a1a;
+  --border-light:   #2a2a2a;
+  --border-medium:  #3a3a3a;
+
   /*
-    Neutral hierarchy in dark mode too — secondary/muted were saturated greens
-    (#a5d6a7 / #4CAF50) which made everything look mono-green. Now soft
-    neutral-greys so green reads as an accent, not the body-text colour.
+    Radial page wash — lighter centre, black edges. A faint green tint in the
+    core lets primary green pop without painting the whole UI forest-green.
   */
+  --bg-radial:
+    radial-gradient(
+      ellipse 120% 85% at 50% 18%,
+      #1a2420 0%,
+      #101412 32%,
+      #0a0a0a 58%,
+      #050505 100%
+    );
+
   --text-primary:   #f3f6f4;
   --text-secondary: #aeb8b2;
   --text-muted:     #7f8a84;
-  --text-inverse:   #0D2B1A;
+  --text-inverse:   #080808;
 
   /* Elevation — deep, low-opacity shadows so dark cards still lift subtly */
   --shadow-card:       0 1px 2px 0 rgb(0 0 0 / 0.30), 0 2px 8px -2px rgb(0 0 0 / 0.35);
@@ -151,24 +161,24 @@
   --chart-fat:     #7da0e0;
   --chart-accent:  #a98ddb;
 
-  --background:             150 53% 8%;
-  --foreground:             120 40% 96%;
-  --card:                   150 36% 12%;
-  --card-foreground:        120 40% 96%;
-  --popover:                150 36% 12%;
-  --popover-foreground:     120 40% 96%;
+  --background:             0 0% 5%;
+  --foreground:             120 10% 96%;
+  --card:                   0 0% 8%;
+  --card-foreground:        120 10% 96%;
+  --popover:                0 0% 8%;
+  --popover-foreground:     120 10% 96%;
   --primary:                123 38% 48%;
-  --primary-foreground:     150 53% 8%;
-  --secondary:              150 30% 16%;
-  --secondary-foreground:   120 40% 96%;
-  --muted:                  150 30% 16%;
-  --muted-foreground:       123 38% 48%;
-  --accent:                 150 30% 16%;
-  --accent-foreground:      120 40% 96%;
+  --primary-foreground:     0 0% 5%;
+  --secondary:              0 0% 12%;
+  --secondary-foreground:   120 10% 96%;
+  --muted:                  0 0% 12%;
+  --muted-foreground:       120 5% 65%;
+  --accent:                 0 0% 12%;
+  --accent-foreground:      120 10% 96%;
   --destructive:            4 86% 58%;
   --destructive-foreground: 0 0% 100%;
-  --border:                 150 41% 22%;
-  --input:                  150 41% 22%;
+  --border:                 0 0% 18%;
+  --input:                  0 0% 18%;
   --ring:                   123 38% 48%;
 }
 
@@ -246,6 +256,12 @@ body {
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html.dark body {
+  background-color: #050505;
+  background-image: var(--bg-radial);
+  background-attachment: fixed;
 }
 
 /* cursor-pointer on all interactive elements */

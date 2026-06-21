@@ -28,7 +28,7 @@ export function MissionSection() {
   return (
     <section
       id="mission"
-      className="scroll-mt-20 border-y border-border-light bg-bg-card py-16 lg:py-24"
+      className="scroll-mt-20 py-16 lg:py-24"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
@@ -52,7 +52,7 @@ export function MissionSection() {
             return (
               <div
                 key={item.title}
-                className="rounded-2xl border border-border-light bg-bg-main p-6"
+                className="rounded-2xl border border-border-light bg-bg-main p-6 transition-all duration-200 hover:border-primary/25 hover:shadow-card-hover dark:bg-bg-muted/30"
               >
                 <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" aria-hidden="true" />

@@ -28,7 +28,7 @@ const CONTACT_CHANNELS = [
 
 export function ContactSection() {
   return (
-    <section id="contact" className="scroll-mt-20 py-16 lg:py-24">
+    <section id="contact" className="scroll-mt-20 pt-16 pb-4 sm:pb-6 lg:pt-24 lg:pb-8">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-3xl font-bold sm:text-4xl">Contact us</h2>
@@ -42,7 +42,7 @@ export function ContactSection() {
           {CONTACT_CHANNELS.map((channel) => {
             const Icon = channel.icon
             const content = (
-              <div className="flex h-full flex-col rounded-2xl border border-border-light bg-bg-card p-6 shadow-sm">
+              <div className="flex h-full flex-col rounded-2xl border border-border-light bg-bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-card-hover">
                 <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
@@ -64,7 +64,7 @@ export function ContactSection() {
           })}
         </div>
 
-        <div className="mt-10 flex flex-col items-center gap-4 rounded-2xl border border-border-light bg-bg-muted/50 px-6 py-8 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div className="mt-10 flex flex-col items-center gap-4 rounded-2xl border border-border-light bg-bg-muted/50 px-6 py-8 text-center transition-all duration-200 hover:border-primary/20 sm:flex-row sm:justify-between sm:text-left">
           <div className="flex items-start gap-3">
             <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
             <div>
@@ -75,7 +75,7 @@ export function ContactSection() {
               </p>
             </div>
           </div>
-          <Button asChild className="shrink-0 bg-primary text-white hover:bg-primary-hover">
+          <Button asChild className="shrink-0 bg-primary text-white shadow-sm hover:bg-primary-hover hover:shadow-md">
             <Link href="/register">
               Get started free
               <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
