@@ -53,7 +53,7 @@ function StepItem({
   return (
     <li
       className={cn(
-        "group flex w-full max-w-[10rem] flex-col items-center text-center transition-all duration-500 sm:w-40",
+        "group flex w-full max-w-40 flex-col items-center text-center transition-all duration-500 sm:w-40",
         visible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
       )}
       style={{ transitionDelay: visible ? `${index * STAGGER_MS}ms` : "0ms" }}
