@@ -66,7 +66,10 @@ const nextConfig: NextConfig = {
   images: {
     // Next.js 16: quality values must be allowlisted.
     qualities: [75],
-    localPatterns: [{ pathname: "/landing_page_meals/**" }],
+    localPatterns: [
+      { pathname: "/landing_page_meals/**" },
+      { pathname: "/icons/**" },
+    ],
     // sharp is installed; enable WebP/AVIF auto-conversion
     formats: ["image/avif", "image/webp"],
   },
@@ -79,6 +82,11 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
     ]
+  },
+
+  // Browsers request /favicon.ico by default — serve the file from public/icons/
+  async rewrites() {
+    return [{ source: "/favicon.ico", destination: "/icons/favicon.ico" }]
   },
 
   // Compiler options
