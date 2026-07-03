@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next"
+import { NextIntlClientProvider } from "next-intl"
+import { getMessages, getLocale } from "next-intl/server"
 import { SessionProvider } from "next-auth/react"
 import { ThemeProvider } from "next-themes"
 import { Toaster } from "sonner"
@@ -18,27 +20,33 @@ export const viewport: Viewport = {
   maximumScale: 1,
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // Read locale + messages server-side so the client provider gets them pre-loaded
+  const locale = await getLocale()
+  const messages = await getMessages()
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body>
-        <SessionProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TooltipProvider>
-              {children}
-              <Toaster richColors closeButton position="top-right" />
-            </TooltipProvider>
-          </ThemeProvider>
-        </SessionProvider>
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <SessionProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TooltipProvider>
+                {children}
+                <Toaster richColors closeButton position="top-right" />
+              </TooltipProvider>
+            </ThemeProvider>
+          </SessionProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

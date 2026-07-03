@@ -9,6 +9,7 @@ import {
   logConstraintsInDev,
 } from "@/lib/prompts/meal-plan"
 import { getMealPlanByDate, saveMealPlan } from "@/lib/services/meals"
+import { translateMeals } from "@/lib/translate"
 import { getUserProfile } from "@/lib/services/users"
 import { GenerateMealPlanSchema } from "@/lib/validations/meals"
 import { MealPlanResponseSchema } from "@/types"
@@ -91,8 +92,11 @@ export async function POST(request: Request) {
 
   const { meals, macrosFromDb } = await applyDbMacrosToMeals(validated.data.meals)
 
+  // Translate meal names/descriptions if user's language is Twi or Ga
+  const translatedMeals = await translateMeals(meals, profile.language)
+
   try {
-    const plan = await saveMealPlan(session.user.id, planDateObj, meals)
+    const plan = await saveMealPlan(session.user.id, planDateObj, translatedMeals)
     return NextResponse.json({
       planId: plan.id,
       meals: plan.meals,

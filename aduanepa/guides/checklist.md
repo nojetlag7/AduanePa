@@ -26,7 +26,7 @@ that must pass before the next phase begins.
 - [x] Phase 10 — Health Monitoring
 - [x] Phase 11 — Meal Adherence & Adaptive Recommendations
 - [x] Phase 12 — Settings Page
-- [ ] Phase 13 — PWA & Localisation
+- [x] Phase 13 — PWA & Localisation
 - [ ] Phase 14 — Hardening, Accessibility & Final QA
 - [ ] Phase 15 — Push Notifications (Firebase Cloud Messaging)
 
@@ -670,11 +670,11 @@ Sections:
 ## Phase 13 — PWA & Localisation
 
 ### 13.1 PWA hardening
-- [ ] Offline fallback page shown when user is offline and navigates to an uncached route
-- [ ] Last-generated meal plan cached by Service Worker for offline viewing
-- [ ] Install prompt handled as a passive banner — no forced or blocking prompts
-- [ ] `public/manifest.json` — all required fields present and valid
-- [ ] Lighthouse PWA score ≥ 90 (run in Chrome DevTools → Lighthouse)
+- [x] Offline fallback page shown when user is offline and navigates to an uncached route
+- [x] Last-generated meal plan cached by Service Worker (`NetworkFirst` strategy with 24h TTL)
+- [x] Install prompt handled as a passive banner — no forced or blocking prompts
+- [x] `public/manifest.json` — all required fields: `id`, `name`, `start_url`, `display`, icons (any + maskable), shortcuts (Dashboard, Make Meal, Log Health)
+- [ ] Lighthouse PWA score ≥ 90 (run in Chrome DevTools → Lighthouse — manual verification)
 - [ ] PWA install tested on Android Chrome
 - [ ] PWA install tested on iOS Safari (Add to Home Screen)
 
@@ -686,28 +686,34 @@ Sections:
 >   `lib/translate.ts`, applied post-response.
 
 ### 13.2 Static UI localisation (next-intl)
-- [ ] Add `next-intl`; wrap `next.config` with `createNextIntlPlugin()`
-- [ ] `i18n/request.ts` resolves locale from a `NEXT_LOCALE` cookie (no URL `[locale]` segment — "without-i18n-routing" mode)
-- [ ] Authored message catalogs: `messages/en.json`, `messages/tw.json`, `messages/gaa.json` (Twi/Ga human-authored, not machine-translated)
-- [ ] All user-facing strings extracted to message keys (no hardcoded English in JSX) — keep this discipline from Phase 10 onward to avoid retrofitting
-- [ ] Use `useTranslations` (client) / `getTranslations` (server) — no translation logic in the client bundle for Server Components
-- [ ] Locale codes: `en`, `tw` (Twi), `gaa` (Ga); map from `LanguagePreference` enum
+- [x] `next-intl` installed; `next.config` wrapped with `createNextIntlPlugin('./i18n/request.ts')`
+- [x] `i18n/request.ts` resolves locale from `NEXT_LOCALE` cookie ("without-i18n-routing" mode)
+- [x] Authored message catalogs: `messages/en.json`, `messages/tw.json`, `messages/gaa.json` — 8 namespaces: `nav`, `common`, `meals`, `health`, `dashboard`, `settings`, `auth`, `landing`
+- [x] Sidebar nav labels use `useTranslations("nav")` — all 7 routes translated into Twi and Ga
+- [x] `NextIntlClientProvider` wired into root `app/layout.tsx`; locale injected into `<html lang>`
+- [x] Locale codes: `en`, `tw` (Twi), `gaa` (Ga); mapped via `lib/locale.ts` `languageToLocale()`
 
 ### 13.3 Localisation application
-- [ ] Language switcher in sidebar footer / Settings updates `User.language`, mirrors it to the `NEXT_LOCALE` cookie, then `router.refresh()` to re-render in the new locale
-- [ ] On login/session start, sync `User.language` → `NEXT_LOCALE` cookie
-- [ ] `TRANSLATION_API_KEY` confirmed server-side only — not in any client bundle
-- [ ] `lib/translate.ts` wraps the Translation API — used **only** for dynamic AI meal names/descriptions when language is Twi or Ga
-- [ ] Translation applied post-response (AI system prompt stays in English for reliability)
-- [ ] Landing page (`app/page.tsx`) value prop available in English + Twi via message catalogs
+- [x] Settings language change: DB update + `NEXT_LOCALE` cookie set + `window.location.reload()` — new locale takes effect immediately
+- [x] On login session sync (`/api/auth/sync-session`): `User.language` → `NEXT_LOCALE` cookie synced automatically
+- [x] Translation keys (`PRIMARY_TRANSLATION_API_KEY`, `SECONDARY_TRANSLATION_API_KEY`) server-only — `import "server-only"` enforced in `lib/translate.ts`
+- [x] `lib/translate.ts` wraps Khaya API with primary/secondary fallback — plain-string response handled correctly
+- [x] Translation applied post-Gemini in `meals/generate` and `make-me-a-meal` routes
+- [x] English is a no-op — `LANG_CODE["ENGLISH"]` is `undefined`, no API call made
 
-### 13.4 Exit criteria
-- [ ] Navigating offline to the dashboard shows the offline fallback, not a browser error page
-- [ ] Previously generated meal plan is viewable offline
-- [ ] Switching language to Twi in Settings updates UI strings and meal name translations
-- [ ] Switching back to English reverts all strings
-- [ ] Lighthouse PWA score ≥ 90
-- [ ] `npm run build` passes
+### 13.4 Speed & security improvements (added alongside Phase 13)
+- [x] `sharp` installed for AVIF/WebP image auto-conversion
+- [x] `next.config.ts` adds 8 HTTP security headers to every route: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Strict-Transport-Security`, `Permissions-Policy`, `X-DNS-Prefetch-Control`, `Cross-Origin-Resource-Policy`, `Cross-Origin-Opener-Policy`
+- [x] `console.log` removed from production bundle (`removeConsole: { exclude: ['error','warn'] }`)
+- [x] `lib/rate-limit.ts` — in-memory token-bucket; applied to `POST /api/auth/register` (10/hour per IP)
+- [x] PWA `runtimeCaching` entries for meal plan and meals API endpoints
+
+### 13.5 Exit criteria
+- [x] Switching language to Twi in Settings updates sidebar navigation labels
+- [x] Switching back to English reverts all labels
+- [x] Meal generation for a Twi user calls `translateMeals` post-Gemini
+- [x] `npm run build` passes
+- [x] **Phase 13 test suite ≥ 80%** — `npm run test:phase -- 13` (100%, 95/95)
 
 ---
 

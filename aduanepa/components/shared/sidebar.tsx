@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useTranslations } from "next-intl"
 import {
   Apple,
   ChefHat,
@@ -23,20 +24,14 @@ import {
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 
-interface NavItem {
-  href: string
-  label: string
-  icon: LucideIcon
-}
-
-export const NAV_ITEMS: NavItem[] = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/meals", label: "My Meals", icon: UtensilsCrossed },
-  { href: "/make-me-a-meal", label: "Make Me a Meal", icon: ChefHat },
-  { href: "/health", label: "Health", icon: HeartPulse },
-  { href: "/nutrition", label: "Nutrition", icon: Apple },
-  { href: "/grocery", label: "Grocery List", icon: ShoppingBasket },
-  { href: "/settings", label: "Settings", icon: Settings },
+const NAV_ROUTES: { href: string; key: string; icon: LucideIcon }[] = [
+  { href: "/dashboard", key: "dashboard", icon: LayoutDashboard },
+  { href: "/meals", key: "meals", icon: UtensilsCrossed },
+  { href: "/make-me-a-meal", key: "makeMeAMeal", icon: ChefHat },
+  { href: "/health", key: "health", icon: HeartPulse },
+  { href: "/nutrition", key: "nutrition", icon: Apple },
+  { href: "/grocery", key: "grocery", icon: ShoppingBasket },
+  { href: "/settings", key: "settings", icon: Settings },
 ]
 
 interface SidebarProps {
@@ -47,6 +42,7 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: SidebarProps) {
   const pathname = usePathname()
+  const t = useTranslations("nav")
 
   return (
     <div className="flex h-full flex-col bg-bg-card">
@@ -107,10 +103,11 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
             </Tooltip>
           )}
 
-          {NAV_ITEMS.map((item) => {
+          {NAV_ROUTES.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(`${item.href}/`)
             const Icon = item.icon
+            const label = t(item.key as Parameters<typeof t>[0])
 
             const link = (
               <Link
@@ -118,7 +115,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
                 href={item.href}
                 onClick={onNavigate}
                 aria-current={isActive ? "page" : undefined}
-                aria-label={collapsed ? item.label : undefined}
+                aria-label={collapsed ? label : undefined}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200",
                   collapsed && "justify-center px-2",
@@ -128,7 +125,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
                 )}
               >
                 <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-                {!collapsed && <span className="truncate">{item.label}</span>}
+                {!collapsed && <span className="truncate">{label}</span>}
               </Link>
             )
 
@@ -136,7 +133,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, onNavigate }: Sid
               return (
                 <Tooltip key={item.href}>
                   <TooltipTrigger asChild>{link}</TooltipTrigger>
-                  <TooltipContent side="right">{item.label}</TooltipContent>
+                  <TooltipContent side="right">{label}</TooltipContent>
                 </Tooltip>
               )
             }

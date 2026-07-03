@@ -43,7 +43,8 @@ export function LanguageSettings({ user }: Props) {
         return
       }
       toast.success("Language updated")
-      router.refresh()
+      // Hard-reload so next-intl picks up the new NEXT_LOCALE cookie
+      window.location.reload()
     } catch {
       toast.error("Something went wrong")
     } finally {

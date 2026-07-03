@@ -2,10 +2,17 @@ import bcrypt from "bcryptjs"
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
 import { sendOtpEmail } from "@/lib/email"
+import { rateLimit, getClientIp } from "@/lib/rate-limit"
 import { generateOtp } from "@/lib/services/otp"
 import { registerSchema } from "@/lib/validations/auth"
 
 export async function POST(request: Request) {
+  // 10 registration attempts per IP per hour
+  const rl = rateLimit(`register:${getClientIp(request)}`, { limit: 10, windowMs: 60 * 60 * 1000 })
+  if (!rl.success) {
+    return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 })
+  }
+
   let body: unknown
   try {
     body = await request.json()

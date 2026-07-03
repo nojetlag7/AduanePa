@@ -7,6 +7,7 @@ import {
   buildMakeMeAMealSystemPrompt,
   buildMakeMeAMealUserPrompt,
 } from "@/lib/prompts/make-me-a-meal"
+import { translateMeal } from "@/lib/translate"
 import { getUserProfile } from "@/lib/services/users"
 import { MakeMeAMealSchema } from "@/lib/validations/meals"
 import { MakeMeAMealResultSchema } from "@/types"
@@ -81,9 +82,12 @@ export async function POST(request: Request) {
   // Override AI macros with FoodItem data when every ingredient resolves.
   const { meals, macrosFromDb } = await applyDbMacrosToMeals([validated.data.meal])
 
+  // Translate meal name/description if user's language is Twi or Ga
+  const translatedMeal = await translateMeal(meals[0], profile.language)
+
   return NextResponse.json({
     possible: true,
-    meal: meals[0],
+    meal: translatedMeal,
     macrosFromDb: macrosFromDb > 0,
   })
 }

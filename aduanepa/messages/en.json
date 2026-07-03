@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "meals": "My Meals",
+    "makeMeAMeal": "Make Me a Meal",
+    "health": "Health",
+    "nutrition": "Nutrition",
+    "grocery": "Grocery List",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading…",
+    "saving": "Saving…",
+    "tryAgain": "Try again",
+    "generating": "Generating…",
+    "error": "Something went wrong",
+    "noData": "No data yet",
+    "viewAll": "View all",
+    "back": "Back",
+    "close": "Close",
+    "generate": "Generate",
+    "refresh": "Refresh"
+  },
+  "meals": {
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "snack": "Snack",
+    "anyMeal": "Any meal",
+    "localDish": "Local dish",
+    "saveMeal": "Save meal",
+    "saved": "Saved",
+    "prepTime": "Prep time",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions",
+    "macros": {
+      "calories": "Calories",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fat"
+    },
+    "generatePlan": "Generate Plan",
+    "generatingPlan": "Generating plan…",
+    "todaysPlan": "Today's Meals",
+    "noMealPlanned": "Not planned"
+  },
+  "health": {
+    "weight": "Weight",
+    "bloodSugar": "Blood Sugar",
+    "bloodPressure": "Blood Pressure",
+    "logToday": "Log Today's Data",
+    "logForm": {
+      "title": "Log Health Data",
+      "notes": "Notes",
+      "submit": "Save log"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "healthSnapshot": "Health Snapshot",
+    "nutritionToday": "Today's Nutrition",
+    "recommendations": "Recommendations",
+    "quickActions": "Quick Actions"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your profile, health conditions, and preferences.",
+    "profile": "Profile",
+    "healthProfile": "Health profile",
+    "password": "Password",
+    "language": "Language",
+    "appearance": "Appearance",
+    "dangerZone": "Danger zone",
+    "deleteAccount": "Delete my account",
+    "languages": {
+      "english": "English",
+      "twi": "Twi",
+      "ga": "Ga"
+    }
+  },
+  "landing": {
+    "hero": {
+      "headline": "AI-powered nutrition for Ghanaian health",
+      "subtext": "Personalised meal plans rooted in Ghanaian cuisine, tailored to your health conditions and goals.",
+      "cta": "Get started free",
+      "signIn": "Sign in"
+    },
+    "features": {
+      "title": "Built for Ghanaian health"
+    }
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?"
+  },
+  "onboarding": {
+    "step": "Step {current} of {total}",
+    "title": "Set up your profile",
+    "continue": "Continue",
+    "finish": "Finish setup"
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "dashboard": "Krataa Titiriw",
+    "meals": "M'aduane",
+    "makeMeAMeal": "Yɛ Me Aduane",
+    "health": "Ahofam",
+    "nutrition": "Aduane Ho Nsɛm",
+    "grocery": "Aduane To Krataa",
+    "settings": "Nhwehwɛmu",
+    "signOut": "Firi ha"
+  },
+  "common": {
+    "save": "Kora",
+    "cancel": "Gyae",
+    "loading": "Ɛreloading…",
+    "saving": "Ɛrekora…",
+    "tryAgain": "Sɔ bio",
+    "generating": "Ɛreyɛ…",
+    "error": "Biribi kɔ mfomso",
+    "noData": "Nkɔmmɔbea biara nni hɔ",
+    "viewAll": "Hwɛ nyinaa",
+    "back": "San kɔ",
+    "close": "To mu",
+    "generate": "Yɛ",
+    "refresh": "Dan bio"
+  },
+  "meals": {
+    "breakfast": "Anopa Aduane",
+    "lunch": "Awia Aduane",
+    "dinner": "Anadwo Aduane",
+    "snack": "Aduane Kakra",
+    "anyMeal": "Aduane biara",
+    "localDish": "Ghana aduane",
+    "saveMeal": "Kora aduane",
+    "saved": "Akora",
+    "prepTime": "Aduane yɛ bere",
+    "ingredients": "Aduane mu nneɛma",
+    "instructions": "Aduane yɛ akwan",
+    "macros": {
+      "calories": "Aduane hye",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fats"
+    },
+    "generatePlan": "Yɛ Aduane Plan",
+    "generatingPlan": "Ɛreyɛ plan…",
+    "todaysPlan": "Ɛnnɛ Aduane",
+    "noMealPlanned": "Anka ansi plan"
+  },
+  "health": {
+    "weight": "Ayɛn",
+    "bloodSugar": "Mogya Sika",
+    "bloodPressure": "Mogya Tumi",
+    "logToday": "Kora Ɛnnɛ Nsɛm",
+    "logForm": {
+      "title": "Kora Ahofam Nsɛm",
+      "notes": "Nsɛm",
+      "submit": "Kora"
+    }
+  },
+  "dashboard": {
+    "welcome": "Akwaaba",
+    "healthSnapshot": "Ahofam Ho Nsɛm",
+    "nutritionToday": "Ɛnnɛ Aduane Nsɛm",
+    "recommendations": "Mmɔdeneyɛ",
+    "quickActions": "Ntɛm Yɛ"
+  },
+  "settings": {
+    "title": "Nhwehwɛmu",
+    "subtitle": "Sesa wo ho nsɛm, ahofam ne wo ani.",
+    "profile": "Wo Ho Nsɛm",
+    "healthProfile": "Ahofam Ho Nsɛm",
+    "password": "Gyinae",
+    "language": "Kasa",
+    "appearance": "Nhwɛso",
+    "dangerZone": "Ɔhaw Bea",
+    "deleteAccount": "Yi m'akaunti",
+    "languages": {
+      "english": "Borɔfo",
+      "twi": "Twi",
+      "ga": "Ga"
+    }
+  },
+  "landing": {
+    "hero": {
+      "headline": "AI aduane nhyehyɛe ma Ghana ahofam",
+      "subtext": "Aduane nhyehyɛe a wɔbɔ wo ho, a wɔde Ghana aduane ne wo ahofam ne wo ani ano.",
+      "cta": "Hyɛ ase sɛ ofie",
+      "signIn": "Bra mu"
+    },
+    "features": {
+      "title": "Yɛbɔɔ sɛ Ghana ahofam"
+    }
+  },
+  "auth": {
+    "signIn": "Bra mu",
+    "signUp": "Kyerɛ w'ani",
+    "email": "Email",
+    "password": "Gyinae",
+    "name": "Din",
+    "forgotPassword": "Wowere wo gyinae?",
+    "noAccount": "Akaunti nni wo?",
+    "haveAccount": "Akaunti wɔ wo?"
+  },
+  "onboarding": {
+    "step": "Ɛkwan {current} wɔ {total} mu",
+    "title": "Hyɛ wo ho ase",
+    "continue": "Kɔ so",
+    "finish": "wie"
+  }
+}

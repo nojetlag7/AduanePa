@@ -1,0 +1,111 @@
+{
+  "nav": {
+    "dashboard": "Tsɔɔ Faa",
+    "meals": "Nɔɔ Ye",
+    "makeMeAMeal": "Gbɛɔ Nɔ Ye",
+    "health": "Gbɛɔ Yɛli",
+    "nutrition": "Nɔɔ Yeli",
+    "grocery": "Nɔɔ Wɔ Lɛ",
+    "settings": "Nyɛliɛ",
+    "signOut": "Loo"
+  },
+  "common": {
+    "save": "Tsɔɔ",
+    "cancel": "Ayɛ",
+    "loading": "Ebi he…",
+    "saving": "Etsɔɔ…",
+    "tryAgain": "Lɛ bio",
+    "generating": "Ebii…",
+    "error": "Oyoo kɛ bii",
+    "noData": "Nyɛwala",
+    "viewAll": "Faa fɛɛ",
+    "back": "Kpee",
+    "close": "Pele",
+    "generate": "Gbii",
+    "refresh": "Lɛ bio"
+  },
+  "meals": {
+    "breakfast": "Gbɛɔ Nɔɔ",
+    "lunch": "Ayeli Nɔɔ",
+    "dinner": "Oyiɛ Nɔɔ",
+    "snack": "Nɔɔ Kakaa",
+    "anyMeal": "Nɔɔ bihi",
+    "localDish": "Ghana nɔɔ",
+    "saveMeal": "Tsɔɔ nɔɔ",
+    "saved": "Atsɔɔ",
+    "prepTime": "Nɔɔ ŋmɛi bere",
+    "ingredients": "Nɔɔ nii",
+    "instructions": "Nɔɔ ŋmɛi akwan",
+    "macros": {
+      "calories": "Nɔɔ hye",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fat"
+    },
+    "generatePlan": "Gbii Nɔɔ Plan",
+    "generatingPlan": "Ebii plan…",
+    "todaysPlan": "Gbɛɔ Nɔɔ",
+    "noMealPlanned": "Nɔɔ kɛ plan"
+  },
+  "health": {
+    "weight": "Shiɛ",
+    "bloodSugar": "Fio Suga",
+    "bloodPressure": "Fio Tumi",
+    "logToday": "Tsɔɔ Gbɛɔ Nii",
+    "logForm": {
+      "title": "Tsɔɔ Gbɛɔ Yɛli",
+      "notes": "Nii",
+      "submit": "Tsɔɔ"
+    }
+  },
+  "dashboard": {
+    "welcome": "He bo",
+    "healthSnapshot": "Gbɛɔ Yɛli Nii",
+    "nutritionToday": "Gbɛɔ Nɔɔ Yeli",
+    "recommendations": "Mmɔdeneyɛ",
+    "quickActions": "Ntɛm Yɛ"
+  },
+  "settings": {
+    "title": "Nyɛliɛ",
+    "subtitle": "Sesa ŋŋ nii, gbɛɔ yɛli naɛ.",
+    "profile": "Ŋŋ Nii",
+    "healthProfile": "Gbɛɔ Yɛli Nii",
+    "password": "Gyinae",
+    "language": "Kɔɔ",
+    "appearance": "Nhwɛso",
+    "dangerZone": "Ɔhaw Bea",
+    "deleteAccount": "Yi m'akaunti",
+    "languages": {
+      "english": "Blofonyo wiemɔ",
+      "twi": "Twi",
+      "ga": "Ga"
+    }
+  },
+  "landing": {
+    "hero": {
+      "headline": "AI nɔɔ nhyehyɛe ma Ghana gbɛɔ yɛli",
+      "subtext": "Nɔɔ nhyehyɛe a ŋŋ Ghana nɔɔ naɛ gbɛɔ yɛli.",
+      "cta": "Faa lɛ kɔ",
+      "signIn": "Bii"
+    },
+    "features": {
+      "title": "Yɛbɔɔ Ghana gbɛɔ yɛli"
+    }
+  },
+  "auth": {
+    "signIn": "Bii",
+    "signUp": "Kyerɛ w'ani",
+    "email": "Email",
+    "password": "Gyinae",
+    "name": "Din",
+    "forgotPassword": "Owere ŋŋ gyinae?",
+    "noAccount": "Akaunti kɛ?",
+    "haveAccount": "Akaunti wɔ?"
+  },
+  "onboarding": {
+    "step": "Lɛ {current} wɔ {total}",
+    "title": "Faa ŋŋ nii",
+    "continue": "Kɔ so",
+    "finish": "Pele"
+  }
+}
