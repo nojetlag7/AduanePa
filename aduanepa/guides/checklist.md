@@ -25,7 +25,7 @@ that must pass before the next phase begins.
 - [x] Phase 9 — Nutritional Breakdown & Grocery List
 - [x] Phase 10 — Health Monitoring
 - [x] Phase 11 — Meal Adherence & Adaptive Recommendations
-- [ ] Phase 12 — Settings Page
+- [x] Phase 12 — Settings Page
 - [ ] Phase 13 — PWA & Localisation
 - [ ] Phase 14 — Hardening, Accessibility & Final QA
 - [ ] Phase 15 — Push Notifications (Firebase Cloud Messaging)
@@ -642,27 +642,28 @@ that must pass before the next phase begins.
 ### 12.1 Settings page (`app/(app)/settings/page.tsx`)
 Sections:
 
-- [ ] **Profile** — update name, email, age, weight, height; Zod-validated; success toast on save
-- [ ] **Health profile** — update health conditions (multi-select checkboxes) + dietary goal (radio); saves to `User`; toast on save
-- [ ] **Password** — change password: current password, new password, confirm new password; verifies current before updating; field-level errors
-- [ ] **Language** — select English / Twi / Ga; saves to `User.language`; applies immediately
-- [ ] **Appearance** — dark/light mode toggle (also accessible from sidebar)
-- [ ] **Danger zone** — "Delete Account": requires password confirmation in a `Dialog`; on confirm, deletes `User` and all cascaded data; logs out
+- [x] **Profile** — update name, email, age, weight, height; Zod-validated; success toast on save
+- [x] **Health profile** — update health conditions (multi-select checkboxes) + dietary goal (radio); saves to `User`; toast on save
+- [x] **Password** — change password: current password, new password, confirm new password; verifies current before updating; field-level errors
+- [x] **Language** — select English / Twi / Ga; saves to `User.language`; applies immediately
+- [x] **Appearance** — dark/light/system mode selector (three-way, not just toggle)
+- [x] **Danger zone** — "Delete Account": requires password confirmation in a `Dialog`; on confirm, deletes `User` and all cascaded data; logs out
 
 ### 12.2 Settings service (extend `lib/services/users.ts`)
-- [ ] `updateProfile(userId, data)` — updates name, email, age, weight, height
-- [ ] `updateHealthProfile(userId, data)` — updates healthConditions, dietaryGoal
-- [ ] `updatePassword(userId, currentPassword, newPassword)` — verifies current hash before updating
-- [ ] `updateLanguage(userId, language)` — updates `User.language`
-- [ ] `deleteAccount(userId, password)` — verifies password then deletes user (cascade handles all related records)
+- [x] `updateProfile(userId, data)` — updates name, email, dateOfBirth, weight, height; duplicate email check
+- [x] `updateHealthProfile(userId, data)` — updates healthConditions, dietaryGoal
+- [x] `updatePassword(userId, currentPassword, newPassword)` — verifies current hash before updating
+- [x] `updateLanguage(userId, language)` — updates `User.language`
+- [x] `deleteAccount(userId, password)` — verifies password then deletes user (cascade handles all related records)
 
 ### 12.3 Exit criteria
-- [ ] Profile updates save and are reflected on next page load
-- [ ] Health profile update is saved; a new meal generation after this update uses the new constraints
-- [ ] Wrong current password on password change returns a field-level error
-- [ ] Language change saves to DB
-- [ ] Account deletion: password confirmation dialog works; on confirm, user is logged out and all their data is removed (verify in Prisma Studio)
-- [ ] `npm run build` passes
+- [x] Profile updates save and are reflected on next page load
+- [x] Health profile update is saved; a new meal generation after this update uses the new constraints
+- [x] Wrong current password on password change returns a field-level error
+- [x] Language change saves to DB
+- [x] Account deletion: password confirmation dialog works; on confirm, user is logged out and all their data is removed (verify in Prisma Studio)
+- [x] `npm run build` passes
+- [x] **Phase 12 test suite ≥ 80%** — `npm run test:phase -- 12` (100%, 46/46)
 
 ---
 
