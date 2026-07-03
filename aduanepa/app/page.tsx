@@ -74,7 +74,7 @@ const STEPS = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen scroll-smooth bg-bg-main text-text-primary dark:bg-transparent">
+    <div className="min-h-screen bg-bg-main text-text-primary dark:bg-transparent">
       {/* ─── Hero (nav shares this background — no visible seam) ─────────── */}
       <section id="top" className="relative overflow-hidden">
         <LandingNav />

@@ -25,7 +25,7 @@ export default async function VerifyEmailPage() {
   // the client session cookie catches up.
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { emailVerified: true, dateOfBirth: true, weight: true, height: true },
+    select: { emailVerified: true, dateOfBirth: true, weight: true, height: true, privacyPolicyAcceptedAt: true },
   })
 
   if (user?.emailVerified || session.user.isEmailVerified) {

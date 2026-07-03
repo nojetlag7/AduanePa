@@ -36,17 +36,24 @@ async function main() {
       healthConditions: [HealthCondition.NONE],
       dietaryGoal: DietaryGoal.MAINTENANCE,
       language: LanguagePreference.ENGLISH,
+      privacyPolicyAcceptedAt: new Date(),
     },
   })
 
-  // Ensure profile is complete even if the row pre-existed without biodata.
-  if (user.dateOfBirth == null || user.weight == null || user.height == null) {
+  // Ensure profile is complete even if the row pre-existed without biodata or consent.
+  if (
+    user.dateOfBirth == null ||
+    user.weight == null ||
+    user.height == null ||
+    user.privacyPolicyAcceptedAt == null
+  ) {
     await prisma.user.update({
       where: { id: user.id },
       data: {
         dateOfBirth: user.dateOfBirth ?? new Date("1998-06-15"),
         weight: user.weight ?? 72,
         height: user.height ?? 176,
+        privacyPolicyAcceptedAt: user.privacyPolicyAcceptedAt ?? new Date(),
       },
     })
   }

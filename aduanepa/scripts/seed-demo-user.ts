@@ -292,6 +292,7 @@ async function main() {
       healthConditions: [HealthCondition.HYPERTENSION],
       dietaryGoal: DietaryGoal.WEIGHT_LOSS,
       language: LanguagePreference.ENGLISH,
+      privacyPolicyAcceptedAt: new Date(),
     },
     create: {
       name: DEMO_NAME,
@@ -305,6 +306,7 @@ async function main() {
       healthConditions: [HealthCondition.HYPERTENSION],
       dietaryGoal: DietaryGoal.WEIGHT_LOSS,
       language: LanguagePreference.ENGLISH,
+      privacyPolicyAcceptedAt: new Date(),
     },
   })
   const userId = user.id

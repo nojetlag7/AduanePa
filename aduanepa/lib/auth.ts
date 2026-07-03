@@ -49,6 +49,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
               weight: true,
               height: true,
               language: true,
+              privacyPolicyAcceptedAt: true,
             },
           })
           if (dbUser) {

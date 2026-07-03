@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useState, type MouseEvent } from "react"
 import { Menu } from "lucide-react"
 import { BrandLogo } from "@/components/shared/brand-logo"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
@@ -21,6 +21,28 @@ const NAV_LINKS = [
   { href: "#contact", label: "Contact" },
 ] as const
 
+function smoothScrollBehavior(): ScrollBehavior {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
+}
+
+/** Smoothly scroll to a landing-page section and update the URL hash without a jump. */
+function scrollToSection(hash: string) {
+  const id = hash.replace(/^#/, "")
+  const behavior = smoothScrollBehavior()
+
+  if (id === "top") {
+    window.scrollTo({ top: 0, behavior })
+    history.pushState(null, "", "/")
+    return
+  }
+
+  const target = document.getElementById(id)
+  if (!target) return
+
+  target.scrollIntoView({ behavior, block: "start" })
+  history.pushState(null, "", `#${id}`)
+}
+
 function NavLink({
   href,
   label,
@@ -32,17 +54,23 @@ function NavLink({
   className?: string
   onNavigate?: () => void
 }) {
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    scrollToSection(href)
+    onNavigate?.()
+  }
+
   return (
-    <Link
+    <a
       href={href}
-      onClick={onNavigate}
+      onClick={handleClick}
       className={cn(
         "text-sm font-medium text-text-secondary transition-colors hover:text-primary",
         className
       )}
     >
       {label}
-    </Link>
+    </a>
   )
 }
 
@@ -56,6 +84,12 @@ export function LandingNav() {
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
+
+  const handleLogoClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (window.location.pathname !== "/") return
+    event.preventDefault()
+    scrollToSection("#top")
+  }
 
   return (
     <header
@@ -71,7 +105,11 @@ export function LandingNav() {
         aria-label="Main"
       >
         {/* Logo — flush left (viewport padding only) */}
-        <Link href="/#top" className="relative z-10 flex shrink-0 items-center gap-2 transition-opacity duration-200 hover:opacity-90">
+        <Link
+          href="/#top"
+          onClick={handleLogoClick}
+          className="relative z-10 flex shrink-0 items-center gap-2 transition-opacity duration-200 hover:opacity-90"
+        >
           <BrandLogo className="h-9 w-9 text-primary" />
           <span className="font-display text-xl font-bold text-text-primary">AduanePa</span>
         </Link>

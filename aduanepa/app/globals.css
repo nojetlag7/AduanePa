@@ -274,6 +274,12 @@ select,
   cursor: pointer;
 }
 
+/* In-page anchor navigation (landing page sections) */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* sticky nav height (h-16) */
+}
+
 /* Smooth transitions */
 button,
 [role="button"],

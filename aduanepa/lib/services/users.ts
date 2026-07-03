@@ -42,6 +42,7 @@ export async function updateUserProfile(userId: string, data: OnboardingParsed) 
       healthConditions: data.healthConditions,
       dietaryGoal: data.dietaryGoal,
       language: data.language,
+      privacyPolicyAcceptedAt: new Date(),
     },
     select: PROFILE_SELECT,
   })

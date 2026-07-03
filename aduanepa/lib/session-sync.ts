@@ -24,6 +24,7 @@ export async function syncSessionFromDb(): Promise<void> {
       weight: true,
       height: true,
       language: true,
+      privacyPolicyAcceptedAt: true,
     },
   })
   if (!user) return

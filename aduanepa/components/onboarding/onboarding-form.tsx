@@ -1,14 +1,23 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react"
+import { ArrowLeft, ArrowRight, Check, ExternalLink, Loader2 } from "lucide-react"
 import { DietaryGoal, HealthCondition, LanguagePreference } from "@prisma/client"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
+import { PrivacyPolicyContent } from "@/components/legal/privacy-policy-content"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
@@ -17,17 +26,22 @@ import {
   onboardingStep2Schema,
   onboardingStep3Schema,
   onboardingStep4Schema,
+  onboardingStep5Schema,
   SELECTABLE_CONDITIONS,
 } from "@/lib/validations/onboarding"
 import { cn } from "@/lib/utils"
 
-const TOTAL_STEPS = 4
+const TOTAL_STEPS = 5
 
 const STEP_HEADINGS = [
   { title: "About you", subtitle: "We use this to personalise your nutrition targets." },
   { title: "Health conditions", subtitle: "Select any that apply — we'll adjust your meal plans." },
   { title: "Your goal", subtitle: "What would you like your meals to help you achieve?" },
   { title: "Language", subtitle: "Choose how you'd like to use AduanePa." },
+  {
+    title: "Privacy & your data",
+    subtitle: "Review how we use your information to personalise your experience.",
+  },
 ]
 
 const CONDITION_LABELS: Record<(typeof SELECTABLE_CONDITIONS)[number], string> = {
@@ -90,6 +104,7 @@ type FormState = {
   noneSelected: boolean
   dietaryGoal: DietaryGoal | ""
   language: LanguagePreference | ""
+  privacyAccepted: boolean
 }
 
 export function OnboardingForm() {
@@ -106,6 +121,7 @@ export function OnboardingForm() {
     noneSelected: false,
     dietaryGoal: "",
     language: LanguagePreference.ENGLISH,
+    privacyAccepted: false,
   })
 
   const bounds = useMemo(() => dateInputBounds(), [])
@@ -190,6 +206,20 @@ export function OnboardingForm() {
       }
     }
 
+    if (step === 5) {
+      const parsed = onboardingStep5Schema.safeParse({
+        privacyAccepted: values.privacyAccepted ? true : undefined,
+      })
+      if (!parsed.success) {
+        setErrors({
+          privacyAccepted:
+            parsed.error.flatten().fieldErrors.privacyAccepted?.[0] ??
+            "You must agree to the Privacy Policy to continue",
+        })
+        return false
+      }
+    }
+
     return true
   }
 
@@ -215,6 +245,7 @@ export function OnboardingForm() {
         healthConditions: values.noneSelected ? [] : values.healthConditions,
         dietaryGoal: values.dietaryGoal,
         language: values.language,
+        privacyAccepted: true as const,
       }
 
       const res = await fetch("/api/users/profile", {
@@ -437,6 +468,64 @@ export function OnboardingForm() {
             </div>
             {errors.language && <p className="text-xs text-error">{errors.language}</p>}
             <p className="text-xs text-text-muted">You can change this anytime in Settings.</p>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div className="space-y-4">
+            <div className="max-h-48 overflow-y-auto rounded-xl border border-border-light bg-bg-muted/40 p-4">
+              <PrivacyPolicyContent compact />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button type="button" variant="outline" size="sm" className="h-8">
+                    Read full policy
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="font-display">Privacy Policy</DialogTitle>
+                  </DialogHeader>
+                  <PrivacyPolicyContent compact />
+                </DialogContent>
+              </Dialog>
+              <Link
+                href="/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+              >
+                Open in new tab
+                <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              </Link>
+            </div>
+
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border-light bg-bg-muted/40 p-4 transition-colors duration-200 hover:border-primary/30">
+              <Checkbox
+                id="privacy-accepted"
+                checked={values.privacyAccepted}
+                onCheckedChange={(checked) => {
+                  setValues((v) => ({ ...v, privacyAccepted: checked === true }))
+                  clearError("privacyAccepted")
+                }}
+                className="mt-0.5"
+                aria-invalid={!!errors.privacyAccepted}
+              />
+              <span className="text-sm text-text-primary">
+                I have read and agree to the{" "}
+                <Link href="/privacy" target="_blank" className="font-medium text-primary hover:underline">
+                  Privacy Policy
+                </Link>
+                . I consent to AduanePa collecting and using my profile, health, and meal data as
+                described to provide personalised nutrition services, and I acknowledge that this
+                information is stored to support my account.
+              </span>
+            </label>
+            {errors.privacyAccepted && (
+              <p className="text-xs text-error">{errors.privacyAccepted}</p>
+            )}
           </div>
         )}
       </div>

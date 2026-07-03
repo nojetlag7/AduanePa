@@ -15,17 +15,42 @@ export async function run(t: Tester) {
   const { isProfileComplete } = await import("@/lib/profile")
   t.check(
     "complete profile → true",
-    isProfileComplete({ dateOfBirth: new Date("1998-01-01"), weight: 70, height: 175 }) === true,
+    isProfileComplete({
+      dateOfBirth: new Date("1998-01-01"),
+      weight: 70,
+      height: 175,
+      privacyPolicyAcceptedAt: new Date(),
+    }) === true,
+    { weight: 2 }
+  )
+  t.check(
+    "missing privacy consent → false",
+    isProfileComplete({
+      dateOfBirth: new Date("1998-01-01"),
+      weight: 70,
+      height: 175,
+      privacyPolicyAcceptedAt: null,
+    }) === false,
     { weight: 2 }
   )
   t.check(
     "missing weight → false",
-    isProfileComplete({ dateOfBirth: new Date("1998-01-01"), weight: null, height: 175 }) === false,
+    isProfileComplete({
+      dateOfBirth: new Date("1998-01-01"),
+      weight: null,
+      height: 175,
+      privacyPolicyAcceptedAt: new Date(),
+    }) === false,
     { weight: 2 }
   )
   t.check(
     "all null → false",
-    isProfileComplete({ dateOfBirth: null, weight: null, height: null }) === false
+    isProfileComplete({
+      dateOfBirth: null,
+      weight: null,
+      height: null,
+      privacyPolicyAcceptedAt: null,
+    }) === false
   )
 
   t.section("Test user profile (DB)")

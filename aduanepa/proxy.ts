@@ -5,7 +5,7 @@ import { authConfig } from "@/lib/auth.config"
 const { auth } = NextAuth(authConfig)
 
 // Routes reachable without a session.
-const PUBLIC_PATHS = new Set(["/", "/login", "/register", "/offline"])
+const PUBLIC_PATHS = new Set(["/", "/login", "/register", "/offline", "/privacy"])
 
 export default auth((req) => {
   const { nextUrl } = req
@@ -30,9 +30,9 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/verify-email", nextUrl))
   }
 
-  // Verified but profile incomplete: only /onboarding is allowed.
+  // Verified but profile incomplete: onboarding and privacy policy only.
   if (!isProfileComplete) {
-    if (isOnboardingPage) return NextResponse.next()
+    if (isOnboardingPage || path === "/privacy") return NextResponse.next()
     return NextResponse.redirect(new URL("/onboarding", nextUrl))
   }
 
