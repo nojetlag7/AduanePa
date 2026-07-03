@@ -1,80 +1,80 @@
 {
   "nav": {
-    "dashboard": "Krataa Titiriw",
+    "dashboard": "Ahwɛbea",
     "meals": "M'aduane",
     "makeMeAMeal": "Yɛ Me Aduane",
-    "health": "Ahofam",
+    "health": "Akwahosan",
     "nutrition": "Aduane Ho Nsɛm",
-    "grocery": "Aduane To Krataa",
-    "settings": "Nhwehwɛmu",
-    "signOut": "Firi ha"
+    "grocery": "Aduane Tɔ Krataa",
+    "settings": "Nsakrae",
+    "signOut": "Fi Adi"
   },
   "common": {
     "save": "Kora",
     "cancel": "Gyae",
     "loading": "Ɛreloading…",
     "saving": "Ɛrekora…",
-    "tryAgain": "Sɔ bio",
+    "tryAgain": "Sɔ Bio",
     "generating": "Ɛreyɛ…",
-    "error": "Biribi kɔ mfomso",
-    "noData": "Nkɔmmɔbea biara nni hɔ",
-    "viewAll": "Hwɛ nyinaa",
-    "back": "San kɔ",
-    "close": "To mu",
+    "error": "Biribi Akɔ Mfomso",
+    "noData": "Nsɛm Biara Nni Hɔ",
+    "viewAll": "Hwɛ Nyinaa",
+    "back": "San Kɔ",
+    "close": "To Mu",
     "generate": "Yɛ",
-    "refresh": "Dan bio"
+    "refresh": "Dan Bio"
   },
   "meals": {
-    "breakfast": "Anopa Aduane",
+    "breakfast": "Anɔpa Aduane",
     "lunch": "Awia Aduane",
     "dinner": "Anadwo Aduane",
     "snack": "Aduane Kakra",
-    "anyMeal": "Aduane biara",
-    "localDish": "Ghana aduane",
-    "saveMeal": "Kora aduane",
+    "anyMeal": "Aduane Biara",
+    "localDish": "Ghana Aduane",
+    "saveMeal": "Kora Aduane",
     "saved": "Akora",
-    "prepTime": "Aduane yɛ bere",
-    "ingredients": "Aduane mu nneɛma",
-    "instructions": "Aduane yɛ akwan",
+    "prepTime": "Aduane Noa Bere",
+    "ingredients": "Aduane Mu Nneɛma",
+    "instructions": "Aduane Yɛ Kwan",
     "macros": {
-      "calories": "Aduane hye",
+      "calories": "Ahoɔden (Calories)",
       "protein": "Protein",
       "carbs": "Carbs",
-      "fat": "Fats"
+      "fat": "Srade"
     },
-    "generatePlan": "Yɛ Aduane Plan",
-    "generatingPlan": "Ɛreyɛ plan…",
-    "todaysPlan": "Ɛnnɛ Aduane",
-    "noMealPlanned": "Anka ansi plan"
+    "generatePlan": "Yɛ Aduane Nhyehyɛe",
+    "generatingPlan": "Ɛreyɛ Nhyehyɛe…",
+    "todaysPlan": "Ɛnnɛ Aduane Nhyehyɛe",
+    "noMealPlanned": "Aduane Nhyehyɛe Biara Nni Hɔ"
   },
   "health": {
-    "weight": "Ayɛn",
-    "bloodSugar": "Mogya Sika",
+    "weight": "Mu Duru",
+    "bloodSugar": "Mogya Asikyire",
     "bloodPressure": "Mogya Tumi",
     "logToday": "Kora Ɛnnɛ Nsɛm",
     "logForm": {
-      "title": "Kora Ahofam Nsɛm",
+      "title": "Kora Akwahosan Nsɛm",
       "notes": "Nsɛm",
       "submit": "Kora"
     }
   },
   "dashboard": {
     "welcome": "Akwaaba",
-    "healthSnapshot": "Ahofam Ho Nsɛm",
+    "healthSnapshot": "Akwahosan Ho Nsɛm",
     "nutritionToday": "Ɛnnɛ Aduane Nsɛm",
-    "recommendations": "Mmɔdeneyɛ",
+    "recommendations": "Afotusɛm",
     "quickActions": "Ntɛm Yɛ"
   },
   "settings": {
-    "title": "Nhwehwɛmu",
-    "subtitle": "Sesa wo ho nsɛm, ahofam ne wo ani.",
+    "title": "Nsakrae",
+    "subtitle": "Sesa wo ho nsɛm, w'akwahosan, ne sɛnea nneɛma te.",
     "profile": "Wo Ho Nsɛm",
-    "healthProfile": "Ahofam Ho Nsɛm",
-    "password": "Gyinae",
+    "healthProfile": "Akwahosan Ho Nsɛm",
+    "password": "Password",
     "language": "Kasa",
     "appearance": "Nhwɛso",
-    "dangerZone": "Ɔhaw Bea",
-    "deleteAccount": "Yi m'akaunti",
+    "dangerZone": "Asiane Beaeɛ",
+    "deleteAccount": "Yi Akaunti",
     "languages": {
       "english": "Borɔfo",
       "twi": "Twi",
@@ -83,29 +83,29 @@
   },
   "landing": {
     "hero": {
-      "headline": "AI aduane nhyehyɛe ma Ghana ahofam",
-      "subtext": "Aduane nhyehyɛe a wɔbɔ wo ho, a wɔde Ghana aduane ne wo ahofam ne wo ani ano.",
-      "cta": "Hyɛ ase sɛ ofie",
-      "signIn": "Bra mu"
+      "headline": "AI Aduane Nhyehyɛe Ma Ghanafoɔ Akwahosan",
+      "subtext": "Aduane nhyehyɛe a wɔasiesie ama wo, a ɛde Ghana aduane, w'akwahosan, ne wo pɛ bom.",
+      "cta": "Hyɛ Aseɛ Kwa",
+      "signIn": "Bra Mu"
     },
     "features": {
-      "title": "Yɛbɔɔ sɛ Ghana ahofam"
+      "title": "Yɛde Ma Ghanafoɔ Akwahosan"
     }
   },
   "auth": {
-    "signIn": "Bra mu",
-    "signUp": "Kyerɛ w'ani",
+    "signIn": "Bra Mu",
+    "signUp": "Kyerɛw Wo Din",
     "email": "Email",
-    "password": "Gyinae",
+    "password": "Password",
     "name": "Din",
-    "forgotPassword": "Wowere wo gyinae?",
-    "noAccount": "Akaunti nni wo?",
-    "haveAccount": "Akaunti wɔ wo?"
+    "forgotPassword": "Wo Werɛ Afiri Wo Password?",
+    "noAccount": "Wonni Akaunti?",
+    "haveAccount": "Wowɔ Akaunti?"
   },
   "onboarding": {
-    "step": "Ɛkwan {current} wɔ {total} mu",
-    "title": "Hyɛ wo ho ase",
-    "continue": "Kɔ so",
-    "finish": "wie"
+    "step": "Ɛkwan {current} wɔ {total} Mu",
+    "title": "Hyɛ Wo Ho Aseɛ",
+    "continue": "Kɔ So",
+    "finish": "Wie"
   }
 }
