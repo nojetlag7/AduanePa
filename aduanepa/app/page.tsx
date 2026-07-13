@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { getTranslations } from "next-intl/server"
 import {
   Apple,
   ArrowRight,
@@ -72,7 +73,9 @@ const STEPS = [
   },
 ]
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const t = await getTranslations("landing")
+
   return (
     <div className="min-h-screen bg-bg-main text-text-primary dark:bg-transparent">
       {/* ─── Hero (nav shares this background — no visible seam) ─────────── */}
@@ -94,15 +97,21 @@ export default function LandingPage() {
           <div className="flex flex-col items-start gap-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-border-light bg-bg-card px-3 py-1 text-xs font-medium text-text-secondary">
               <Sparkles className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-              AI nutrition, built for Ghana
+              {t("hero.badge")}
             </span>
             <h1 className="font-display text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              Eat well with the{" "}
-              <span className="text-primary">foods you know</span>
+              {t("hero.headline").includes(t("hero.headlineAccent")) ? (
+                <>
+                  {t("hero.headline").split(t("hero.headlineAccent"))[0]}
+                  <span className="text-primary">{t("hero.headlineAccent")}</span>
+                  {t("hero.headline").split(t("hero.headlineAccent"))[1]}
+                </>
+              ) : (
+                t("hero.headline")
+              )}
             </h1>
             <p className="max-w-md text-base text-text-secondary sm:text-lg">
-              AduanePa creates personalised, culturally relevant meal plans and tracks your health —
-              so eating right finally fits your life and your kitchen.
+              {t("hero.subtext")}
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
@@ -111,26 +120,26 @@ export default function LandingPage() {
                 className="bg-primary text-white shadow-sm hover:bg-primary-hover hover:shadow-md"
               >
                 <Link href="/register">
-                  Create free account
+                  {t("hero.cta")}
                   <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="hover:border-primary/40 hover:bg-primary/5">
-                <Link href="/login">I already have an account</Link>
+                <Link href="/login">{t("hero.signIn")}</Link>
               </Button>
             </div>
             <dl className="mt-2 flex gap-8">
               <div>
                 <dt className="text-2xl font-bold text-primary">50+</dt>
-                <dd className="text-xs text-text-muted">Local foods</dd>
+                <dd className="text-xs text-text-muted">{t("hero.statLocal")}</dd>
               </div>
               <div>
                 <dt className="text-2xl font-bold text-primary">3</dt>
-                <dd className="text-xs text-text-muted">Languages</dd>
+                <dd className="text-xs text-text-muted">{t("hero.statLanguages")}</dd>
               </div>
               <div>
                 <dt className="text-2xl font-bold text-primary">100%</dt>
-                <dd className="text-xs text-text-muted">Personalised</dd>
+                <dd className="text-xs text-text-muted">{t("hero.statPersonalised")}</dd>
               </div>
             </dl>
           </div>
@@ -184,10 +193,10 @@ export default function LandingPage() {
         <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="font-display text-3xl font-bold sm:text-4xl">
-            Everything you need to eat better
+            {t("features.title")}
           </h2>
           <p className="mt-3 text-text-secondary">
-            Thoughtful tools that work with Ghanaian cuisine and your health — not against them.
+            {t("features.subtitle")}
           </p>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

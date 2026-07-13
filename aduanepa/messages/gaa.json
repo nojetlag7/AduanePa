@@ -14,98 +14,175 @@
     "cancel": "Ayɛ",
     "loading": "Ebi he…",
     "saving": "Etsɔɔ…",
-    "tryAgain": "Lɛ bio",
+    "tryAgain": "Lɛ Bio",
     "generating": "Ebii…",
-    "error": "Oyoo kɛ bii",
+    "error": "Oyoo Kɛ Bii",
     "noData": "Nyɛwala",
-    "viewAll": "Faa fɛɛ",
+    "viewAll": "Hwɛ Nyinaa",
     "back": "Kpee",
     "close": "Pele",
     "generate": "Gbii",
-    "refresh": "Lɛ bio"
+    "refresh": "Lɛ Bio",
+    "next": "Kɔ So",
+    "complete": "Pele Nhyehyɛe",
+    "menu": "Menu",
+    "openMenu": "Bue Menu",
+    "kcal": "kcal"
   },
   "meals": {
     "breakfast": "Gbɛɔ Nɔɔ",
     "lunch": "Ayeli Nɔɔ",
     "dinner": "Oyiɛ Nɔɔ",
     "snack": "Nɔɔ Kakaa",
-    "anyMeal": "Nɔɔ bihi",
-    "localDish": "Ghana nɔɔ",
-    "saveMeal": "Tsɔɔ nɔɔ",
+    "anyMeal": "Nɔɔ Bihi",
+    "localDish": "Ghana Nɔɔ",
+    "saveMeal": "Tsɔɔ Nɔɔ",
     "saved": "Atsɔɔ",
-    "prepTime": "Nɔɔ ŋmɛi bere",
-    "ingredients": "Nɔɔ nii",
-    "instructions": "Nɔɔ ŋmɛi akwan",
+    "prepTime": "Nɔɔ Ŋmɛi Bere",
+    "ingredients": "Nɔɔ Nii",
+    "instructions": "Nɔɔ Ŋmɛi Akwan",
     "macros": {
-      "calories": "Nɔɔ hye",
+      "calories": "Nɔɔ Hye",
       "protein": "Protein",
       "carbs": "Carbs",
       "fat": "Fat"
     },
     "generatePlan": "Gbii Nɔɔ Plan",
-    "generatingPlan": "Ebii plan…",
+    "regeneratePlan": "Gbii Plan Foforo",
+    "generatingPlan": "Ebii Plan…",
     "todaysPlan": "Gbɛɔ Nɔɔ",
-    "noMealPlanned": "Nɔɔ kɛ plan"
+    "todaysPlanSubtitle": "Ghana nɔɔ nhyehyɛe a ɛfata wo gbɛɔ yɛli.",
+    "noMealPlanned": "Nɔɔ Plan Biara Nni Hɔ",
+    "pageTitle": "Nɔɔ Ye",
+    "pageSubtitle": "Hwɛ na di wo nɔɔ nhyehyɛe so.",
+    "emptyTitle": "Nɔɔ Biara Nni Hɔ",
+    "emptyDescription": "Gbii da biara plan na wohu gbɛɔ, ayeli, oyiɛ nɔɔ ne snack wɔ ha."
   },
   "health": {
     "weight": "Shiɛ",
     "bloodSugar": "Fio Suga",
     "bloodPressure": "Fio Tumi",
     "logToday": "Tsɔɔ Gbɛɔ Nii",
+    "pageTitle": "Gbɛɔ Yɛli",
+    "pageSubtitle": "Di wo gbɛɔ yɛli so na hwɛ sɛnea ɛte.",
+    "emptyTitle": "Gbɛɔ Nii Biara Nni Hɔ",
+    "emptyDescription": "Tsɔɔ gbɛɔ shiɛ, fio tumi, anaa fio suga na faa lɛ.",
     "logForm": {
       "title": "Tsɔɔ Gbɛɔ Yɛli",
       "notes": "Nii",
       "submit": "Tsɔɔ"
     }
   },
+  "nutrition": {
+    "pageTitle": "Nɔɔ Yeli",
+    "pageSubtitle": "Hwɛ sɛnea wo macros ne calories te bere so."
+  },
+  "grocery": {
+    "pageTitle": "Nɔɔ Wɔ Lɛ",
+    "pageSubtitle": "Nii a ɛfiri wo nɔɔ plan mu, a wɔakyekyɛ mu.",
+    "emptyTitle": "Wɔ Lɛ Biara Nni Hɔ",
+    "emptyDescription": "Gbii nɔɔ plan kan, na wo wɔ lɛ bɛba ha."
+  },
+  "makeMeAMeal": {
+    "pageTitle": "Gbɛɔ Nɔ Ye",
+    "pageSubtitle": "Ka nii a wowɔ wɔ fie na yɛbɛma wo nɔɔ ŋmɛi a ɛfata."
+  },
   "dashboard": {
-    "welcome": "He bo",
+    "welcome": "He Bo, {name}",
+    "welcomeSubtitle": "Wo nɔɔ yeli wɔ ha — di nɔɔ, macros, ne wo gbɛɔ yɛli so wɔ beae koro.",
     "healthSnapshot": "Gbɛɔ Yɛli Nii",
+    "healthSnapshotSubtitle": "Nii a etwaa mu nnawɔtwe koro yi mu.",
+    "noHealthData": "Gbɛɔ yɛli nii biara nni hɔ.",
+    "noHealthDataHint": "Tsɔɔ shiɛ, fio tumi, anaa fio suga na wohu trends wɔ ha.",
     "nutritionToday": "Gbɛɔ Nɔɔ Yeli",
-    "recommendations": "Mmɔdeneyɛ",
-    "quickActions": "Ntɛm Yɛ"
+    "nutritionSubtitle": "Sɛnea ɛkɔ so ma wo da biara botaeɛ.",
+    "recommendations": "Afotusɛm",
+    "adherence": "Gbɛɔ Nɔɔ Di So",
+    "quickActions": "Ntɛm Yɛ",
+    "quickActionsSubtitle": "Kɔ tsɔɔ gbɛɔ yɛli, gbɛɔ nɔ firi nii mu, anaa hwɛ wo plan nyinaa.",
+    "viewAllMeals": "Hwɛ Nɔɔ Nyinaa",
+    "logHealthData": "Tsɔɔ Gbɛɔ Yɛli",
+    "makeMeAMeal": "Gbɛɔ Nɔ Ye"
   },
   "settings": {
     "title": "Nyɛliɛ",
     "subtitle": "Sesa ŋŋ nii, gbɛɔ yɛli naɛ.",
     "profile": "Ŋŋ Nii",
+    "profileDescription": "Sesa wo din, email, ne wo shiɛ ne tenten.",
     "healthProfile": "Gbɛɔ Yɛli Nii",
+    "healthProfileDescription": "Sesa wo gbɛɔ yɛli ne wo nɔɔ botaeɛ. Nsakrae bɛda adi wɔ nɔɔ a ɛdi so.",
     "password": "Gyinae",
+    "passwordDescription": "Sesa wo akaunti gyinae.",
     "language": "Kɔɔ",
+    "languageDescription": "Paw kɔɔ a wɔde bɛkyerɛ nɔɔ din ne nkyerɛkyerɛmu.",
     "appearance": "Nhwɛso",
+    "appearanceDescription": "Paw sɛnea AduanePa bɛyɛ ahwɛ.",
     "dangerZone": "Ɔhaw Bea",
-    "deleteAccount": "Yi m'akaunti",
+    "deleteAccount": "Yi M'akaunti",
     "languages": {
-      "english": "Blofonyo wiemɔ",
+      "english": "Borɔfo",
       "twi": "Twi",
       "ga": "Ga"
+    },
+    "themes": {
+      "light": "Hann",
+      "dark": "Sum",
+      "system": "System"
     }
   },
   "landing": {
-    "hero": {
-      "headline": "AI nɔɔ nhyehyɛe ma Ghana gbɛɔ yɛli",
-      "subtext": "Nɔɔ nhyehyɛe a ŋŋ Ghana nɔɔ naɛ gbɛɔ yɛli.",
-      "cta": "Faa lɛ kɔ",
+    "nav": {
+      "home": "Shia",
+      "mission": "Wɔ Botaeɛ",
+      "contact": "Kasa Kyerɛ Wɔ",
+      "getStarted": "Faa Lɛ",
       "signIn": "Bii"
     },
+    "hero": {
+      "badge": "AI nɔɔ nhyehyɛe, a wɔbɔɔ ma Ghana",
+      "headline": "Di nɔɔ a wonim no",
+      "headlineAccent": "nɔɔ a wonim no",
+      "subtext": "AduanePa yɛ nɔɔ nhyehyɛe a ɛfata wo ne Ghana nɔɔ, na ɛdi wo gbɛɔ yɛli so.",
+      "cta": "Yɛ Akaunti Kwa",
+      "signIn": "Mewɔ Akaunti Dedaw",
+      "statLocal": "Ghana Nɔɔ",
+      "statLanguages": "Kɔɔ",
+      "statPersonalised": "Wɔasiesie Ama Wo"
+    },
     "features": {
-      "title": "Yɛbɔɔ Ghana gbɛɔ yɛli"
+      "title": "Biribiara a ehia ma wudi yie",
+      "subtitle": "Nneɛma a ɛboa Ghana nɔɔ ne wo gbɛɔ yɛli."
     }
   },
   "auth": {
     "signIn": "Bii",
-    "signUp": "Kyerɛ w'ani",
+    "signUp": "Kyerɛ W'ani",
     "email": "Email",
     "password": "Gyinae",
     "name": "Din",
-    "forgotPassword": "Owere ŋŋ gyinae?",
-    "noAccount": "Akaunti kɛ?",
-    "haveAccount": "Akaunti wɔ?"
+    "forgotPassword": "Owere Ŋŋ Gyinae?",
+    "noAccount": "Akaunti Kɛ?",
+    "haveAccount": "Akaunti Wɔ?",
+    "welcomeBack": "He Bo",
+    "signInHelper": "Bii na kɔ so wɔ wo nɔɔ nhyehyɛe so.",
+    "createAccount": "Yɛ Wo Akaunti",
+    "signUpHelper": "Faa lɛ di yie wɔ nɔɔ a wɔabɔ ama wo.",
+    "confirmPassword": "Si Gyinae So Bio"
   },
   "onboarding": {
-    "step": "Lɛ {current} wɔ {total}",
-    "title": "Faa ŋŋ nii",
-    "continue": "Kɔ so",
-    "finish": "Pele"
+    "step": "Lɛ {current} Wɔ {total}",
+    "title": "Faa Ŋŋ Nii",
+    "continue": "Kɔ So",
+    "finish": "Pele",
+    "aboutYou": "Ŋŋ Nii",
+    "aboutYouSubtitle": "Yɛde yi bɛsesa wo nɔɔ botaeɛ.",
+    "healthConditions": "Gbɛɔ Yɛli",
+    "healthConditionsSubtitle": "Paw deɛ ɛfata wo — yɛbɛsesa wo nɔɔ nhyehyɛe.",
+    "yourGoal": "Wo Botaeɛ",
+    "yourGoalSubtitle": "Dɛn na wopɛ sɛ wo nɔɔ boa wo?",
+    "language": "Kɔɔ",
+    "languageSubtitle": "Paw sɛnea wopɛ sɛ wode AduanePa di dwuma.",
+    "privacy": "Kokoamsɛm Ne Wo Data",
+    "privacySubtitle": "Kenkan sɛnea yɛde wo nii di dwuma."
   }
 }

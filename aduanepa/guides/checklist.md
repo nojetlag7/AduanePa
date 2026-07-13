@@ -690,8 +690,11 @@ Sections:
 - [x] `i18n/request.ts` resolves locale from `NEXT_LOCALE` cookie ("without-i18n-routing" mode)
 - [x] Authored message catalogs: `messages/en.json`, `messages/tw.json`, `messages/gaa.json` — 8 namespaces: `nav`, `common`, `meals`, `health`, `dashboard`, `settings`, `auth`, `landing`
 - [x] Sidebar nav labels use `useTranslations("nav")` — all 7 routes translated into Twi and Ga
+- [x] Settings, dashboard, meals, health, nutrition, grocery, make-me-a-meal page chrome use `getTranslations` / `useTranslations`
+- [x] Landing hero + nav and auth panel headings use message catalogs
 - [x] `NextIntlClientProvider` wired into root `app/layout.tsx`; locale injected into `<html lang>`
 - [x] Locale codes: `en`, `tw` (Twi), `gaa` (Ga); mapped via `lib/locale.ts` `languageToLocale()`
+- [x] Page skeletons: dashboard, meals, health, nutrition, grocery, make-me-a-meal, settings (+ shared `(app)/loading`)
 
 ### 13.3 Localisation application
 - [x] Settings language change: DB update + `NEXT_LOCALE` cookie set + `window.location.reload()` — new locale takes effect immediately

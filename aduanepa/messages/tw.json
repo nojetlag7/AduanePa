@@ -22,7 +22,12 @@
     "back": "San Kɔ",
     "close": "To Mu",
     "generate": "Yɛ",
-    "refresh": "Dan Bio"
+    "refresh": "Dan Bio",
+    "next": "Deɛ Ɛdi So",
+    "complete": "Wie Nhyehyɛe",
+    "menu": "Menu",
+    "openMenu": "Bue Menu",
+    "kcal": "kcal"
   },
   "meals": {
     "breakfast": "Anɔpa Aduane",
@@ -43,53 +48,110 @@
       "fat": "Srade"
     },
     "generatePlan": "Yɛ Aduane Nhyehyɛe",
+    "regeneratePlan": "Yɛ Nhyehyɛe Foforo",
     "generatingPlan": "Ɛreyɛ Nhyehyɛe…",
-    "todaysPlan": "Ɛnnɛ Aduane Nhyehyɛe",
-    "noMealPlanned": "Aduane Nhyehyɛe Biara Nni Hɔ"
+    "todaysPlan": "Ɛnnɛ Aduane",
+    "todaysPlanSubtitle": "Ghana aduane nhyehyɛe a ɛfata w'akwahosan.",
+    "noMealPlanned": "Aduane Nhyehyɛe Biara Nni Hɔ",
+    "pageTitle": "M'aduane",
+    "pageSubtitle": "Hwɛ na di wo aduane nhyehyɛe so.",
+    "emptyTitle": "Aduane Biara Nni Hɔ",
+    "emptyDescription": "Yɛ da biara nhyehyɛe na wohu anɔpa, awia, anadwo aduane ne snack wɔ ha."
   },
   "health": {
     "weight": "Mu Duru",
     "bloodSugar": "Mogya Asikyire",
     "bloodPressure": "Mogya Tumi",
     "logToday": "Kora Ɛnnɛ Nsɛm",
+    "pageTitle": "Akwahosan",
+    "pageSubtitle": "Di wo akwahosan so na hwɛ sɛnea ɛte.",
+    "emptyTitle": "Akwahosan Nsɛm Biara Nni Hɔ",
+    "emptyDescription": "Kora ɛnnɛ mu duru, mogya tumi, anaa mogya asikyire na hyɛ aseɛ.",
     "logForm": {
       "title": "Kora Akwahosan Nsɛm",
       "notes": "Nsɛm",
       "submit": "Kora"
     }
   },
+  "nutrition": {
+    "pageTitle": "Aduane Ho Nsɛm",
+    "pageSubtitle": "Hwɛ sɛnea wo macros ne calories te bere so."
+  },
+  "grocery": {
+    "pageTitle": "Aduane Tɔ Krataa",
+    "pageSubtitle": "Nneɛma a ɛfiri wo aduane nhyehyɛe mu, a wɔakyekyɛ mu.",
+    "emptyTitle": "Tɔ Krataa Biara Nni Hɔ",
+    "emptyDescription": "Yɛ aduane nhyehyɛe kan, na wo tɔ krataa bɛba ha."
+  },
+  "makeMeAMeal": {
+    "pageTitle": "Yɛ Me Aduane",
+    "pageSubtitle": "Ka nneɛma a wowɔ wɔ fie na yɛbɛma wo aduanekwan a ɛfata."
+  },
   "dashboard": {
-    "welcome": "Akwaaba",
+    "welcome": "Akwaaba, {name}",
+    "welcomeSubtitle": "Wo aduane ho nsɛm wɔ ha — di aduane, macros, ne w'akwahosan so wɔ beae koro.",
     "healthSnapshot": "Akwahosan Ho Nsɛm",
+    "healthSnapshotSubtitle": "Nsɛm a etwaa mu nnawɔtwe koro yi mu.",
+    "noHealthData": "Akwahosan nsɛm biara nni hɔ.",
+    "noHealthDataHint": "Kora mu duru, mogya tumi, anaa mogya asikyire na wohu trends wɔ ha.",
     "nutritionToday": "Ɛnnɛ Aduane Nsɛm",
+    "nutritionSubtitle": "Sɛnea ɛkɔ so ma wo da biara botaeɛ.",
     "recommendations": "Afotusɛm",
-    "quickActions": "Ntɛm Yɛ"
+    "adherence": "Ɛnnɛ Aduane Di So",
+    "quickActions": "Ntɛm Yɛ",
+    "quickActionsSubtitle": "Kɔ kora akwahosan, yɛ aduane firi nneɛma mu, anaa hwɛ wo nhyehyɛe nyinaa.",
+    "viewAllMeals": "Hwɛ Aduane Nyinaa",
+    "logHealthData": "Kora Akwahosan Nsɛm",
+    "makeMeAMeal": "Yɛ Me Aduane"
   },
   "settings": {
     "title": "Nsakrae",
     "subtitle": "Sesa wo ho nsɛm, w'akwahosan, ne sɛnea nneɛma te.",
     "profile": "Wo Ho Nsɛm",
+    "profileDescription": "Sesa wo din, email, ne wo mu duru ne tenten.",
     "healthProfile": "Akwahosan Ho Nsɛm",
+    "healthProfileDescription": "Sesa w'akwahosan ne wo aduane botaeɛ. Nsakrae bɛda adi wɔ aduane a ɛdi so.",
     "password": "Password",
+    "passwordDescription": "Sesa wo akaunti password.",
     "language": "Kasa",
+    "languageDescription": "Paw kasa a wɔde bɛkyerɛ aduane din ne nkyerɛkyerɛmu.",
     "appearance": "Nhwɛso",
+    "appearanceDescription": "Paw sɛnea AduanePa bɛyɛ ahwɛ.",
     "dangerZone": "Asiane Beaeɛ",
     "deleteAccount": "Yi Akaunti",
     "languages": {
       "english": "Borɔfo",
       "twi": "Twi",
       "ga": "Ga"
+    },
+    "themes": {
+      "light": "Hann",
+      "dark": "Sum",
+      "system": "System"
     }
   },
   "landing": {
-    "hero": {
-      "headline": "AI Aduane Nhyehyɛe Ma Ghanafoɔ Akwahosan",
-      "subtext": "Aduane nhyehyɛe a wɔasiesie ama wo, a ɛde Ghana aduane, w'akwahosan, ne wo pɛ bom.",
-      "cta": "Hyɛ Aseɛ Kwa",
+    "nav": {
+      "home": "Fie",
+      "mission": "Yɛn Botaeɛ",
+      "contact": "Kasa Kyerɛ Yɛn",
+      "getStarted": "Hyɛ Aseɛ",
       "signIn": "Bra Mu"
     },
+    "hero": {
+      "badge": "AI aduane nhyehyɛe, a wɔbɔɔ ma Ghana",
+      "headline": "Di aduanepa a wonim no",
+      "headlineAccent": "aduanepa a wonim no",
+      "subtext": "AduanePa yɛ aduane nhyehyɛe a ɛfata wo ne Ghana aduane, na ɛdi w'akwahosan so — enti sɛ wudi yie a, ɛfata wo abrabɔ.",
+      "cta": "Yɛ Akaunti Kwa",
+      "signIn": "Mewɔ Akaunti Dedaw",
+      "statLocal": "Ghana Aduane",
+      "statLanguages": "Kasa",
+      "statPersonalised": "Wɔasiesie Ama Wo"
+    },
     "features": {
-      "title": "Yɛde Ma Ghanafoɔ Akwahosan"
+      "title": "Biribiara a ehia ma wudi yie",
+      "subtitle": "Nneɛma a ɛboa Ghana aduane ne w'akwahosan — ɛnyɛ atuate."
     }
   },
   "auth": {
@@ -100,12 +162,27 @@
     "name": "Din",
     "forgotPassword": "Wo Werɛ Afiri Wo Password?",
     "noAccount": "Wonni Akaunti?",
-    "haveAccount": "Wowɔ Akaunti?"
+    "haveAccount": "Wowɔ Akaunti?",
+    "welcomeBack": "Akwaaba",
+    "signInHelper": "Bra mu na kɔ so wɔ wo aduane nhyehyɛe so.",
+    "createAccount": "Yɛ Wo Akaunti",
+    "signUpHelper": "Hyɛ aseɛ di yie wɔ aduane a wɔabɔ ama wo.",
+    "confirmPassword": "Si Password So Bio"
   },
   "onboarding": {
     "step": "Ɛkwan {current} wɔ {total} Mu",
     "title": "Hyɛ Wo Ho Aseɛ",
     "continue": "Kɔ So",
-    "finish": "Wie"
+    "finish": "Wie",
+    "aboutYou": "Wo Ho Nsɛm",
+    "aboutYouSubtitle": "Yɛde yi bɛsesa wo aduane botaeɛ.",
+    "healthConditions": "Akwahosan",
+    "healthConditionsSubtitle": "Paw deɛ ɛfata wo — yɛbɛsesa wo aduane nhyehyɛe.",
+    "yourGoal": "Wo Botaeɛ",
+    "yourGoalSubtitle": "Dɛn na wopɛ sɛ wo aduane boa wo?",
+    "language": "Kasa",
+    "languageSubtitle": "Paw sɛnea wopɛ sɛ wode AduanePa di dwuma.",
+    "privacy": "Kokoamsɛm Ne Wo Data",
+    "privacySubtitle": "Kenkan sɛnea yɛde wo nsɛm di dwuma."
   }
 }

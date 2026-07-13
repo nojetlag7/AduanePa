@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { HeartPulse, Plus } from "lucide-react"
+import { getTranslations } from "next-intl/server"
 
 import { auth } from "@/lib/auth"
 import { startOfDay } from "@/lib/meal-utils"
@@ -23,6 +24,7 @@ export const metadata: Metadata = { title: "Health · AduanePa" }
 export default async function HealthPage() {
   const session = await auth()
   const userId = session!.user!.id
+  const t = await getTranslations("health")
 
   const today = startOfDay(new Date())
   const [profile, trend, latest, plan, adherence] = await Promise.all([
@@ -43,16 +45,16 @@ export default async function HealthPage() {
   if (!hasData) {
     return (
       <>
-        <PageHeader title="Health" subtitle="Track your weight, blood pressure and blood sugar." />
+        <PageHeader title={t("pageTitle")} subtitle={t("pageSubtitle")} />
         <EmptyState
           icon={HeartPulse}
-          title="No health readings yet"
-          description="Log your daily readings to start seeing trends over the last 30 days."
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
           action={
             <Button asChild>
               <Link href="/health/log">
                 <Plus className="h-4 w-4" aria-hidden="true" />
-                Log today&apos;s data
+                {t("logToday")}
               </Link>
             </Button>
           }
@@ -63,13 +65,13 @@ export default async function HealthPage() {
 
   const tiles = [
     {
-      label: "Weight",
+      label: t("weight"),
       value: latest.weight,
       display: latest.weight != null ? `${latest.weight} kg` : "—",
       metric: "weight" as const,
     },
     {
-      label: "Blood pressure",
+      label: t("bloodPressure"),
       value: latest.bpSystolic,
       display:
         latest.bpSystolic != null
@@ -78,7 +80,7 @@ export default async function HealthPage() {
       metric: "bpSystolic" as const,
     },
     {
-      label: "Blood sugar",
+      label: t("bloodSugar"),
       value: latest.bloodSugar,
       display: latest.bloodSugar != null ? `${latest.bloodSugar} mmol/L` : "—",
       metric: "bloodSugar" as const,
@@ -88,13 +90,13 @@ export default async function HealthPage() {
   return (
     <>
       <PageHeader
-        title="Health"
-        subtitle="Your readings over the last 30 days."
+        title={t("pageTitle")}
+        subtitle={t("pageSubtitle")}
         action={
           <Button asChild>
             <Link href="/health/log">
               <Plus className="h-4 w-4" aria-hidden="true" />
-              Log today&apos;s data
+              {t("logToday")}
             </Link>
           </Button>
         }

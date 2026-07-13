@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Loader2, Sparkles } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 
@@ -14,6 +15,7 @@ export function GeneratePlanButton({
   className?: string
 }) {
   const router = useRouter()
+  const t = useTranslations("meals")
   const [loading, setLoading] = useState(false)
 
   async function handleGenerate() {
@@ -58,11 +60,7 @@ export function GeneratePlanButton({
       ) : (
         <Sparkles className="h-4 w-4" aria-hidden="true" />
       )}
-      {loading
-        ? "Generating…"
-        : hasPlan
-          ? "Regenerate plan"
-          : "Generate today's plan"}
+      {loading ? t("generatingPlan") : hasPlan ? t("regeneratePlan") : t("generatePlan")}
     </Button>
   )
 }

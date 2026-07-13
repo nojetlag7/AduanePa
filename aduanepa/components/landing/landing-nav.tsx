@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useEffect, useState, type MouseEvent } from "react"
 import { Menu } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { BrandLogo } from "@/components/shared/brand-logo"
 import { ThemeToggle } from "@/components/shared/theme-toggle"
 import { Button } from "@/components/ui/button"
@@ -15,17 +16,16 @@ import {
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 
-const NAV_LINKS = [
-  { href: "#top", label: "Home" },
-  { href: "#mission", label: "Our Mission" },
-  { href: "#contact", label: "Contact" },
+const NAV_HREFS = [
+  { href: "#top", key: "home" as const },
+  { href: "#mission", key: "mission" as const },
+  { href: "#contact", key: "contact" as const },
 ] as const
 
 function smoothScrollBehavior(): ScrollBehavior {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
 }
 
-/** Smoothly scroll to a landing-page section and update the URL hash without a jump. */
 function scrollToSection(hash: string) {
   const id = hash.replace(/^#/, "")
   const behavior = smoothScrollBehavior()
@@ -75,6 +75,8 @@ function NavLink({
 }
 
 export function LandingNav() {
+  const t = useTranslations("landing.nav")
+  const tc = useTranslations("common")
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -104,7 +106,6 @@ export function LandingNav() {
         className="relative flex h-16 w-full items-center px-4 sm:px-6 lg:px-10"
         aria-label="Main"
       >
-        {/* Logo — flush left (viewport padding only) */}
         <Link
           href="/#top"
           onClick={handleLogoClick}
@@ -114,16 +115,14 @@ export function LandingNav() {
           <span className="font-display text-xl font-bold text-text-primary">AduanePa</span>
         </Link>
 
-        {/* Center links — absolutely centred on desktop */}
         <ul className="pointer-events-none absolute inset-x-0 hidden items-center justify-center gap-8 md:flex">
-          {NAV_LINKS.map((link) => (
+          {NAV_HREFS.map((link) => (
             <li key={link.href} className="pointer-events-auto">
-              <NavLink href={link.href} label={link.label} />
+              <NavLink href={link.href} label={t(link.key)} />
             </li>
           ))}
         </ul>
 
-        {/* Actions — flush right */}
         <div className="relative z-10 ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
@@ -132,21 +131,21 @@ export function LandingNav() {
                 variant="ghost"
                 size="icon"
                 className="md:hidden"
-                aria-label="Open menu"
+                aria-label={tc("openMenu")}
               >
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[min(100%,20rem)]">
               <SheetHeader>
-                <SheetTitle className="font-display text-left">Menu</SheetTitle>
+                <SheetTitle className="font-display text-left">{tc("menu")}</SheetTitle>
               </SheetHeader>
               <ul className="mt-6 flex flex-col gap-4">
-                {NAV_LINKS.map((link) => (
+                {NAV_HREFS.map((link) => (
                   <li key={link.href}>
                     <NavLink
                       href={link.href}
-                      label={link.label}
+                      label={t(link.key)}
                       className="text-base"
                       onNavigate={() => setMobileOpen(false)}
                     />
@@ -158,7 +157,7 @@ export function LandingNav() {
                     className="text-sm font-medium text-text-secondary hover:text-primary"
                     onClick={() => setMobileOpen(false)}
                   >
-                    Sign in
+                    {t("signIn")}
                   </Link>
                 </li>
               </ul>
@@ -167,13 +166,13 @@ export function LandingNav() {
 
           <ThemeToggle />
           <Button asChild variant="ghost" className="hidden sm:inline-flex hover:bg-primary/10 hover:text-primary">
-            <Link href="/login">Sign in</Link>
+            <Link href="/login">{t("signIn")}</Link>
           </Button>
           <Button
             asChild
             className="bg-primary text-white shadow-sm hover:bg-primary-hover hover:shadow-md"
           >
-            <Link href="/register">Get started</Link>
+            <Link href="/register">{t("getStarted")}</Link>
           </Button>
         </div>
       </nav>

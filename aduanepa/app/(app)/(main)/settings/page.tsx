@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { redirect } from "next/navigation"
+import { getTranslations } from "next-intl/server"
 import { auth } from "@/lib/auth"
 import { getUserProfile } from "@/lib/services/users"
 import { PageHeader } from "@/components/shared/page-header"
@@ -39,49 +40,34 @@ export default async function SettingsPage() {
   const user = await getUserProfile(session.user.id)
   if (!user) redirect("/login")
 
+  const t = await getTranslations("settings")
+
   return (
     <>
-      <PageHeader title="Settings" subtitle="Manage your profile, health conditions, and preferences." />
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       <div className="space-y-4 sm:space-y-5">
-        <Section
-          title="Profile"
-          description="Update your name, email, and physical measurements."
-        >
+        <Section title={t("profile")} description={t("profileDescription")}>
           <ProfileSettings user={user} />
         </Section>
 
-        <Section
-          title="Health profile"
-          description="Update your health conditions and dietary goal. Changes take effect on your next meal generation."
-        >
+        <Section title={t("healthProfile")} description={t("healthProfileDescription")}>
           <HealthProfileSettings user={user} />
         </Section>
 
-        <Section
-          title="Password"
-          description="Change your account password."
-        >
+        <Section title={t("password")} description={t("passwordDescription")}>
           <PasswordSettings />
         </Section>
 
-        <Section
-          title="Language"
-          description="Choose the language for meal names and descriptions."
-        >
+        <Section title={t("language")} description={t("languageDescription")}>
           <LanguageSettings user={user} />
         </Section>
 
-        <Section
-          title="Appearance"
-          description="Choose how AduanePa looks for you."
-        >
+        <Section title={t("appearance")} description={t("appearanceDescription")}>
           <AppearanceSettings />
         </Section>
 
-        <Section
-          title="Danger zone"
-        >
+        <Section title={t("dangerZone")}>
           <DangerZone />
         </Section>
       </div>

@@ -23,7 +23,20 @@ export async function run(t: Tester) {
   const tw = (await import("../../messages/tw.json")).default as Record<string, unknown>
   const gaa = (await import("../../messages/gaa.json")).default as Record<string, unknown>
 
-  const topLevelKeys = ["nav", "common", "meals", "health", "dashboard", "settings", "auth", "landing"]
+  const topLevelKeys = [
+    "nav",
+    "common",
+    "meals",
+    "health",
+    "dashboard",
+    "settings",
+    "auth",
+    "landing",
+    "nutrition",
+    "grocery",
+    "makeMeAMeal",
+    "onboarding",
+  ]
   for (const key of topLevelKeys) {
     t.check(`en.json has "${key}" namespace`, key in en)
     t.check(`tw.json has "${key}" namespace`, key in tw)

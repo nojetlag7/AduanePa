@@ -1,8 +1,11 @@
+"use client"
+
 import { Coffee, Cookie, Moon, Sun, type LucideIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { MealType } from "@prisma/client"
 import { GeneratePlanButton } from "@/components/dashboard/generate-plan-button"
 import { MealCard } from "@/components/meals/meal-card"
-import { MEAL_SLOT_ORDER, MEAL_TYPE_LABELS, mealsByType } from "@/lib/meal-utils"
+import { MEAL_SLOT_ORDER, mealsByType } from "@/lib/meal-utils"
 import type { Meal } from "@/types"
 
 const SLOT_ICONS: Record<MealType, LucideIcon> = {
@@ -10,6 +13,13 @@ const SLOT_ICONS: Record<MealType, LucideIcon> = {
   LUNCH: Sun,
   DINNER: Moon,
   SNACK: Cookie,
+}
+
+const SLOT_KEYS: Record<MealType, "breakfast" | "lunch" | "dinner" | "snack"> = {
+  BREAKFAST: "breakfast",
+  LUNCH: "lunch",
+  DINNER: "dinner",
+  SNACK: "snack",
 }
 
 export function TodaysMeals({
@@ -21,16 +31,17 @@ export function TodaysMeals({
   hasPlan: boolean
   savedMealIds: Set<string>
 }) {
+  const t = useTranslations("meals")
   const byType = mealsByType(meals)
 
   return (
     <section className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-display text-lg font-semibold text-text-primary">Today&apos;s meals</h2>
-          <p className="text-sm text-text-secondary">
-            Ghanaian-first plans tailored to your health profile.
-          </p>
+          <h2 className="font-display text-lg font-semibold text-text-primary">
+            {t("todaysPlan")}
+          </h2>
+          <p className="text-sm text-text-secondary">{t("todaysPlanSubtitle")}</p>
         </div>
         <GeneratePlanButton hasPlan={hasPlan} />
       </div>
@@ -57,10 +68,8 @@ export function TodaysMeals({
                 })()}
               </span>
               <div>
-                <p className="text-sm font-medium text-text-primary">
-                  {MEAL_TYPE_LABELS[slot]}
-                </p>
-                <p className="mt-0.5 text-xs text-text-muted">Not planned yet</p>
+                <p className="text-sm font-medium text-text-primary">{t(SLOT_KEYS[slot])}</p>
+                <p className="mt-0.5 text-xs text-text-muted">{t("noMealPlanned")}</p>
               </div>
             </div>
           )

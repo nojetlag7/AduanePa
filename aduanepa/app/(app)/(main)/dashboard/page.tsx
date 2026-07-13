@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server"
 import { auth } from "@/lib/auth"
 import { calculateDailyTargets } from "@/lib/nutrition"
 import { startOfDay } from "@/lib/meal-utils"
@@ -29,6 +30,7 @@ export default async function DashboardPage() {
   const session = await auth()
   const userId = session!.user!.id
   const today = startOfDay(new Date())
+  const t = await getTranslations("dashboard")
 
   const [profile, plan, consumed, readings, savedIds, adherence, trend, latestReco] =
     await Promise.all([
@@ -72,11 +74,10 @@ export default async function DashboardPage() {
             {todayLabel}
           </p>
           <h1 className="mt-1 font-display text-2xl font-bold text-text-primary sm:text-3xl">
-            Welcome back, {firstName}
+            {t("welcome", { name: firstName })}
           </h1>
           <p className="mt-1.5 max-w-md text-sm text-text-secondary">
-            Here&apos;s your nutrition at a glance — track meals, macros and your
-            health trends in one place.
+            {t("welcomeSubtitle")}
           </p>
         </div>
       </section>
@@ -93,7 +94,7 @@ export default async function DashboardPage() {
           {hasPlan && (
             <section className="rounded-xl border border-border-light bg-bg-card p-5 shadow-card">
               <h2 className="mb-4 font-display text-base font-semibold text-text-primary">
-                Today&apos;s adherence
+                {t("adherence")}
               </h2>
               <AdherenceTracker
                 meals={planMeals.map((m) => ({ id: m.id, name: m.name, type: m.type }))}

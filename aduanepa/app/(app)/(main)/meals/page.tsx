@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { UtensilsCrossed } from "lucide-react"
+import { getTranslations } from "next-intl/server"
 import { MealsDateNav } from "@/components/meals/meals-date-nav"
 import { MealCard } from "@/components/meals/meal-card"
 import { EmptyState } from "@/components/shared/empty-state"
@@ -19,6 +20,7 @@ export default async function MealsPage({
   const { date: dateParam } = await searchParams
   const date = parseDateInput(dateParam)
   const userId = session!.user!.id
+  const t = await getTranslations("meals")
   const [plan, savedIds] = await Promise.all([
     getMealPlanByDate(userId, date),
     getSavedSourceMealIds(userId),
@@ -27,7 +29,7 @@ export default async function MealsPage({
 
   return (
     <>
-      <PageHeader title="My Meals" subtitle="Your daily meal plans." />
+      <PageHeader title={t("pageTitle")} subtitle={t("pageSubtitle")} />
       <MealsDateNav date={date} />
 
       <div className="mt-6">
@@ -47,8 +49,8 @@ export default async function MealsPage({
         ) : (
           <EmptyState
             icon={UtensilsCrossed}
-            title="No meal plan for this day"
-            description="Generate a plan from your dashboard to see meals here."
+            title={t("emptyTitle")}
+            description={t("emptyDescription")}
           />
         )}
       </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
 
 import { auth } from "@/lib/auth"
 import { generateGroceryList } from "@/lib/services/grocery"
@@ -10,15 +11,13 @@ export const metadata: Metadata = { title: "Grocery List · AduanePa" }
 export default async function GroceryPage() {
   const session = await auth()
   const userId = session!.user!.id
+  const t = await getTranslations("grocery")
 
   const groups = await generateGroceryList(userId)
 
   return (
     <>
-      <PageHeader
-        title="Grocery List"
-        subtitle="Ingredients aggregated from this week's meal plan, grouped by category."
-      />
+      <PageHeader title={t("pageTitle")} subtitle={t("pageSubtitle")} />
       <GroceryList groups={groups} />
     </>
   )

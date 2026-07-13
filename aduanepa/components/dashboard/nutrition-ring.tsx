@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslations } from "next-intl"
 import type { DailyNutrition } from "@/lib/services/nutrition"
 import type { NutritionalTargets } from "@/types"
 
@@ -15,6 +16,7 @@ export function NutritionRing({
   consumed: DailyNutrition | null
   targets: NutritionalTargets | null
 }) {
+  const t = useTranslations("dashboard")
   const calories = consumed?.calories ?? 0
   const target = targets?.calories ?? 0
 
@@ -26,11 +28,9 @@ export function NutritionRing({
   return (
     <section className="rounded-xl border border-border-light bg-bg-card p-5 shadow-card">
       <h2 className="font-display text-lg font-semibold text-text-primary">
-        Daily nutrition
+        {t("nutritionToday")}
       </h2>
-      <p className="mt-1 text-sm text-text-secondary">
-        Calories and macros from today&apos;s plan.
-      </p>
+      <p className="mt-1 text-sm text-text-secondary">{t("nutritionSubtitle")}</p>
 
       <div className="mt-4 flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div

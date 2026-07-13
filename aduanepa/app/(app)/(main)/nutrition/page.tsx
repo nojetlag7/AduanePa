@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
 
 import { auth } from "@/lib/auth"
 import { calculateDailyTargets } from "@/lib/nutrition"
@@ -46,6 +47,7 @@ function Panel({
 export default async function NutritionPage() {
   const session = await auth()
   const userId = session!.user!.id
+  const t = await getTranslations("nutrition")
 
   const today = startOfDay(new Date())
   const last30 = startOfDay(new Date())
@@ -62,10 +64,7 @@ export default async function NutritionPage() {
 
   return (
     <>
-      <PageHeader
-        title="Nutrition"
-        subtitle="Your macro breakdown and intake trends over the last 30 days."
-      />
+      <PageHeader title={t("pageTitle")} subtitle={t("pageSubtitle")} />
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <Panel

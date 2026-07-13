@@ -1,5 +1,8 @@
+"use client"
+
 import Link from "next/link"
 import { ArrowDown, ArrowUp, Minus, HeartPulse } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import type { LatestReadings } from "@/lib/services/health-logs"
@@ -25,6 +28,8 @@ function readingBadge(value: number | null, kind: "weight" | "bp" | "sugar") {
 }
 
 export function HealthSnapshot({ readings }: { readings: LatestReadings }) {
+  const t = useTranslations("dashboard")
+  const th = useTranslations("health")
   const hasData =
     readings.weight != null ||
     readings.bloodSugar != null ||
@@ -35,35 +40,31 @@ export function HealthSnapshot({ readings }: { readings: LatestReadings }) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="font-display text-lg font-semibold text-text-primary">
-            Health snapshot
+            {t("healthSnapshot")}
           </h2>
-          <p className="mt-1 text-sm text-text-secondary">
-            Latest readings vs. roughly one week ago.
-          </p>
+          <p className="mt-1 text-sm text-text-secondary">{t("healthSnapshotSubtitle")}</p>
         </div>
         <Button asChild variant="secondary" size="sm">
-          <Link href="/health/log">Log today&apos;s data</Link>
+          <Link href="/health/log">{th("logToday")}</Link>
         </Button>
       </div>
 
       {!hasData ? (
         <div className="mt-5 flex flex-col items-center rounded-lg border border-dashed border-border-medium px-4 py-8 text-center">
           <HeartPulse className="mb-2 h-8 w-8 text-text-muted" aria-hidden="true" />
-          <p className="text-sm text-text-secondary">No health readings yet.</p>
-          <p className="mt-1 text-xs text-text-muted">
-            Log weight, blood pressure, or blood sugar to see trends here.
-          </p>
+          <p className="text-sm text-text-secondary">{t("noHealthData")}</p>
+          <p className="mt-1 text-xs text-text-muted">{t("noHealthDataHint")}</p>
         </div>
       ) : (
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           <ReadingTile
-            label="Weight"
+            label={th("weight")}
             value={readings.weight != null ? `${readings.weight} kg` : "—"}
             trend={readings.trends.weight}
             badge={readingBadge(readings.weight, "weight")}
           />
           <ReadingTile
-            label="Blood pressure"
+            label={th("bloodPressure")}
             value={
               readings.bpSystolic != null
                 ? `${readings.bpSystolic}/${readings.bpDiastolic ?? "—"}`
@@ -73,7 +74,7 @@ export function HealthSnapshot({ readings }: { readings: LatestReadings }) {
             badge={readingBadge(readings.bpSystolic, "bp")}
           />
           <ReadingTile
-            label="Blood sugar"
+            label={th("bloodSugar")}
             value={readings.bloodSugar != null ? `${readings.bloodSugar} mmol/L` : "—"}
             trend={readings.trends.bloodSugar}
             badge={readingBadge(readings.bloodSugar, "sugar")}

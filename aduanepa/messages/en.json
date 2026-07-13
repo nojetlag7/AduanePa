@@ -22,7 +22,12 @@
     "back": "Back",
     "close": "Close",
     "generate": "Generate",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "next": "Next",
+    "complete": "Complete setup",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "kcal": "kcal"
   },
   "meals": {
     "breakfast": "Breakfast",
@@ -43,53 +48,110 @@
       "fat": "Fat"
     },
     "generatePlan": "Generate Plan",
+    "regeneratePlan": "Regenerate plan",
     "generatingPlan": "Generating plan…",
-    "todaysPlan": "Today's Meals",
-    "noMealPlanned": "Not planned"
+    "todaysPlan": "Today's meals",
+    "todaysPlanSubtitle": "Ghanaian-first plans tailored to your health profile.",
+    "noMealPlanned": "Not planned yet",
+    "pageTitle": "My Meals",
+    "pageSubtitle": "Browse and manage your meal plans.",
+    "emptyTitle": "No meals planned",
+    "emptyDescription": "Generate a daily plan to see breakfast, lunch, dinner and snacks here."
   },
   "health": {
     "weight": "Weight",
     "bloodSugar": "Blood Sugar",
     "bloodPressure": "Blood Pressure",
     "logToday": "Log Today's Data",
+    "pageTitle": "Health",
+    "pageSubtitle": "Track readings and trends over time.",
+    "emptyTitle": "No health logs yet",
+    "emptyDescription": "Log today's weight, blood pressure, or blood sugar to get started.",
     "logForm": {
       "title": "Log Health Data",
       "notes": "Notes",
       "submit": "Save log"
     }
   },
+  "nutrition": {
+    "pageTitle": "Nutrition",
+    "pageSubtitle": "See how your macros and calories trend over time."
+  },
+  "grocery": {
+    "pageTitle": "Grocery List",
+    "pageSubtitle": "Ingredients from your meal plan, grouped by category.",
+    "emptyTitle": "No grocery list yet",
+    "emptyDescription": "Generate a meal plan first, then your shopping list appears here."
+  },
+  "makeMeAMeal": {
+    "pageTitle": "Make Me a Meal",
+    "pageSubtitle": "Tell us what's in your kitchen and get a recipe that fits."
+  },
   "dashboard": {
-    "welcome": "Welcome back",
-    "healthSnapshot": "Health Snapshot",
-    "nutritionToday": "Today's Nutrition",
+    "welcome": "Welcome back, {name}",
+    "welcomeSubtitle": "Here's your nutrition at a glance — track meals, macros and your health trends in one place.",
+    "healthSnapshot": "Health snapshot",
+    "healthSnapshotSubtitle": "Latest readings vs. roughly one week ago.",
+    "noHealthData": "No health readings yet.",
+    "noHealthDataHint": "Log weight, blood pressure, or blood sugar to see trends here.",
+    "nutritionToday": "Today's nutrition",
+    "nutritionSubtitle": "Progress toward your daily targets.",
     "recommendations": "Recommendations",
-    "quickActions": "Quick Actions"
+    "adherence": "Today's adherence",
+    "quickActions": "Quick actions",
+    "quickActionsSubtitle": "Jump to logging, ingredient-based meals, or your full plan history.",
+    "viewAllMeals": "View all meals",
+    "logHealthData": "Log health data",
+    "makeMeAMeal": "Make me a meal"
   },
   "settings": {
     "title": "Settings",
     "subtitle": "Manage your profile, health conditions, and preferences.",
     "profile": "Profile",
+    "profileDescription": "Update your name, email, and physical measurements.",
     "healthProfile": "Health profile",
+    "healthProfileDescription": "Update your health conditions and dietary goal. Changes take effect on your next meal generation.",
     "password": "Password",
+    "passwordDescription": "Change your account password.",
     "language": "Language",
+    "languageDescription": "Choose the language for meal names and descriptions.",
     "appearance": "Appearance",
+    "appearanceDescription": "Choose how AduanePa looks for you.",
     "dangerZone": "Danger zone",
     "deleteAccount": "Delete my account",
     "languages": {
       "english": "English",
       "twi": "Twi",
       "ga": "Ga"
+    },
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
     }
   },
   "landing": {
-    "hero": {
-      "headline": "AI-powered nutrition for Ghanaian health",
-      "subtext": "Personalised meal plans rooted in Ghanaian cuisine, tailored to your health conditions and goals.",
-      "cta": "Get started free",
+    "nav": {
+      "home": "Home",
+      "mission": "Our Mission",
+      "contact": "Contact",
+      "getStarted": "Get started",
       "signIn": "Sign in"
     },
+    "hero": {
+      "badge": "AI nutrition, built for Ghana",
+      "headline": "Eat well with the foods you know",
+      "headlineAccent": "foods you know",
+      "subtext": "AduanePa creates personalised, culturally relevant meal plans and tracks your health — so eating right finally fits your life and your kitchen.",
+      "cta": "Create free account",
+      "signIn": "I already have an account",
+      "statLocal": "Local foods",
+      "statLanguages": "Languages",
+      "statPersonalised": "Personalised"
+    },
     "features": {
-      "title": "Built for Ghanaian health"
+      "title": "Everything you need to eat better",
+      "subtitle": "Thoughtful tools that work with Ghanaian cuisine and your health — not against them."
     }
   },
   "auth": {
@@ -100,12 +162,27 @@
     "name": "Name",
     "forgotPassword": "Forgot password?",
     "noAccount": "Don't have an account?",
-    "haveAccount": "Already have an account?"
+    "haveAccount": "Already have an account?",
+    "welcomeBack": "Welcome back",
+    "signInHelper": "Sign in to continue to your meal plans.",
+    "createAccount": "Create your account",
+    "signUpHelper": "Start eating well with meals built around you.",
+    "confirmPassword": "Confirm password"
   },
   "onboarding": {
     "step": "Step {current} of {total}",
     "title": "Set up your profile",
     "continue": "Continue",
-    "finish": "Finish setup"
+    "finish": "Finish setup",
+    "aboutYou": "About you",
+    "aboutYouSubtitle": "We use this to personalise your nutrition targets.",
+    "healthConditions": "Health conditions",
+    "healthConditionsSubtitle": "Select any that apply — we'll adjust your meal plans.",
+    "yourGoal": "Your goal",
+    "yourGoalSubtitle": "What would you like your meals to help you achieve?",
+    "language": "Language",
+    "languageSubtitle": "Choose how you'd like to use AduanePa.",
+    "privacy": "Privacy & your data",
+    "privacySubtitle": "Review how we use your information to personalise your experience."
   }
 }

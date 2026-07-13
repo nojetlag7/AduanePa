@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Check, Eye, EyeOff, Loader2, X } from "lucide-react"
 import { signIn } from "next-auth/react"
+import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -13,17 +14,6 @@ import { loginSchema, registerSchema } from "@/lib/validations/auth"
 import { cn } from "@/lib/utils"
 
 type Mode = "signin" | "signup"
-
-const COPY: Record<Mode, { heading: string; helper: string }> = {
-  signin: {
-    heading: "Welcome back",
-    helper: "Sign in to continue to your meal plans.",
-  },
-  signup: {
-    heading: "Create your account",
-    helper: "Start eating well with meals built around you.",
-  },
-}
 
 // Advisory rules surfaced in the strength meter. Submission itself is gated by
 // `registerSchema` (min 8 chars) so the server contract stays unchanged.
@@ -42,6 +32,12 @@ const STRENGTH_META = [
 
 export function AuthPanel({ initialMode = "signin" }: { initialMode?: Mode }) {
   const [mode, setMode] = useState<Mode>(initialMode)
+  const t = useTranslations("auth")
+
+  const copy =
+    mode === "signin"
+      ? { heading: t("welcomeBack"), helper: t("signInHelper") }
+      : { heading: t("createAccount"), helper: t("signUpHelper") }
 
   return (
     <Card className="rounded-2xl border-border-light/70 p-6 shadow-sm sm:p-7 dark:border-white/6">
@@ -72,7 +68,7 @@ export function AuthPanel({ initialMode = "signin" }: { initialMode?: Mode }) {
                 active ? "text-white" : "text-text-secondary hover:text-text-primary"
               )}
             >
-              {value === "signin" ? "Sign in" : "Sign up"}
+              {value === "signin" ? t("signIn") : t("signUp")}
             </button>
           )
         })}
@@ -81,9 +77,9 @@ export function AuthPanel({ initialMode = "signin" }: { initialMode?: Mode }) {
       {/* Heading + helper text */}
       <div className="mt-6 space-y-1">
         <h1 className="font-display text-2xl font-bold text-text-primary">
-          {COPY[mode].heading}
+          {copy.heading}
         </h1>
-        <p className="text-sm text-text-secondary">{COPY[mode].helper}</p>
+        <p className="text-sm text-text-secondary">{copy.helper}</p>
       </div>
 
       {/* Active form, faded in on switch */}
@@ -102,6 +98,7 @@ export function AuthPanel({ initialMode = "signin" }: { initialMode?: Mode }) {
 
 function SignInForm() {
   const router = useRouter()
+  const t = useTranslations("auth")
   const [values, setValues] = useState({ email: "", password: "" })
   const [errors, setErrors] = useState<Partial<Record<"email" | "password", string>>>({})
   const [showPassword, setShowPassword] = useState(false)
@@ -172,7 +169,7 @@ function SignInForm() {
         />
       </Field>
 
-      <SubmitButton isSubmitting={isSubmitting} label="Sign in" />
+      <SubmitButton isSubmitting={isSubmitting} label={t("signIn")} />
     </form>
   )
 }
@@ -181,6 +178,7 @@ function SignInForm() {
 
 function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () => void }) {
   const router = useRouter()
+  const t = useTranslations("auth")
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -321,7 +319,7 @@ function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () => void }) {
         />
       </Field>
 
-      <SubmitButton isSubmitting={isSubmitting} label="Create account" />
+      <SubmitButton isSubmitting={isSubmitting} label={t("createAccount")} />
     </form>
   )
 }
