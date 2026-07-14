@@ -2,8 +2,11 @@
 
 import * as React from "react"
 import { useRouter } from "next/navigation"
-import { RefreshCw } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { RefreshCw, ShoppingCart } from "lucide-react"
 
+import { GeneratePlanButton } from "@/components/dashboard/generate-plan-button"
+import { EmptyState } from "@/components/shared/empty-state"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import type { GroceryGroup } from "@/lib/services/grocery"
@@ -14,6 +17,7 @@ function itemKey(category: string, name: string, unit: string) {
 
 export function GroceryList({ groups }: { groups: GroceryGroup[] }) {
   const router = useRouter()
+  const t = useTranslations("grocery")
   const [checked, setChecked] = React.useState<Set<string>>(new Set())
   const [refreshing, setRefreshing] = React.useState(false)
 
@@ -33,20 +37,17 @@ export function GroceryList({ groups }: { groups: GroceryGroup[] }) {
     setRefreshing(true)
     setChecked(new Set())
     router.refresh()
-    // Re-enable shortly; router.refresh resolves on the server round-trip.
     window.setTimeout(() => setRefreshing(false), 800)
   }
 
   if (totalItems === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border-medium bg-bg-muted/40 p-8 text-center">
-        <p className="text-sm font-medium text-text-primary">
-          No meals planned for this week yet.
-        </p>
-        <p className="mt-1 text-sm text-text-muted">
-          Generate a meal plan and your grocery list will be built automatically.
-        </p>
-      </div>
+      <EmptyState
+        icon={ShoppingCart}
+        title={t("emptyTitle")}
+        description={t("emptyDescription")}
+        action={<GeneratePlanButton hasPlan={false} />}
+      />
     )
   }
 

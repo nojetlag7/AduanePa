@@ -1,5 +1,6 @@
 import { MealPlanSource, MealType, type Prisma } from "@prisma/client"
 import { prisma } from "@/lib/db"
+import { sanitizeMealJson } from "@/lib/meal-utils"
 import type { GeneratedMeal, MealPlanWithMeals } from "@/types"
 
 export type SaveMealInput = {
@@ -56,33 +57,43 @@ export async function getMealPlanByDate(
   date: Date
 ): Promise<MealPlanWithMeals | null> {
   const planDate = startOfDay(date)
-  return prisma.mealPlan.findFirst({
+  const plan = await prisma.mealPlan.findFirst({
     where: { userId, date: planDate },
     include: { meals: true },
     orderBy: { createdAt: "desc" },
   })
+  if (!plan) return null
+  return {
+    ...plan,
+    meals: plan.meals.map(sanitizeMealJson),
+  }
 }
 
 export async function listMealPlans(
   userId: string,
   limit = 14
 ): Promise<MealPlanWithMeals[]> {
-  return prisma.mealPlan.findMany({
+  const plans = await prisma.mealPlan.findMany({
     where: { userId },
     include: { meals: true },
     orderBy: { date: "desc" },
     take: limit,
   })
+  return plans.map((plan) => ({
+    ...plan,
+    meals: plan.meals.map(sanitizeMealJson),
+  }))
 }
 
 export async function getMealById(userId: string, mealId: string) {
-  return prisma.meal.findFirst({
+  const meal = await prisma.meal.findFirst({
     where: {
       id: mealId,
       mealPlan: { userId },
     },
     include: { mealPlan: true },
   })
+  return meal ? sanitizeMealJson(meal) : null
 }
 
 export async function saveMeal(userId: string, meal: SaveMealInput) {

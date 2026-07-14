@@ -80,6 +80,7 @@ export type UserProfile = Pick<
   | "language"
   | "theme"
   | "measurementSystem"
+  | "notificationsEnabled"
 >
 
 // ─── Nutritional engine return types (used from Phase 5 onwards) ─────────────

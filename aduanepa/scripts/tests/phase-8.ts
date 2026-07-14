@@ -30,6 +30,7 @@ const hypUser: UserProfile = {
   language: LanguagePreference.ENGLISH,
   theme: ThemePreference.SYSTEM,
   measurementSystem: MeasurementSystem.METRIC,
+  notificationsEnabled: true,
 }
 
 export async function run(t: Tester) {

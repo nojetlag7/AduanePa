@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { Check, Minus, X } from "lucide-react"
 import { LogStatus, MealType } from "@prisma/client"
 import { toast } from "sonner"
@@ -96,7 +97,11 @@ export function AdherenceTracker({
   if (ordered.length === 0) {
     return (
       <p className="text-sm text-text-muted">
-        No meals planned for today yet — generate a plan to track adherence.
+        No meals planned for today yet —{" "}
+        <Link href="/dashboard" className="font-medium text-primary underline-offset-2 hover:underline">
+          generate a plan
+        </Link>{" "}
+        to track adherence.
       </p>
     )
   }

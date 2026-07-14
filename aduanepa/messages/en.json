@@ -117,6 +117,8 @@
     "languageDescription": "Choose the language for meal names and descriptions.",
     "appearance": "Appearance",
     "appearanceDescription": "Choose how AduanePa looks for you.",
+    "notifications": "Notifications",
+    "notificationsDescription": "Allow AduanePa to send meal and health reminders to this device.",
     "dangerZone": "Danger zone",
     "deleteAccount": "Delete my account",
     "languages": {

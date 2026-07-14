@@ -16,11 +16,18 @@ export function AppearanceSettings() {
   return (
     <div className="space-y-3">
       <p className="text-sm text-text-muted">Choose how AduanePa looks for you.</p>
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+      <div
+        role="radiogroup"
+        aria-label="Color theme"
+        className="grid grid-cols-3 gap-2 sm:gap-3"
+      >
         {THEMES.map(({ value, label, icon: Icon }) => (
           <button
             key={value}
             type="button"
+            role="radio"
+            aria-checked={theme === value}
+            aria-label={label}
             onClick={() => setTheme(value)}
             className={cn(
               "flex flex-col items-center gap-2 rounded-xl border px-3 py-4 transition-colors duration-200",

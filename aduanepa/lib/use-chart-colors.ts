@@ -58,20 +58,15 @@ function readColors(): ChartColors {
   }
 }
 
+function subscribe(onStoreChange: () => void) {
+  const observer = new MutationObserver(onStoreChange)
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  })
+  return () => observer.disconnect()
+}
+
 export function useChartColors(): ChartColors {
-  // Start from the fallback so SSR and the first client render match
-  // (avoids hydration warnings); resolve real values after mount.
-  const [colors, setColors] = React.useState<ChartColors>(FALLBACK)
-
-  React.useEffect(() => {
-    setColors(readColors())
-    const observer = new MutationObserver(() => setColors(readColors()))
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    })
-    return () => observer.disconnect()
-  }, [])
-
-  return colors
+  return React.useSyncExternalStore(subscribe, readColors, () => FALLBACK)
 }

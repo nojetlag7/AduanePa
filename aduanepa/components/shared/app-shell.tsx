@@ -3,6 +3,7 @@
 import { useState, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { Menu } from "lucide-react"
+import { ForegroundListener } from "@/components/notifications/foreground-listener"
 import { AppHeader } from "@/components/shared/app-header"
 import { BrandLogo } from "@/components/shared/brand-logo"
 import { Sidebar } from "@/components/shared/sidebar"
@@ -50,6 +51,7 @@ export function AppShell({ user, children }: AppShellProps) {
 
   return (
     <div className="min-h-screen bg-bg-main dark:bg-transparent">
+      <ForegroundListener />
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 hidden border-r border-border-light transition-[width] duration-200 lg:block",

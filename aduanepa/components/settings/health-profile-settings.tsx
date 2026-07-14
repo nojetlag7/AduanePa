@@ -6,7 +6,10 @@ import { toast } from "sonner"
 import { DietaryGoal, HealthCondition } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import {
+  healthProfileSettingsSchema,
+  type HealthProfileSettingsInput,
+} from "@/lib/validations/settings"
 import type { UserProfile } from "@/types"
 
 const CONDITION_LABELS: Record<string, string> = {
@@ -32,6 +35,9 @@ interface Props {
 export function HealthProfileSettings({ user }: Props) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof HealthProfileSettingsInput, string[]>>
+  >({})
 
   const initConditions = user.healthConditions.filter((c): c is (typeof SELECTABLE)[number] =>
     SELECTABLE.includes(c as (typeof SELECTABLE)[number])
@@ -47,16 +53,31 @@ export function HealthProfileSettings({ user }: Props) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    const parsed = healthProfileSettingsSchema.safeParse({
+      healthConditions: conditions,
+      dietaryGoal: goal,
+    })
+    if (!parsed.success) {
+      setErrors(parsed.error.flatten().fieldErrors as typeof errors)
+      return
+    }
+    setErrors({})
     setSaving(true)
+
     try {
       const res = await fetch("/api/users/health-profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ healthConditions: conditions, dietaryGoal: goal }),
+        body: JSON.stringify({
+          healthConditions: conditions,
+          dietaryGoal: goal,
+        }),
       })
       const json = await res.json()
       if (!res.ok) {
-        toast.error(json.error ?? "Failed to update health profile")
+        if (json.fields) setErrors(json.fields)
+        else toast.error(json.error ?? "Failed to update health profile")
         return
       }
       toast.success("Health profile updated")
@@ -71,8 +92,14 @@ export function HealthProfileSettings({ user }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-3">
-        <p className="text-sm font-medium text-text-primary">Health conditions</p>
-        <div className="space-y-2.5">
+        <p id="health-conditions-label" className="text-sm font-medium text-text-primary">
+          Health conditions
+        </p>
+        <div
+          role="group"
+          aria-labelledby="health-conditions-label"
+          className="space-y-2.5"
+        >
           {SELECTABLE.map((c) => (
             <label
               key={c}
@@ -93,11 +120,20 @@ export function HealthProfileSettings({ user }: Props) {
             <span className="text-sm text-text-primary">None of the above</span>
           </label>
         </div>
+        {errors.healthConditions && (
+          <p className="text-xs text-error">{errors.healthConditions[0]}</p>
+        )}
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm font-medium text-text-primary">Dietary goal</p>
-        <div className="grid gap-2 sm:grid-cols-2">
+        <p id="dietary-goal-label" className="text-sm font-medium text-text-primary">
+          Dietary goal
+        </p>
+        <div
+          role="radiogroup"
+          aria-labelledby="dietary-goal-label"
+          className="grid gap-2 sm:grid-cols-2"
+        >
           {GOAL_OPTIONS.map((opt) => (
             <label
               key={opt.value}
@@ -122,6 +158,9 @@ export function HealthProfileSettings({ user }: Props) {
             </label>
           ))}
         </div>
+        {errors.dietaryGoal && (
+          <p className="text-xs text-error">{errors.dietaryGoal[0]}</p>
+        )}
       </div>
 
       <div className="flex justify-end">

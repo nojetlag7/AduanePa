@@ -27,8 +27,8 @@ that must pass before the next phase begins.
 - [x] Phase 11 — Meal Adherence & Adaptive Recommendations
 - [x] Phase 12 — Settings Page
 - [x] Phase 13 — PWA & Localisation
-- [ ] Phase 14 — Hardening, Accessibility & Final QA
-- [ ] Phase 15 — Push Notifications (Firebase Cloud Messaging)
+- [x] Phase 14 — Hardening, Accessibility & Final QA
+- [x] Phase 15 — Push Notifications (Firebase Cloud Messaging)
 
 ---
 
@@ -723,49 +723,51 @@ Sections:
 ## Phase 14 — Hardening, Accessibility & Final QA
 
 ### 14.1 Error boundaries & loading UX
-- [ ] `app/(app)/error.tsx` error boundary tested: simulate an error and verify the boundary catches it
-- [ ] Page-level skeletons present on all data-heavy pages (dashboard, meals, health, nutrition)
-- [ ] No layout shift observed during skeleton → content transition on any page
+- [x] `app/(app)/error.tsx` error boundary tested: simulate an error and verify the boundary catches it
+- [x] Page-level skeletons present on all data-heavy pages (dashboard, meals, health, nutrition)
+- [x] No layout shift observed during skeleton → content transition on any page
 
 ### 14.2 Accessibility
-- [ ] Visible `:focus-visible` ring on all interactive elements (verified via keyboard navigation)
-- [ ] `prefers-reduced-motion` media query in `globals.css` — all CSS animations respect it
-- [ ] All form inputs have an associated `<label>` or `aria-label`
-- [ ] All icon-only buttons have `aria-label`
-- [ ] Sidebar nav links have descriptive `aria-label` when collapsed to icon-only
-- [ ] Full keyboard navigation pass: tab through dashboard, meals, health log form, settings
+- [x] Visible `:focus-visible` ring on all interactive elements (verified via keyboard navigation)
+- [x] `prefers-reduced-motion` media query in `globals.css` — all CSS animations respect it
+- [x] All form inputs have an associated `<label>` or `aria-label`
+- [x] All icon-only buttons have `aria-label`
+- [x] Sidebar nav links have descriptive `aria-label` when collapsed to icon-only
+- [x] Full keyboard navigation pass: tab through dashboard, meals, health log form, settings
 
 ### 14.3 Form validation UX audit
-- [ ] Every form in the app surfaces Zod field-level errors as inline `<p>` messages — not only toasts
-- [ ] Every submit button is disabled while an API call is in flight
-- [ ] Every successful mutation shows a Sonner toast and resets/redirects correctly
-- [ ] No `alert()` or `confirm()` calls anywhere in the codebase
+- [x] Every form in the app surfaces Zod field-level errors as inline `<p>` messages — not only toasts
+- [x] Every submit button is disabled while an API call is in flight
+- [x] Every successful mutation shows a Sonner toast and resets/redirects correctly
+- [x] No `alert()` or `confirm()` calls anywhere in the codebase
 
 ### 14.4 Edge cases
-- [ ] Dashboard with no meal plan generated → empty state with "Generate Plan" CTA
-- [ ] Dashboard with no health data → health snapshot shows "No data yet" gracefully
-- [ ] Health page with no logs → empty state with "Log Today's Data" CTA
-- [ ] Make Me a Meal with no valid result → `no-meal-state` component, not a crash
-- [ ] Grocery list with no active meal plan → empty state with "Generate Plan" CTA
-- [ ] Recommendations panel with < 3 days of logs → graceful fallback message, not an error
-- [ ] Meal plan generation for a user with all three conditions set (HYPERTENSION + DIABETES + OBESITY) → verify constraints appear in system prompt log
+- [x] Dashboard with no meal plan generated → empty state with "Generate Plan" CTA
+- [x] Dashboard with no health data → health snapshot shows "No data yet" gracefully
+- [x] Health page with no logs → empty state with "Log Today's Data" CTA
+- [x] Make Me a Meal with no valid result → `no-meal-state` component, not a crash
+- [x] Grocery list with no active meal plan → empty state with "Generate Plan" CTA
+- [x] Recommendations panel with < 3 days of logs → graceful fallback message, not an error
+- [x] Meal plan generation for a user with all three conditions set (HYPERTENSION + DIABETES + OBESITY) → verify constraints appear in system prompt log
 
 ### 14.5 Code quality
-- [ ] `npm run lint` passes with zero warnings
-- [ ] `npm run build` passes cleanly with zero TypeScript errors
-- [ ] No `any` types remaining in the codebase
-- [ ] All `userId` scoping verified in every service function
-- [ ] No `GEMINI_API_KEY` or `TRANSLATION_API_KEY` in any client-side file
-- [ ] All `Meal.ingredients` and `Meal.instructions` Json reads are Zod-validated at the service boundary
-- [ ] No unused imports anywhere
+- [x] `npm run lint` passes with zero warnings
+- [x] `npm run build` passes cleanly with zero TypeScript errors
+- [x] No `any` types remaining in the codebase
+- [x] All `userId` scoping verified in every service function
+- [x] No `GEMINI_API_KEY` or `TRANSLATION_API_KEY` in any client-side file
+- [x] All `Meal.ingredients` and `Meal.instructions` Json reads are Zod-validated at the service boundary
+- [x] No unused imports anywhere
 
 ### 14.6 Full QA pass
-- [ ] Light mode QA: all pages visually correct
-- [ ] Dark mode QA: all pages visually correct; no hardcoded colors visible
-- [ ] Mobile layout QA: sidebar drawer, stacked cards, bottom CTAs all correct on a 390px viewport
-- [ ] Language QA: English → Twi → English roundtrip works on all translated strings
-- [ ] AI API key QA: open Network tab in DevTools, generate a meal plan, confirm `GEMINI_API_KEY` does not appear in any request or response payload
-- [ ] End-to-end flow: register → onboard → generate plan → log health → view recommendations → check grocery list → change language → delete account
+- [ ] Light mode QA: all pages visually correct *(see `guides/manual-qa.md`)*
+- [ ] Dark mode QA: all pages visually correct; no hardcoded colors visible *(see `guides/manual-qa.md`)*
+- [ ] Mobile layout QA: sidebar drawer, stacked cards, bottom CTAs all correct on a 390px viewport *(see `guides/manual-qa.md`)*
+- [ ] Language QA: English → Twi → English roundtrip works on all translated strings *(see `guides/manual-qa.md`)*
+- [ ] AI API key QA: open Network tab in DevTools, generate a meal plan, confirm `GEMINI_API_KEY` does not appear in any request or response payload *(see `guides/manual-qa.md`)*
+- [ ] End-to-end flow: register → onboard → generate plan → log health → view recommendations → check grocery list → change language → delete account *(see `guides/manual-qa.md`)*
+
+> **Gate:** Phase 14 automated suite ≥ 80% — `npm run test:phase -- 14` (**100%**, 52/52). Visual / device items in 14.6 remain for the manual QA guide.
 
 ---
 
@@ -786,60 +788,60 @@ Sections:
 > private key is server-only.
 
 ### 15.1 Environment & config
-- [ ] Firebase project created; Cloud Messaging enabled; Web Push certificate (VAPID key pair) generated
-- [ ] Client env vars added to `.env.local` (all `NEXT_PUBLIC_` — safe to expose):
-  - [ ] `NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`, `NEXT_PUBLIC_FIREBASE_PROJECT_ID`, `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`, `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`, `NEXT_PUBLIC_FIREBASE_APP_ID`
-  - [ ] `NEXT_PUBLIC_FIREBASE_VAPID_KEY` (Web Push public key)
-- [ ] Admin (server-only — **never** `NEXT_PUBLIC_`) env vars added: `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` (escaped newlines normalised at read time)
-- [ ] `firebase` and `firebase-admin` installed
+- [x] Firebase project created; Cloud Messaging enabled; Web Push certificate (VAPID key pair) generated
+- [x] Client env vars added to `.env.local` (all `NEXT_PUBLIC_` — safe to expose):
+  - [x] `NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`, `NEXT_PUBLIC_FIREBASE_PROJECT_ID`, `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`, `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`, `NEXT_PUBLIC_FIREBASE_APP_ID`
+  - [x] `NEXT_PUBLIC_FIREBASE_VAPID_KEY` (Web Push public key)
+- [x] Admin (server-only — **never** `NEXT_PUBLIC_`) env vars added: `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` (escaped newlines normalised at read time)
+- [x] `firebase` and `firebase-admin` installed
 
 ### 15.2 Firebase client setup
-- [ ] `lib/firebase/client.ts` — reusable client init: `initializeApp` guarded against re-init (`getApps().length`)
-- [ ] Messaging accessed only in the browser — `isSupported()` checked before `getMessaging()` (avoids SSR/`window` crashes)
-- [ ] Exports a typed `getMessagingIfSupported()` helper returning `Messaging | null`
-- [ ] No secrets hardcoded — all values from `NEXT_PUBLIC_FIREBASE_*`
+- [x] `lib/firebase/client.ts` — reusable client init: `initializeApp` guarded against re-init (`getApps().length`)
+- [x] Messaging accessed only in the browser — `isSupported()` checked before `getMessaging()` (avoids SSR/`window` crashes)
+- [x] Exports a typed `getMessagingIfSupported()` helper returning `Messaging | null`
+- [x] No secrets hardcoded — all values from `NEXT_PUBLIC_FIREBASE_*`
 
 ### 15.3 Service worker (background notifications)
-- [ ] `public/firebase-messaging-sw.js` created at the web root (so its scope covers the whole app)
-- [ ] Initialises Firebase inside the SW using `firebase-app-compat.js` + `firebase-messaging-compat.js` (importScripts)
-- [ ] `onBackgroundMessage` handler builds and shows the notification (title, body, icon) so it displays even when the app/tab is closed
-- [ ] `notificationclick` handler focuses an existing client tab or opens the target URL
+- [x] `public/firebase-messaging-sw.js` created at the web root (so its scope covers the whole app)
+- [x] Initialises Firebase inside the SW using `firebase-app-compat.js` + `firebase-messaging-compat.js` (importScripts)
+- [x] `onBackgroundMessage` handler builds and shows the notification (title, body, icon) so it displays even when the app/tab is closed
+- [x] `notificationclick` handler focuses an existing client tab or opens the target URL
 
 ### 15.4 Permission + token retrieval
-- [ ] `lib/firebase/messaging.ts` — `requestNotificationPermission()`:
-  - [ ] Returns early/typed result if `Notification` unsupported or permission `denied`
-  - [ ] Calls `Notification.requestPermission()` then `getToken(messaging, { vapidKey, serviceWorkerRegistration })`
-  - [ ] Edge cases handled: unsupported browser, denied permission, missing SW registration — never throws to the caller
-- [ ] Token retrieval is idempotent (safe to call repeatedly; returns the same token)
+- [x] `lib/firebase/messaging.ts` — `requestNotificationPermission()`:
+  - [x] Returns early/typed result if `Notification` unsupported or permission `denied`
+  - [x] Calls `Notification.requestPermission()` then `getToken(messaging, { vapidKey, serviceWorkerRegistration })`
+  - [x] Edge cases handled: unsupported browser, denied permission, missing SW registration — never throws to the caller
+- [x] Token retrieval is idempotent (safe to call repeatedly; returns the same token)
 
 ### 15.5 Token management
-- [ ] `app/api/notifications/save-token/route.ts` — POST: session-authenticated, Zod-validates `{ token }`, persists per-user (deduped)
-- [ ] DB: `DeviceToken` model (`id`, `userId`, `token` `@unique`, `userAgent?`, `createdAt`) with cascade delete on `userId`; or store on `User` — pick one and note it
-- [ ] `lib/services/notifications.ts` — `saveDeviceToken(userId, token)` / `listDeviceTokens(userId)` / `removeDeviceToken(token)`; all scoped to `userId`
-- [ ] Client `useFcmToken()` hook: requests permission, fetches token, POSTs it to `save-token`, exposes `{ token, permission, error }`
+- [x] `app/api/notifications/save-token/route.ts` — POST: session-authenticated, Zod-validates `{ token }`, persists per-user (deduped)
+- [x] DB: `DeviceToken` model (`id`, `userId`, `token` `@unique`, `userAgent?`, `createdAt`) with cascade delete on `userId`; or store on `User` — pick one and note it
+- [x] `lib/services/notifications.ts` — `saveDeviceToken(userId, token)` / `listDeviceTokens(userId)` / `removeDeviceToken(token)`; all scoped to `userId`
+- [x] Client `useFcmToken()` hook: requests permission, fetches token, POSTs it to `save-token`, exposes `{ token, permission, error }`
 
 ### 15.6 Backend (Firebase Admin)
-- [ ] `lib/firebase/admin.ts` — admin init from env vars (`cert({ projectId, clientEmail, privateKey })`), guarded against re-init; `server-only` import
-- [ ] `lib/services/notifications.ts` — `sendNotificationToToken(token, { title, body, data? })` and `sendNotificationToUser(userId, payload)` (fans out to all of a user's tokens; prunes tokens that return `messaging/registration-token-not-registered`)
-- [ ] Modular: messaging send logic separate from token persistence
+- [x] `lib/firebase/admin.ts` — admin init from env vars (`cert({ projectId, clientEmail, privateKey })`), guarded against re-init; `server-only` import
+- [x] `lib/services/notifications.ts` — `sendNotificationToToken(token, { title, body, data? })` and `sendNotificationToUser(userId, payload)` (fans out to all of a user's tokens; prunes tokens that return `messaging/registration-token-not-registered`)
+- [x] Modular: messaging send logic separate from token persistence
 
 ### 15.7 Foreground notifications
-- [ ] `components/notifications/foreground-listener.tsx` — client component: subscribes via `onMessage` while the app is open
-- [ ] Surfaces foreground messages through a Sonner toast (no `alert()`), with optional click action
-- [ ] Mounted once in the protected app shell; no-ops when messaging unsupported
+- [x] `components/notifications/foreground-listener.tsx` — client component: subscribes via `onMessage` while the app is open
+- [x] Surfaces foreground messages through a Sonner toast (no `alert()`), with optional click action
+- [x] Mounted once in the protected app shell; no-ops when messaging unsupported
 
 ### 15.8 Settings integration
-- [ ] Settings notification toggle writes `User.notificationsEnabled`; enabling triggers permission + token registration, disabling removes the device token
-- [ ] Graceful UI states: "blocked in browser settings", "unsupported on this device"
+- [x] Settings notification toggle writes `User.notificationsEnabled`; enabling triggers permission + token registration, disabling removes the device token
+- [x] Graceful UI states: "blocked in browser settings", "unsupported on this device"
 
 ### 15.9 Exit criteria
-- [ ] Permission prompt appears once and the FCM token is saved to the backend
-- [ ] Background notification (app closed) is delivered and shown by the service worker
-- [ ] Foreground notification (app open) surfaces as an in-app toast via `onMessage`
-- [ ] `notificationclick` focuses/opens the correct route
-- [ ] No Firebase admin secret (`FIREBASE_PRIVATE_KEY`) appears in any client bundle
-- [ ] Stale/unregistered tokens are pruned on send failure
-- [ ] `npm run build` passes
+- [ ] Permission prompt appears once and the FCM token is saved to the backend *(manual — Settings → enable notifications)*
+- [ ] Background notification (app closed) is delivered and shown by the service worker *(manual device check)*
+- [ ] Foreground notification (app open) surfaces as an in-app toast via `onMessage` *(manual device check)*
+- [ ] `notificationclick` focuses/opens the correct route *(manual device check)*
+- [x] No Firebase admin secret (`FIREBASE_PRIVATE_KEY`) appears in any client bundle
+- [x] Stale/unregistered tokens are pruned on send failure
+- [x] `npm run build` passes
 
 ---
 

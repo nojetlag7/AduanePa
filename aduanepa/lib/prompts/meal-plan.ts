@@ -1,5 +1,4 @@
 import type { NutritionalTargets, UserProfile } from "@/types"
-import { buildDietaryConstraints } from "@/lib/dietary-rules"
 
 function ageFromDateOfBirth(dateOfBirth: Date): number {
   const today = new Date()

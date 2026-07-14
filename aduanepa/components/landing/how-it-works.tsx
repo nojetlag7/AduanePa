@@ -133,9 +133,11 @@ export function HowItWorks({ steps }: HowItWorksProps) {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (reduced) {
-      setInView(true)
-      setFilledConnectors([true, true])
-      return
+      const id = window.setTimeout(() => {
+        setInView(true)
+        setFilledConnectors([true, true])
+      }, 0)
+      return () => window.clearTimeout(id)
     }
 
     const observer = new IntersectionObserver(
@@ -156,10 +158,7 @@ export function HowItWorks({ steps }: HowItWorksProps) {
     if (!inView) return
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduced) {
-      setFilledConnectors([true, true])
-      return
-    }
+    if (reduced) return
 
     const t1 = window.setTimeout(
       () => setFilledConnectors((prev) => [true, prev[1]]),

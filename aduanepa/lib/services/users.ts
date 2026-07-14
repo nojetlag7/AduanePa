@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/db"
-import { isProfileComplete } from "@/lib/profile"
 import type { OnboardingParsed } from "@/lib/validations/onboarding"
 import type {
   ProfileSettingsParsed,
@@ -21,6 +20,7 @@ const PROFILE_SELECT = {
   language: true,
   theme: true,
   measurementSystem: true,
+  notificationsEnabled: true,
 } as const
 
 export { isProfileComplete } from "@/lib/profile"

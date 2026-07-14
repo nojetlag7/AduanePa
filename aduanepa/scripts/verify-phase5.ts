@@ -46,6 +46,7 @@ async function main() {
     language: LanguagePreference.ENGLISH,
     theme: ThemePreference.SYSTEM,
     measurementSystem: MeasurementSystem.METRIC,
+    notificationsEnabled: true,
   }
 
   const targets = calculateDailyTargets(sampleUser)

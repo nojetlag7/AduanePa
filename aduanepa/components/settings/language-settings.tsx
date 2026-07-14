@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { LanguagePreference } from "@prisma/client"
 import { Button } from "@/components/ui/button"
+import { languageSettingsSchema } from "@/lib/validations/settings"
 import { cn } from "@/lib/utils"
 import type { UserProfile } from "@/types"
 
@@ -19,13 +19,20 @@ interface Props {
 }
 
 export function LanguageSettings({ user }: Props) {
-  const router = useRouter()
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [selected, setSelected] = useState<LanguagePreference>(
     user.language ?? LanguagePreference.ENGLISH
   )
 
   async function handleSave() {
+    const parsed = languageSettingsSchema.safeParse({ language: selected })
+    if (!parsed.success) {
+      setError(parsed.error.flatten().fieldErrors.language?.[0] ?? "Select a language")
+      return
+    }
+    setError(null)
+
     if (selected === user.language) {
       toast.info("Language unchanged")
       return
@@ -43,7 +50,6 @@ export function LanguageSettings({ user }: Props) {
         return
       }
       toast.success("Language updated")
-      // Hard-reload so next-intl picks up the new NEXT_LOCALE cookie
       window.location.reload()
     } catch {
       toast.error("Something went wrong")
@@ -58,11 +64,17 @@ export function LanguageSettings({ user }: Props) {
         Meal names and descriptions will be translated into your chosen language.
         Static interface labels will update in a future release.
       </p>
-      <div className="grid gap-2 sm:grid-cols-3">
+      <div
+        role="radiogroup"
+        aria-label="Preferred language"
+        className="grid gap-2 sm:grid-cols-3"
+      >
         {LANGUAGES.map((lang) => (
           <button
             key={lang.value}
             type="button"
+            role="radio"
+            aria-checked={selected === lang.value}
             onClick={() => setSelected(lang.value)}
             className={cn(
               "flex flex-col items-start rounded-xl border px-4 py-3 text-left transition-colors duration-200",
@@ -76,6 +88,7 @@ export function LanguageSettings({ user }: Props) {
           </button>
         ))}
       </div>
+      {error && <p className="text-xs text-error">{error}</p>}
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={saving}>
           {saving ? "Saving…" : "Save language"}

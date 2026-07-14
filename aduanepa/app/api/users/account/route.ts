@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { auth, signOut } from "@/lib/auth"
+import { auth } from "@/lib/auth"
 import { deleteAccount } from "@/lib/services/users"
 import { deleteAccountSchema } from "@/lib/validations/settings"
 

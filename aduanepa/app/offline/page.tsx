@@ -23,6 +23,8 @@ export default function OfflinePage() {
           boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
         }}
       >
+        {/* Offline shell — plain img so the page works without the Next image optimizer */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/icons/android-chrome-192x192.png"
           alt=""

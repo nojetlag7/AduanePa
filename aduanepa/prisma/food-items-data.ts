@@ -898,7 +898,8 @@ export const FOOD_ITEMS: FoodItemSeed[] = [
 
 /** Strip internal metadata before Prisma insert. */
 export function toFoodItemCreateInput(item: FoodItemSeed): Prisma.FoodItemCreateInput {
-  const { _source: _, ...data } = item
+  const { _source, ...data } = item
+  void _source
   return data
 }
 

@@ -16,7 +16,11 @@ export default function AppError({
   }, [error])
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+    <div
+      role="alert"
+      aria-live="assertive"
+      className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center"
+    >
       <span className="flex h-12 w-12 items-center justify-center rounded-full bg-error-bg text-error">
         <AlertTriangle className="h-6 w-6" aria-hidden="true" />
       </span>

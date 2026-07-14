@@ -9,6 +9,7 @@ import { HealthProfileSettings } from "@/components/settings/health-profile-sett
 import { PasswordSettings } from "@/components/settings/password-settings"
 import { LanguageSettings } from "@/components/settings/language-settings"
 import { AppearanceSettings } from "@/components/settings/appearance-settings"
+import { NotificationSettings } from "@/components/settings/notification-settings"
 import { DangerZone } from "@/components/settings/danger-zone"
 
 export const metadata: Metadata = { title: "Settings · AduanePa" }
@@ -65,6 +66,13 @@ export default async function SettingsPage() {
 
         <Section title={t("appearance")} description={t("appearanceDescription")}>
           <AppearanceSettings />
+        </Section>
+
+        <Section
+          title={t("notifications")}
+          description={t("notificationsDescription")}
+        >
+          <NotificationSettings initialEnabled={user.notificationsEnabled} />
         </Section>
 
         <Section title={t("dangerZone")}>

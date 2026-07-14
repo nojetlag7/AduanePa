@@ -4,7 +4,6 @@ import {
   updateHealthProfile,
   updatePassword,
   updateLanguage,
-  deleteAccount,
 } from "@/lib/services/users"
 import {
   profileSettingsSchema,

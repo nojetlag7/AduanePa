@@ -35,6 +35,7 @@ export function IngredientInput({
   const [ingredients, setIngredients] = useState<string[]>([])
   const [mealType, setMealType] = useState<string>(ANY_MEAL)
   const [strict, setStrict] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   function addIngredient(raw: string) {
     const value = raw.trim().replace(/,$/, "").trim()
@@ -66,7 +67,11 @@ export function IngredientInput({
         : [...ingredients, pending]
       : ingredients
 
-    if (finalList.length === 0) return
+    if (finalList.length === 0) {
+      setError("Add at least one ingredient to generate a meal.")
+      return
+    }
+    setError(null)
     setIngredients(finalList)
     setDraft("")
     onGenerate({
@@ -76,7 +81,7 @@ export function IngredientInput({
     })
   }
 
-  const canGenerate = !loading && (ingredients.length > 0 || draft.trim().length > 0)
+  const canGenerate = !loading
 
   return (
     <section className="rounded-xl border border-border-light bg-bg-card p-5 shadow-card">
@@ -94,7 +99,10 @@ export function IngredientInput({
             <Input
               id="ingredient-draft"
               value={draft}
-              onChange={(e) => setDraft(e.target.value)}
+              onChange={(e) => {
+                setDraft(e.target.value)
+                if (error) setError(null)
+              }}
               onKeyDown={handleKeyDown}
               placeholder="e.g. tilapia, plantain, tomatoes"
               autoComplete="off"
@@ -111,6 +119,12 @@ export function IngredientInput({
               Add
             </Button>
           </div>
+
+          {error && (
+            <p className="text-xs text-error" role="alert">
+              {error}
+            </p>
+          )}
 
           {ingredients.length > 0 && (
             <ul className="flex flex-wrap gap-2 pt-1">

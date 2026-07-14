@@ -1,6 +1,6 @@
 import { MealType } from "@prisma/client"
-import { IngredientsSchema } from "@/types"
-import type { Ingredient, Meal } from "@/types"
+import { IngredientsSchema, InstructionsSchema } from "@/types"
+import type { Ingredient, Instructions, Meal } from "@/types"
 
 export const MEAL_SLOT_ORDER: MealType[] = [
   MealType.BREAKFAST,
@@ -19,6 +19,22 @@ export const MEAL_TYPE_LABELS: Record<MealType, string> = {
 export function parseMealIngredients(meal: Pick<Meal, "ingredients">): Ingredient[] {
   const parsed = IngredientsSchema.safeParse(meal.ingredients)
   return parsed.success ? parsed.data : []
+}
+
+export function parseMealInstructions(meal: Pick<Meal, "instructions">): Instructions {
+  const parsed = InstructionsSchema.safeParse(meal.instructions)
+  return parsed.success ? parsed.data : []
+}
+
+/** Zod-validate Json fields after a DB read so callers never trust raw Prisma Json. */
+export function sanitizeMealJson<T extends Pick<Meal, "ingredients" | "instructions">>(
+  meal: T
+): T {
+  return {
+    ...meal,
+    ingredients: parseMealIngredients(meal),
+    instructions: parseMealInstructions(meal),
+  }
 }
 
 export function mealsByType(meals: Meal[]): Map<MealType, Meal> {

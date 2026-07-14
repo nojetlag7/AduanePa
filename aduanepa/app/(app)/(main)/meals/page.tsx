@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { UtensilsCrossed } from "lucide-react"
 import { getTranslations } from "next-intl/server"
+import { GeneratePlanButton } from "@/components/dashboard/generate-plan-button"
 import { MealsDateNav } from "@/components/meals/meals-date-nav"
 import { MealCard } from "@/components/meals/meal-card"
 import { EmptyState } from "@/components/shared/empty-state"
@@ -51,6 +52,7 @@ export default async function MealsPage({
             icon={UtensilsCrossed}
             title={t("emptyTitle")}
             description={t("emptyDescription")}
+            action={<GeneratePlanButton hasPlan={false} />}
           />
         )}
       </div>
