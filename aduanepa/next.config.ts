@@ -85,8 +85,15 @@ const nextConfig: NextConfig = {
   },
 
   // Browsers request /favicon.ico by default — serve the file from public/icons/
+  // FCM SW is generated from env at runtime (never commit Firebase keys to public/)
   async rewrites() {
-    return [{ source: "/favicon.ico", destination: "/icons/favicon.ico" }]
+    return [
+      { source: "/favicon.ico", destination: "/icons/favicon.ico" },
+      {
+        source: "/firebase-messaging-sw.js",
+        destination: "/api/firebase-messaging-sw",
+      },
+    ]
   },
 
   // Compiler options

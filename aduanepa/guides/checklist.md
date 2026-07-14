@@ -802,7 +802,7 @@ Sections:
 - [x] No secrets hardcoded — all values from `NEXT_PUBLIC_FIREBASE_*`
 
 ### 15.3 Service worker (background notifications)
-- [x] `public/firebase-messaging-sw.js` created at the web root (so its scope covers the whole app)
+- [x] FCM service worker served at `/firebase-messaging-sw.js` via env-injected API route (not a committed file with hardcoded keys)
 - [x] Initialises Firebase inside the SW using `firebase-app-compat.js` + `firebase-messaging-compat.js` (importScripts)
 - [x] `onBackgroundMessage` handler builds and shows the notification (title, body, icon) so it displays even when the app/tab is closed
 - [x] `notificationclick` handler focuses an existing client tab or opens the target URL

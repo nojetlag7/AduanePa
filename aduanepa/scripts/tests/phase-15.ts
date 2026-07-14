@@ -13,9 +13,16 @@ export async function run(t: Tester) {
   t.check("lib/firebase/admin.ts", fileExists("lib/firebase/admin.ts"), { critical: true })
   t.check("lib/firebase/messaging.ts", fileExists("lib/firebase/messaging.ts"), { critical: true })
   t.check("lib/firebase/config.ts", fileExists("lib/firebase/config.ts"))
-  t.check("public/firebase-messaging-sw.js", fileExists("public/firebase-messaging-sw.js"), {
-    critical: true,
-  })
+  t.check(
+    "FCM SW served via API route (env-injected)",
+    fileExists("app/api/firebase-messaging-sw/route.ts"),
+    { critical: true }
+  )
+  t.check(
+    "no committed public/firebase-messaging-sw.js with hardcoded keys",
+    !fileExists("public/firebase-messaging-sw.js"),
+    { critical: true, weight: 2 }
+  )
   t.check("lib/services/notifications.ts", fileExists("lib/services/notifications.ts"), {
     critical: true,
   })
@@ -42,20 +49,30 @@ export async function run(t: Tester) {
 
   t.section("Service worker contract")
   t.check(
-    "SW uses firebase-app-compat",
-    fileContains("public/firebase-messaging-sw.js", "firebase-app-compat")
+    "SW route uses firebase-app-compat",
+    fileContains("app/api/firebase-messaging-sw/route.ts", "firebase-app-compat")
   )
   t.check(
-    "SW uses firebase-messaging-compat",
-    fileContains("public/firebase-messaging-sw.js", "firebase-messaging-compat")
+    "SW route uses firebase-messaging-compat",
+    fileContains("app/api/firebase-messaging-sw/route.ts", "firebase-messaging-compat")
   )
   t.check(
-    "SW handles onBackgroundMessage",
-    fileContains("public/firebase-messaging-sw.js", "onBackgroundMessage")
+    "SW route handles onBackgroundMessage",
+    fileContains("app/api/firebase-messaging-sw/route.ts", "onBackgroundMessage")
   )
   t.check(
-    "SW handles notificationclick",
-    fileContains("public/firebase-messaging-sw.js", "notificationclick")
+    "SW route handles notificationclick",
+    fileContains("app/api/firebase-messaging-sw/route.ts", "notificationclick")
+  )
+  t.check(
+    "SW route injects config from NEXT_PUBLIC env",
+    fileContains("app/api/firebase-messaging-sw/route.ts", "NEXT_PUBLIC_FIREBASE_API_KEY"),
+    { critical: true, weight: 2 }
+  )
+  t.check(
+    "next.config rewrites /firebase-messaging-sw.js",
+    fileContains("next.config.ts", "/firebase-messaging-sw.js"),
+    { critical: true }
   )
 
   t.section("Admin + client safety")
