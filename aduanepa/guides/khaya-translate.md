@@ -228,7 +228,7 @@ To verify the API keys work, run a quick cURL from your terminal (substitute you
 curl -X POST https://translation-api.ghananlp.org/v1/translate \
   -H "Content-Type: application/json" \
   -H "Cache-Control: no-cache" \
-  -H "Ocp-Apim-Subscription-Key: e855444412be4103b264d596f2b6797d" \
+  -H "Ocp-Apim-Subscription-Key: <your_api_key>" \
   -d '{"in": "Grilled tilapia", "lang": "en-tw"}'
 ```
 
