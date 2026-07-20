@@ -169,7 +169,10 @@
     "signInHelper": "Bii na kɔ so wɔ wo nɔɔ nhyehyɛe so.",
     "createAccount": "Yɛ Wo Akaunti",
     "signUpHelper": "Faa lɛ di yie wɔ nɔɔ a wɔabɔ ama wo.",
-    "confirmPassword": "Si Gyinae So Bio"
+    "confirmPassword": "Si Gyinae So Bio",
+    "continueWithGoogle": "Toa so Google so",
+    "orContinueWithEmail": "anaasɛ fa email so kɔ so",
+    "useGoogleSignIn": "Wɔde Google na wɔde abɔ wo akaunti yi. Fa boton a ɛwɔ atifi no."
   },
   "onboarding": {
     "step": "Lɛ {current} Wɔ {total}",

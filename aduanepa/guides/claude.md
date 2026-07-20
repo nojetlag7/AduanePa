@@ -51,7 +51,7 @@ component. Do not use a placeholder.
 | UI Components | shadcn/ui | Primary component library — prefer these over custom |
 | Styling | Tailwind CSS | Utility-first; extend theme with design tokens |
 | Icons | Lucide React | Use consistently — no mixing of icon libraries |
-| Auth | Auth.js (NextAuth v5) | Credentials provider (email + password) |
+| Auth | Auth.js (NextAuth v5) | Credentials + Google OAuth; JWT sessions |
 | Charts | Recharts | Nutritional breakdowns, health metric trends |
 | AI | Google Gemini API | Core driver of meal generation and recommendations |
 | Validation | Zod | All form and API input validation |
@@ -545,9 +545,9 @@ model Recommendation {
 
 ## Authentication & Authorization
 
-- Auth.js v5 with **Credentials provider** (email + password).
-- Passwords are bcrypt-hashed before storage. Never store or log plain text.
-- **Email verification is required before accessing the app.** After registration:
+- Auth.js v5 with **Credentials provider** (email + password) and **Google OAuth**.
+- Passwords are bcrypt-hashed before storage. OAuth-only users have `password: null`.
+- **Email verification** (credentials sign-up only):
   1. Create `User` with `emailVerified: false`.
   2. Generate a 6-digit OTP, bcrypt-hash it, save to `EmailOtp` with `expiresAt = now + 10min`.
   3. Send OTP via Brevo (`lib/email.ts`).
@@ -555,11 +555,14 @@ model Recommendation {
   5. User submits OTP → `/api/auth/verify-email` → compare hash → set `emailVerified: true`,
      `emailVerifiedAt: now()`, mark OTP `usedAt`.
   6. Redirect to `/onboarding`.
+- **Google sign-in:** new users are created via `PrismaAdapter` with `emailVerified: true` (Google
+  confirms email). Same-email accounts auto-link to existing credentials users. OAuth users skip OTP.
 - Middleware must check `emailVerified`. Unverified users are redirected to `/verify-email`.
 - After onboarding completion, redirect to `/dashboard`.
 - All `(app)/` routes are protected by middleware session check.
 - There are no roles — every authenticated user has full access to their own data only.
-- Session carries: `id`, `name`, `email`, `language`, `theme`, `measurementSystem`.
+- Session carries: `id`, `name`, `email`, `language`, `theme`, `measurementSystem`,
+  `isEmailVerified`, `isProfileComplete`.
 
 ### Email Service (`lib/email.ts`)
 
@@ -870,6 +873,8 @@ DATABASE_URL=           # Neon PostgreSQL pooled connection string
 DIRECT_URL=             # Neon direct (non-pooled) connection string for migrations
 NEXTAUTH_SECRET=        # 32-char random string for session signing
 NEXTAUTH_URL=           # Full app URL (http://localhost:3000 in dev)
+AUTH_GOOGLE_ID=         # Google OAuth client ID — server-side only
+AUTH_GOOGLE_SECRET=     # Google OAuth client secret — server-side only
 GEMINI_API_KEY=         # Server-side only — never expose to client
 TRANSLATION_API_KEY=    # Google Translate API or equivalent — server-side only
 BREVO_API_KEY=          # Brevo transactional email API key — server-side only

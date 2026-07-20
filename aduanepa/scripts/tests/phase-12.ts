@@ -154,8 +154,14 @@ export async function run(t: Tester) {
     { weight: 2 }
   )
   t.check(
-    "rejects empty password",
-    !deleteAccountSchema.safeParse({ password: "" }).success,
+    "accepts email confirmation for OAuth users",
+    deleteAccountSchema.safeParse({ confirmEmail: "user@example.com" }).success,
+    { weight: 2 }
+  )
+  t.check(
+    "rejects empty confirmation",
+    !deleteAccountSchema.safeParse({ password: "" }).success &&
+      !deleteAccountSchema.safeParse({}).success,
     { critical: true }
   )
 

@@ -63,9 +63,15 @@ export const languageSettingsSchema = z.object({
   language: z.nativeEnum(LanguagePreference, { message: "Select a language" }),
 })
 
-export const deleteAccountSchema = z.object({
-  password: z.string().min(1, "Password is required to confirm deletion"),
-})
+export const deleteAccountSchema = z
+  .object({
+    password: z.string().optional(),
+    confirmEmail: z.string().email("Enter a valid email address").optional(),
+  })
+  .refine((data) => data.password || data.confirmEmail, {
+    message: "Confirmation is required",
+    path: ["password"],
+  })
 
 export type ProfileSettingsInput = z.input<typeof profileSettingsSchema>
 export type ProfileSettingsParsed = z.output<typeof profileSettingsSchema>

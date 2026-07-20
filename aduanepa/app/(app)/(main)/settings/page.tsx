@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 import { auth } from "@/lib/auth"
-import { getUserProfile } from "@/lib/services/users"
+import { getUserProfile, getUserHasPassword } from "@/lib/services/users"
 import { PageHeader } from "@/components/shared/page-header"
 import { ProfileSettings } from "@/components/settings/profile-settings"
 import { HealthProfileSettings } from "@/components/settings/health-profile-settings"
@@ -41,6 +41,8 @@ export default async function SettingsPage() {
   const user = await getUserProfile(session.user.id)
   if (!user) redirect("/login")
 
+  const hasPassword = await getUserHasPassword(session.user.id)
+
   const t = await getTranslations("settings")
 
   return (
@@ -56,9 +58,11 @@ export default async function SettingsPage() {
           <HealthProfileSettings user={user} />
         </Section>
 
-        <Section title={t("password")} description={t("passwordDescription")}>
-          <PasswordSettings />
-        </Section>
+        {hasPassword && (
+          <Section title={t("password")} description={t("passwordDescription")}>
+            <PasswordSettings />
+          </Section>
+        )}
 
         <Section title={t("language")} description={t("languageDescription")}>
           <LanguageSettings user={user} />
@@ -76,7 +80,7 @@ export default async function SettingsPage() {
         </Section>
 
         <Section title={t("dangerZone")}>
-          <DangerZone />
+          <DangerZone userEmail={user.email} hasPassword={hasPassword} />
         </Section>
       </div>
     </>

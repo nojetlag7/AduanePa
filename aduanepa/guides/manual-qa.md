@@ -65,16 +65,25 @@ Use this guide after Phases 14–15 are implemented. Goal: confirm the product i
 
 ### 2.3 Login (`/login`)
 - [ ] Wrong password → clear error
+- [ ] OAuth-only account + email/password → message to use Google sign-in
 - [ ] Unverified account → guided to verify
 - [ ] Valid login → lands on dashboard or onboarding if incomplete
+- [ ] Session persists after refresh
+
+### 2.3a Google sign-in
+- [ ] **Continue with Google** visible on login and register
+- [ ] New Google user → skips `/verify-email`, lands on `/onboarding` (or dashboard if profile complete)
+- [ ] Existing email/password user → Google with same email → signed in to same account (auto-link)
+- [ ] Google user with complete profile → `/dashboard`
 - [ ] Session persists after refresh
 
 ### 2.4 Logout
 - [ ] Sign out clears session; protected routes redirect to login
 
 ### 2.5 Delete account (Settings → Danger zone)
-- [ ] Requires password; wrong password → inline error
-- [ ] Confirm delete → account gone; cannot log in with same credentials
+- [ ] Password account: requires password; wrong password → inline error
+- [ ] Google-only account: password section hidden; delete confirms by typing email
+- [ ] Confirm delete → account gone; cannot log in with same credentials or Google
 - [ ] No `confirm()` / `alert()` browser dialogs — in-app UI only
 
 ---

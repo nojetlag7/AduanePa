@@ -169,7 +169,10 @@
     "signInHelper": "Sign in to continue to your meal plans.",
     "createAccount": "Create your account",
     "signUpHelper": "Start eating well with meals built around you.",
-    "confirmPassword": "Confirm password"
+    "confirmPassword": "Confirm password",
+    "continueWithGoogle": "Continue with Google",
+    "orContinueWithEmail": "or continue with email",
+    "useGoogleSignIn": "This account uses Google sign-in. Use the button above."
   },
   "onboarding": {
     "step": "Step {current} of {total}",

@@ -25,14 +25,40 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    await deleteAccount(session.user.id, parsed.data.password)
+    await deleteAccount(session.user.id, parsed.data)
     return NextResponse.json({ success: true })
   } catch (err) {
-    if (err instanceof Error && err.message === "WRONG_PASSWORD") {
-      return NextResponse.json(
-        { error: "Validation failed", fields: { password: ["Incorrect password"] } },
-        { status: 400 }
-      )
+    if (err instanceof Error) {
+      if (err.message === "WRONG_PASSWORD") {
+        return NextResponse.json(
+          { error: "Validation failed", fields: { password: ["Incorrect password"] } },
+          { status: 400 }
+        )
+      }
+      if (err.message === "EMAIL_MISMATCH") {
+        return NextResponse.json(
+          {
+            error: "Validation failed",
+            fields: { confirmEmail: ["Email does not match your account"] },
+          },
+          { status: 400 }
+        )
+      }
+      if (err.message === "PASSWORD_REQUIRED") {
+        return NextResponse.json(
+          { error: "Validation failed", fields: { password: ["Password is required"] } },
+          { status: 400 }
+        )
+      }
+      if (err.message === "EMAIL_CONFIRMATION_REQUIRED") {
+        return NextResponse.json(
+          {
+            error: "Validation failed",
+            fields: { confirmEmail: ["Enter your email to confirm deletion"] },
+          },
+          { status: 400 }
+        )
+      }
     }
     return NextResponse.json({ error: "Failed to delete account" }, { status: 500 })
   }

@@ -34,6 +34,12 @@ export async function PATCH(request: Request) {
         { status: 400 }
       )
     }
+    if (err instanceof Error && err.message === "OAUTH_ONLY") {
+      return NextResponse.json(
+        { error: "This account uses Google sign-in and has no password to change." },
+        { status: 400 }
+      )
+    }
     return NextResponse.json({ error: "Failed to update password" }, { status: 500 })
   }
 }

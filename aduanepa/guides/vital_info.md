@@ -176,7 +176,24 @@ After moving routes or changing route groups, delete `.next` if you see stale ro
 - Restart dev server after changing env vars.
 - Auth.js accepts `AUTH_SECRET` or `NEXTAUTH_SECRET`.
 
-### Neon / `pg` SSL warning
+### Google OAuth
+
+| Variable | Purpose |
+|----------|---------|
+| `AUTH_GOOGLE_ID` | Google OAuth client ID (Web application) |
+| `AUTH_GOOGLE_SECRET` | Google OAuth client secret |
+
+**Google Cloud Console setup:**
+
+1. OAuth consent screen → External app, scopes: `openid`, `email`, `profile`.
+2. Credentials → OAuth client ID → Web application.
+3. **Authorized JavaScript origins:** `http://localhost:3000` (dev), production URL when deployed.
+4. **Authorized redirect URIs:** `http://localhost:3000/api/auth/callback/google` (and production equivalent).
+
+`NEXTAUTH_URL` must match the app origin. Restart dev server after adding credentials.
+
+OAuth users are created with `emailVerified: true` (no OTP). Existing email/password accounts with the same email are **auto-linked** when the user signs in with Google (`allowDangerousEmailAccountLinking`). OAuth-only users have `password: null` — hide password settings; account deletion confirms by typing their email.
+
 
 `sslmode=require` triggers a deprecation warning in `pg` v8. Use **`sslmode=verify-full`** in connection strings (same security on Neon). `lib/db.ts` also normalizes legacy `require` → `verify-full` at runtime.
 

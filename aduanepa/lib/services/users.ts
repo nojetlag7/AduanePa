@@ -85,6 +85,14 @@ export async function updateHealthProfile(
   })
 }
 
+export async function getUserHasPassword(userId: string): Promise<boolean> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { password: true },
+  })
+  return !!user?.password
+}
+
 export async function updatePassword(
   userId: string,
   currentPassword: string,
@@ -94,7 +102,8 @@ export async function updatePassword(
     where: { id: userId },
     select: { password: true },
   })
-  if (!user?.password) throw new Error("USER_NOT_FOUND")
+  if (!user) throw new Error("USER_NOT_FOUND")
+  if (!user.password) throw new Error("OAUTH_ONLY")
 
   const valid = await bcrypt.compare(currentPassword, user.password)
   if (!valid) throw new Error("WRONG_PASSWORD")
@@ -118,15 +127,26 @@ export async function updateLanguage(
   return updated.language
 }
 
-export async function deleteAccount(userId: string, password: string): Promise<void> {
+export async function deleteAccount(
+  userId: string,
+  confirmation: { password?: string; confirmEmail?: string }
+): Promise<void> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { password: true },
+    select: { password: true, email: true },
   })
-  if (!user?.password) throw new Error("USER_NOT_FOUND")
+  if (!user) throw new Error("USER_NOT_FOUND")
 
-  const valid = await bcrypt.compare(password, user.password)
-  if (!valid) throw new Error("WRONG_PASSWORD")
+  if (user.password) {
+    if (!confirmation.password) throw new Error("PASSWORD_REQUIRED")
+    const valid = await bcrypt.compare(confirmation.password, user.password)
+    if (!valid) throw new Error("WRONG_PASSWORD")
+  } else {
+    if (!confirmation.confirmEmail) throw new Error("EMAIL_CONFIRMATION_REQUIRED")
+    if (confirmation.confirmEmail.trim().toLowerCase() !== user.email.toLowerCase()) {
+      throw new Error("EMAIL_MISMATCH")
+    }
+  }
 
   await prisma.user.delete({ where: { id: userId } })
 }
