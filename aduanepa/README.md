@@ -31,12 +31,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-This app is nested in a Git repo (`aduanepa/` is not the repo root). In the Vercel project:
+Deploy from the **Git repo root** (see [../README.md](../README.md)):
 
-1. **Settings → General → Root Directory** = `aduanepa`
-2. Leave Build / Install / Output Directory on **defaults** (do not `cd aduanepa` in custom commands)
-3. Copy env vars from `.env.local` into Vercel Environment Variables
+1. Vercel **Root Directory** = empty (not `aduanepa`)
+2. Push root `vercel.json` + `scripts/sync-next-output.mjs`
+3. Copy env vars from `.env.local` into Vercel
 
-See the [repo root README](../README.md) for the full checklist. Misconfigured Root Directory causes:
+Misconfigured Root Directory causes:
 
 `ENOENT: ... lstat '/vercel/path0/.next/package.json'`

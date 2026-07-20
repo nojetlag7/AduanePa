@@ -1,0 +1,10 @@
+{
+  "name": "aduanepa-repo",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm install --prefix aduanepa",
+    "build": "npm run build --prefix aduanepa && node scripts/sync-next-output.mjs",
+    "dev": "npm run dev --prefix aduanepa",
+    "start": "npm run start --prefix aduanepa"
+  }
+}

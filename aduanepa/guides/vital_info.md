@@ -174,13 +174,15 @@ After moving routes or changing route groups, delete `.next` if you see stale ro
 
 ### Vercel deploy (subdirectory app)
 
-The Next.js app is in `aduanepa/`, not the Git repo root. In Vercel **Settings → General**, set **Root Directory** to `aduanepa`. Leave Build / Install / Output Directory on defaults.
+The Next.js app is in `aduanepa/`. Deploy config lives at the **Git repo root** (`vercel.json` + `scripts/sync-next-output.mjs`).
 
-Wrong Root Directory (or custom `cd aduanepa && …` build commands with root unset) causes:
+**Root Directory in Vercel must be empty** (not `aduanepa`). The build runs in `aduanepa/`, then mirrors `.next` to the repo root so Vercel finds `/vercel/path0/.next/package.json`.
+
+Wrong setting (`Root Directory = aduanepa`) commonly causes:
 
 `ENOENT: no such file or directory, lstat '/vercel/path0/.next/package.json'`
 
-Build writes `.next` under `aduanepa/`; Vercel was looking at the repo root.
+Also remove `outputFileTracingRoot` pointing at a parent folder — it confuses Vercel’s path resolution.
 
 - Prisma 7 + `prisma.config.ts` does **not** auto-load `.env` — we call `dotenv` in `prisma.config.ts`.
 - Restart dev server after changing env vars.

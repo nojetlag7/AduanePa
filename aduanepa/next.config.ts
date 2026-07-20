@@ -1,4 +1,3 @@
-import path from "node:path"
 import type { NextConfig } from "next"
 import withPWAInit from "@ducanh2912/next-pwa"
 import createNextIntlPlugin from "next-intl/plugin"
@@ -60,8 +59,9 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
-  // Pin the workspace root so Next.js infers the correct project root.
-  outputFileTracingRoot: path.join(__dirname),
+  // Do not set outputFileTracingRoot to a parent of the app — on Vercel that
+  // makes the packager look for `.next` at the Git repo root and fail with
+  // ENOENT on `.next/package.json` when Root Directory is `aduanepa`.
 
   images: {
     // Next.js 16: quality values must be allowlisted.

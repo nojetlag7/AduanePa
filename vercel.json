@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "npm install --prefix aduanepa",
+  "buildCommand": "npm run build --prefix aduanepa && node scripts/sync-next-output.mjs"
+}

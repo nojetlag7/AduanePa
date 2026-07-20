@@ -1,0 +1,9 @@
+node_modules/
+.next/
+aduanepa/node_modules/
+aduanepa/.next/
+.env*
+!.env.example
+.DS_Store
+*.pem
+.vercel
