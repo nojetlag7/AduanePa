@@ -31,6 +31,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This app is nested in a Git repo (`aduanepa/` is not the repo root). In the Vercel project:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Settings → General → Root Directory** = `aduanepa`
+2. Leave Build / Install / Output Directory on **defaults** (do not `cd aduanepa` in custom commands)
+3. Copy env vars from `.env.local` into Vercel Environment Variables
+
+See the [repo root README](../README.md) for the full checklist. Misconfigured Root Directory causes:
+
+`ENOENT: ... lstat '/vercel/path0/.next/package.json'`

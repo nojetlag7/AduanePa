@@ -172,6 +172,16 @@ After moving routes or changing route groups, delete `.next` if you see stale ro
 | `.env` | `DATABASE_URL`, `DIRECT_URL` (Prisma CLI) | Committed (no secrets if team policy allows — prefer secrets in `.env.local`) |
 | `.env.local` | `NEXTAUTH_SECRET`, API keys, app secrets | **Never commit** |
 
+### Vercel deploy (subdirectory app)
+
+The Next.js app is in `aduanepa/`, not the Git repo root. In Vercel **Settings → General**, set **Root Directory** to `aduanepa`. Leave Build / Install / Output Directory on defaults.
+
+Wrong Root Directory (or custom `cd aduanepa && …` build commands with root unset) causes:
+
+`ENOENT: no such file or directory, lstat '/vercel/path0/.next/package.json'`
+
+Build writes `.next` under `aduanepa/`; Vercel was looking at the repo root.
+
 - Prisma 7 + `prisma.config.ts` does **not** auto-load `.env` — we call `dotenv` in `prisma.config.ts`.
 - Restart dev server after changing env vars.
 - Auth.js accepts `AUTH_SECRET` or `NEXTAUTH_SECRET`.
