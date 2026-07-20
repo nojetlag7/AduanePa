@@ -34,10 +34,6 @@ Add all secrets from `aduanepa/.env.local` in **Settings → Environment Variabl
 
 Google OAuth redirect URI for production:
 
-```text
-https://YOUR_DOMAIN/api/auth/callback/google
-```
-
 ## Local development
 
 ```bash
